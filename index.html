@@ -1,412 +1,101 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BNG Tools Center</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<title>BNG Tools Center</title>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-      background:
-        radial-gradient(circle at top, #1a2330 0%, #0e141c 45%, #090d12 100%);
-      color: #eef4ff;
-    }
+<style>
 
-    .container {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 36px 20px 60px;
-    }
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f1720;
+    color:white;
+    text-align:center;
+}
 
-    .hero {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+h1{
+    margin-top:60px;
+    font-size:48px;
+}
 
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: 42px;
-      letter-spacing: 2px;
-      font-weight: 900;
-      color: #ffffff;
-      text-shadow: 0 0 18px rgba(95, 177, 255, 0.14);
-    }
+.subtitle{
+    color:#8aa0b5;
+    margin-bottom:40px;
+}
 
-    .hero p {
-      margin: 0;
-      color: #aebdd0;
-      font-size: 16px;
-      line-height: 1.8;
-    }
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    max-width:900px;
+    margin:auto;
+}
 
-    .top-bar {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 28px 0 32px;
-    }
+.card{
+    background:#1b2532;
+    padding:30px;
+    border-radius:14px;
+    transition:0.2s;
+    cursor:pointer;
+}
 
-    .top-card {
-      min-width: 180px;
-      background: rgba(17, 24, 33, 0.92);
-      border: 1px solid #2b3643;
-      border-radius: 18px;
-      padding: 16px 18px;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
-    }
+.card:hover{
+    transform:translateY(-5px);
+    background:#243244;
+}
 
-    .top-label {
-      font-size: 13px;
-      color: #95a7ba;
-      margin-bottom: 6px;
-    }
+a{
+    text-decoration:none;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+}
 
-    .top-value {
-      font-size: 26px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .section {
-      margin-top: 20px;
-    }
-
-    .section-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      color: #ffffff;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: rgba(18, 25, 34, 0.95);
-      border: 1px solid #2d3948;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
-      transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      min-height: 180px;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: #4a92ff;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
-    }
-
-    .card-badge {
-      display: inline-flex;
-      align-items: center;
-      width: fit-content;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      background: rgba(76, 146, 255, 0.14);
-      color: #8fc0ff;
-      border: 1px solid rgba(76, 146, 255, 0.28);
-    }
-
-    .card-title {
-      font-size: 24px;
-      font-weight: 900;
-      color: #ffffff;
-      margin-bottom: 10px;
-      word-break: break-word;
-    }
-
-    .card-desc {
-      color: #a9b7c7;
-      font-size: 14px;
-      line-height: 1.8;
-      margin-bottom: 18px;
-      flex: 1;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.12s ease, filter 0.2s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-    }
-
-    .btn:hover {
-      filter: brightness(1.08);
-      transform: translateY(-1px);
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn-open {
-      background: linear-gradient(135deg, #2f80ff, #56b2ff);
-      color: #fff;
-    }
-
-    .btn-copy {
-      background: linear-gradient(135deg, #363e49, #596273);
-      color: #fff;
-    }
-
-    .status-box {
-      margin-top: 28px;
-      padding: 16px 18px;
-      border-radius: 16px;
-      background: rgba(16, 22, 29, 0.94);
-      border: 1px solid #2b3642;
-      color: #9fb0c4;
-      line-height: 1.8;
-    }
-
-    .loading,
-    .empty,
-    .error {
-      padding: 30px 20px;
-      border-radius: 18px;
-      background: rgba(16, 22, 29, 0.95);
-      border: 1px solid #2b3642;
-      color: #a8b8ca;
-      line-height: 1.8;
-      text-align: center;
-    }
-
-    .footer {
-      margin-top: 36px;
-      text-align: center;
-      color: #78889a;
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    @media (max-width: 640px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .top-card {
-        width: 100%;
-      }
-
-      .card-title {
-        font-size: 21px;
-      }
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="hero">
-      <h1>BNG Tools Center</h1>
-      <p>
-        这是你的网页工具与游戏入口页。<br>
-        只要新增新的 HTML 文件，首页会自动尝试读取并显示。
-      </p>
-    </div>
 
-    <div class="top-bar">
-      <div class="top-card">
-        <div class="top-label">GitHub 用户名</div>
-        <div id="userName" class="top-value">读取中</div>
-      </div>
-      <div class="top-card">
-        <div class="top-label">仓库名称</div>
-        <div id="repoName" class="top-value">读取中</div>
-      </div>
-      <div class="top-card">
-        <div class="top-label">网页数量</div>
-        <div id="pageCount" class="top-value">0</div>
-      </div>
-    </div>
+<h1>BNG Tools Center</h1>
+<div class="subtitle">这是首页</div>
 
-    <div class="section">
-      <div class="section-title">网页列表</div>
-      <div id="contentArea">
-        <div class="loading">正在读取仓库网页资料...</div>
-      </div>
-    </div>
+<div id="apps" class="grid"></div>
 
-    <div class="status-box">
-      自动读取规则：<br>
-      1. 只读取仓库根目录的 `.html` 文件<br>
-      2. 自动排除 `index.html` 本身<br>
-      3. 以后你新增 `xxx.html`，重新整理首页后就会出现
-    </div>
+<script>
 
-    <div class="footer">
-      BNG Tools Center · GitHub Pages 自动网页入口
-    </div>
-  </div>
+const USER="OuRRlgvOJb"
+const REPO="bng-tools"
 
-  <script>
-  const GITHUB_USER = "OuRRlgvOJb";
-const GITHUB_REPO = "bng-tools";
+fetch(`https://api.github.com/repos/${USER}/${REPO}/contents`)
+.then(r=>r.json())
+.then(data=>{
 
-    const userNameEl = document.getElementById("userName");
-    const repoNameEl = document.getElementById("repoName");
-    const pageCountEl = document.getElementById("pageCount");
-    const contentArea = document.getElementById("contentArea");
+let html=""
 
-    userNameEl.textContent = GITHUB_USER;
-    repoNameEl.textContent = GITHUB_REPO;
+data.forEach(file=>{
 
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
+if(file.name.endsWith(".html") && file.name!=="index.html"){
 
-    function guessTitle(fileName) {
-      const name = fileName.replace(/\.html$/i, "");
+let name=file.name.replace(".html","")
 
-      const map = {
-        tool: "BNG电子对帐",
-        game: "金币小游戏",
-        snake: "贪吃蛇",
-        tetris: "俄罗斯方块",
-        image: "图片工具",
-        music: "音乐工具"
-      };
+html+=`
+<div class="card">
+<a href="./${file.name}">
+${name}
+</a>
+</div>
+`
 
-      return map[name.toLowerCase()] || name;
-    }
+}
 
-    function guessDescription(fileName) {
-      const name = fileName.replace(/\.html$/i, "").toLowerCase();
+})
 
-      if (name.includes("tool")) return "工具网页，可用于资料整理、计算或其他功能。";
-      if (name.includes("game")) return "网页小游戏，打开后可以直接游玩。";
-      if (name.includes("snake")) return "经典贪吃蛇网页游戏。";
-      if (name.includes("tetris")) return "经典方块类型网页游戏。";
+document.getElementById("apps").innerHTML=html
 
-      return "独立网页页面，点击后可直接开启使用。";
-    }
+})
 
-    function guessBadge(fileName) {
-      const name = fileName.replace(/\.html$/i, "").toLowerCase();
+</script>
 
-      if (name.includes("tool")) return "工具";
-      if (name.includes("game")) return "游戏";
-      if (name.includes("snake")) return "游戏";
-      if (name.includes("tetris")) return "游戏";
-
-      return "网页";
-    }
-
-    function buildCard(fileName) {
-      const title = guessTitle(fileName);
-      const desc = guessDescription(fileName);
-      const badge = guessBadge(fileName);
-      const pageUrl = `./${fileName}`;
-
-      return `
-        <div class="card">
-          <div class="card-badge">${escapeHtml(badge)}</div>
-          <div class="card-title">${escapeHtml(title)}</div>
-          <div class="card-desc">
-            文件名：${escapeHtml(fileName)}<br>
-            ${escapeHtml(desc)}
-          </div>
-          <div class="card-actions">
-            <a class="btn btn-open" href="${escapeHtml(pageUrl)}">打开网页</a>
-            <button class="btn btn-copy" onclick="copyLink('${escapeHtml(pageUrl)}')">复制链接</button>
-          </div>
-        </div>
-      `;
-    }
-
-    async function loadPages() {
-      const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents`;
-
-      try {
-        const res = await fetch(apiUrl, { cache: "no-store" });
-        if (!res.ok) {
-          throw new Error(`GitHub API 读取失败：${res.status}`);
-        }
-
-        const data = await res.json();
-
-        const htmlFiles = data
-          .filter(item => item.type === "file")
-          .map(item => item.name)
-          .filter(name => /\.html$/i.test(name))
-          .filter(name => name.toLowerCase() !== "index.html")
-          .sort((a, b) => a.localeCompare(b));
-
-        pageCountEl.textContent = String(htmlFiles.length);
-
-        if (!htmlFiles.length) {
-          contentArea.innerHTML = `
-            <div class="empty">
-              目前还没有读取到其他 HTML 网页。<br>
-              你以后新增例如 <b>tool.html</b>、<b>game.html</b> 后，重新整理这里就会出现。
-            </div>
-          `;
-          return;
-        }
-
-        contentArea.innerHTML = `
-          <div class="grid">
-            ${htmlFiles.map(buildCard).join("")}
-          </div>
-        `;
-      } catch (error) {
-        contentArea.innerHTML = `
-          <div class="error">
-            读取失败。<br>
-            可能是 GitHub API 暂时没有回应，稍后重新整理页面再试一次。<br><br>
-            错误讯息：${escapeHtml(error.message)}
-          </div>
-        `;
-      }
-    }
-
-    async function copyLink(relativePath) {
-      const fullUrl = new URL(relativePath, window.location.href).href;
-
-      try {
-        await navigator.clipboard.writeText(fullUrl);
-        alert("链接已复制：\n" + fullUrl);
-      } catch (error) {
-        alert("复制失败，请手动复制：\n" + fullUrl);
-      }
-    }
-
-    window.copyLink = copyLink;
-    loadPages();
-  </script>
 </body>
 </html>
