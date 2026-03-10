@@ -74,9 +74,6 @@
 <div id="apps" class="grid"></div>
 
 <script>
-  const USER = "OuRRlgvOJb";
-  const REPO = "bng-tools";
-
   function updateTime(){
     const now = new Date();
     const text =
@@ -97,40 +94,30 @@
     const apps = document.getElementById("apps");
 
     try{
-      const url = `https://api.github.com/repos/${USER}/${REPO}/contents`;
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch("./pages.json?v=" + Date.now(), { cache: "no-store" });
 
       if(!res.ok){
-        throw new Error("GitHub API 状态码：" + res.status);
+        throw new Error("pages.json 读取失败，状态码：" + res.status);
       }
 
       const data = await res.json();
 
-      const htmlFiles = data
-        .filter(file => file.type === "file")
-        .map(file => file.name)
-        .filter(name => name.endsWith(".html"))
-        .filter(name => name !== "index.html");
-
-      if(htmlFiles.length === 0){
-        status.textContent = "没有读取到其他网页文件";
+      if(!Array.isArray(data) || data.length === 0){
+        status.textContent = "目前没有可显示的网页";
         return;
       }
 
-      status.textContent = "读取成功";
+      status.textContent = "";
 
-      apps.innerHTML = htmlFiles.map(file => {
-        const name = file.replace(".html", "");
-        return `
-          <div class="card">
-            <a href="./${file}">${name}</a>
-          </div>
-        `;
-      }).join("");
+      apps.innerHTML = data.map(item => `
+        <div class="card">
+          <a href="./${item.file}">${item.name}</a>
+        </div>
+      `).join("");
     }catch(err){
       status.innerHTML = `<div class="error">读取失败：${err.message}</div>`;
     }
-   }
+  }
 
   loadPages();
 </script>
