@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>金币大作战</title>
   <style>
-    .home-btn{
+   .home-btn{
 position:fixed;
 top:20px;
 right:20px;
+z-index:9999;
+
 background:#2d8cff;
 color:white;
 padding:10px 18px;
@@ -16,8 +18,14 @@ border-radius:8px;
 text-decoration:none;
 font-size:16px;
 font-weight:bold;
+
 box-shadow:0 4px 10px rgba(0,0,0,0.3);
 transition:0.2s;
+}
+
+.home-btn:hover{
+background:#4ea3ff;
+transform:translateY(-2px);
 }
 
 .home-btn:hover{
