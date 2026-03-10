@@ -1,119 +1,138 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>首页</title>
-
 <style>
-
-body{
+  body{
     margin:0;
     background:#0f1720;
-    color:white;
-    font-family:Arial;
+    color:#fff;
+    font-family:Arial,"Microsoft JhengHei",sans-serif;
     text-align:center;
-}
+  }
 
-h1{
-    margin-top:60px;
-    font-size:40px;
-}
+  h1{
+    margin-top:50px;
+    font-size:42px;
+  }
 
-#time{
+  #time{
     margin-top:10px;
     font-size:20px;
     color:#9fb3c8;
-}
+  }
 
-.grid{
+  #status{
+    margin:20px auto 10px;
+    color:#8fa6bb;
+    font-size:16px;
+  }
+
+  .grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
     max-width:900px;
-    margin:50px auto;
-}
+    margin:40px auto;
+    padding:0 20px 40px;
+  }
 
-.card{
+  .card{
     background:#1b2532;
     padding:25px;
     border-radius:12px;
-    transition:0.2s;
-}
+    transition:.2s;
+  }
 
-.card:hover{
+  .card:hover{
     background:#243244;
     transform:translateY(-5px);
-}
+  }
 
-a{
+  a{
     color:white;
     text-decoration:none;
     font-size:20px;
-}
+    font-weight:bold;
+  }
 
+  .error{
+    color:#ff9b9b;
+    white-space:pre-wrap;
+    line-height:1.8;
+    padding:0 20px;
+  }
 </style>
 </head>
-
 <body>
 
 <h1>首页</h1>
-
 <div id="time"></div>
-
+<div id="status">正在读取网页列表...</div>
 <div id="apps" class="grid"></div>
 
 <script>
+  const USER = "OuRRlgvOJb";
+  const REPO = "bng-tools";
 
-const USER="OuRRlgvOJb"
-const REPO="bng-tools"
+  function updateTime(){
+    const now = new Date();
+    const text =
+      now.getFullYear() + "-" +
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0") + " " +
+      String(now.getHours()).padStart(2, "0") + ":" +
+      String(now.getMinutes()).padStart(2, "0") + ":" +
+      String(now.getSeconds()).padStart(2, "0");
+    document.getElementById("time").textContent = text;
+  }
 
-function updateTime(){
+  setInterval(updateTime, 1000);
+  updateTime();
 
-let now=new Date()
+  async function loadPages(){
+    const status = document.getElementById("status");
+    const apps = document.getElementById("apps");
 
-let t=
-now.getFullYear()+"-"+
-String(now.getMonth()+1).padStart(2,"0")+"-"+
-String(now.getDate()).padStart(2,"0")+" "+
-String(now.getHours()).padStart(2,"0")+":"+
-String(now.getMinutes()).padStart(2,"0")+":"+
-String(now.getSeconds()).padStart(2,"0")
+    try{
+      const url = `https://api.github.com/repos/${USER}/${REPO}/contents`;
+      const res = await fetch(url, { cache: "no-store" });
 
-document.getElementById("time").innerText=t
+      if(!res.ok){
+        throw new Error("GitHub API 状态码：" + res.status);
+      }
 
-}
+      const data = await res.json();
 
-setInterval(updateTime,1000)
-updateTime()
+      const htmlFiles = data
+        .filter(file => file.type === "file")
+        .map(file => file.name)
+        .filter(name => name.endsWith(".html"))
+        .filter(name => name !== "index.html");
 
-fetch(`https://api.github.com/repos/${USER}/${REPO}/contents`)
-.then(r=>r.json())
-.then(data=>{
+      if(htmlFiles.length === 0){
+        status.textContent = "没有读取到其他网页文件";
+        return;
+      }
 
-let html=""
+      status.textContent = "读取成功";
 
-data.forEach(file=>{
+      apps.innerHTML = htmlFiles.map(file => {
+        const name = file.replace(".html", "");
+        return `
+          <div class="card">
+            <a href="./${file}">${name}</a>
+          </div>
+        `;
+      }).join("");
+    }catch(err){
+      status.innerHTML = `<div class="error">读取失败：${err.message}</div>`;
+    }
+  }
 
-if(file.name.endsWith(".html") && file.name!=="index.html"){
-
-let name=file.name.replace(".html","")
-
-html+=`
-<div class="card">
-<a href="./${file.name}">
-${name}
-</a>
-</div>
-`
-
-}
-
-})
-
-document.getElementById("apps").innerHTML=html
-
-})
-
+  loadPages();
 </script>
 
 </body>
