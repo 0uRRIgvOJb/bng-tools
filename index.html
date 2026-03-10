@@ -260,19 +260,16 @@
     <div class="title">BNG电子对帐</div>
 
     <div class="main">
-      <!-- 左边 -->
       <div class="panel">
         <div class="panel-title">贴上数据</div>
         <textarea id="inputData" class="input-area" placeholder="请把原始资料贴在这里..."></textarea>
       </div>
 
-      <!-- 中间按钮 -->
       <div class="middle-actions">
         <button id="calcBtn" class="btn btn-calc">计算结果</button>
         <button id="clearBtn" class="btn btn-clear">清除</button>
       </div>
 
-      <!-- 右边 -->
       <div class="panel">
         <div class="panel-title">计算结果</div>
         <div id="resultBox" class="result-box">
@@ -285,7 +282,6 @@
     </div>
   </div>
 
-  <!-- 读取遮罩 -->
   <div id="loadingOverlay" class="overlay">
     <div class="loading-card">
       <div class="spinner"></div>
@@ -316,10 +312,10 @@
     }
 
     function parseNumber(numStr) {
-      if (!numStr) return 0;
-      const cleaned = numStr.replace(/\s+/g, "").replace(/,/g, "");
+      if (!numStr) return NaN;
+      const cleaned = String(numStr).replace(/\s+/g, "").replace(/,/g, "");
       const n = Number(cleaned);
-      return isNaN(n) ? 0 : n;
+      return isNaN(n) ? NaN : n;
     }
 
     function formatNumber(num) {
@@ -330,7 +326,7 @@
     }
 
     function escapeHtml(str) {
-      return str
+      return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -338,47 +334,95 @@
         .replace(/'/g, "&#39;");
     }
 
-    function extractData(rawText) {
-      const lines = rawText
-        .split("\n")
-        .map(line => line.trimEnd())
-        .filter(line => line.trim() !== "");
+    function isDateLine(line) {
+      return /^\d{4}-\d{2}-\d{2}\s*\(.*?\)/.test(line);
+    }
 
-      const dateSet = [];
-      const platformProfitMap = {};
+    function isPlatformLine(line) {
+      return /^beyondgaming\s*-\s*\S+/i.test(line);
+    }
 
-      const dateRegex = /^(\d{4}-\d{2}-\d{2})\s*\((.*?)\)/;
-      const platformRegex = /^(beyondgaming\s*-\s*\S+)\s+/i;
-      const numberRegex = /-?\d[\d\s,]*\.\d+|-?\d+/g;
+    function isCurrencyLine(line) {
+      return /^TWD$/i.test(line);
+    }
 
-      for (const rawLine of lines) {
-        const line = normalizeSpaces(rawLine);
+    function extractAllNumbers(line) {
+      const matches = line.match(/-?\d[\d\s,]*\.\d+|-?\d+/g);
+      return matches ? matches : [];
+    }
 
-        const dateMatch = line.match(dateRegex);
-        if (dateMatch) {
-          dateSet.push(dateMatch[1]);
-          continue;
-        }
+    function addProfit(map, platform, profit) {
+      if (!platform || isNaN(profit)) return;
+      if (!map[platform]) map[platform] = 0;
+      map[platform] += profit;
+    }
 
-        const platformMatch = line.match(platformRegex);
-        if (platformMatch) {
-          const platform = platformMatch[1].replace(/\s*-\s*/g, " - ").trim();
+    function extractOldFormatProfit(line, platformText) {
+      const numberPart = line.replace(platformText, "").trim();
+      const nums = extractAllNumbers(numberPart);
+      if (!nums.length) return NaN;
+      return parseNumber(nums[nums.length - 1]);
+    }
 
-          const numberPart = line.replace(platformMatch[1], "").trim();
-          const nums = numberPart.match(numberRegex);
+    function extractNewFormatProfit(lines, startIndex) {
+      const collectedNumbers = [];
 
-          if (nums && nums.length > 0) {
-            const profit = parseNumber(nums[nums.length - 1]);
+      for (let i = startIndex + 1; i < lines.length; i++) {
+        const line = lines[i];
 
-            if (!platformProfitMap[platform]) {
-              platformProfitMap[platform] = 0;
-            }
-            platformProfitMap[platform] += profit;
+        if (!line) continue;
+        if (isDateLine(line)) break;
+        if (isPlatformLine(line)) break;
+        if (isCurrencyLine(line)) break;
+
+        const nums = extractAllNumbers(line);
+        if (nums.length) {
+          for (const n of nums) {
+            collectedNumbers.push(n);
           }
         }
       }
 
-      const uniqueDates = [...new Set(dateSet)].sort();
+      if (!collectedNumbers.length) return NaN;
+      return parseNumber(collectedNumbers[collectedNumbers.length - 1]);
+    }
+
+    function extractData(rawText) {
+      const lines = rawText
+        .split("\n")
+        .map(line => normalizeSpaces(line))
+        .filter(line => line !== "");
+
+      const dates = [];
+      const platformProfitMap = {};
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (isDateLine(line)) {
+          const dateMatch = line.match(/^(\d{4}-\d{2}-\d{2})/);
+          if (dateMatch) dates.push(dateMatch[1]);
+          continue;
+        }
+
+        if (isPlatformLine(line)) {
+          const platformMatch = line.match(/^(beyondgaming\s*-\s*\S+)/i);
+          const platform = platformMatch[1].replace(/\s*-\s*/g, " - ").trim();
+
+          let profit = NaN;
+
+          const sameLineNumbers = extractAllNumbers(line.replace(platformMatch[1], "").trim());
+          if (sameLineNumbers.length > 0) {
+            profit = extractOldFormatProfit(line, platformMatch[1]);
+          } else {
+            profit = extractNewFormatProfit(lines, i);
+          }
+
+          addProfit(platformProfitMap, platform, profit);
+        }
+      }
+
+      const uniqueDates = [...new Set(dates)].sort();
 
       return {
         dates: uniqueDates,
@@ -448,8 +492,7 @@
       setLoading(true);
 
       try {
-        await new Promise(resolve => setTimeout(resolve, 600));
-
+        await new Promise(resolve => setTimeout(resolve, 500));
         const { dates, platformProfitMap } = extractData(rawText);
         resultBox.innerHTML = buildResultHtml(dates, platformProfitMap);
       } catch (error) {
