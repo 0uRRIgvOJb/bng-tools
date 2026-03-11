@@ -3,208 +3,403 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>卡牌闯关</title>
+  <title>卡牌冒险</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, "Microsoft JhengHei", sans-serif;
-      background: #141414;
+      background: linear-gradient(180deg, #111 0%, #1b1b1b 100%);
       color: #fff;
     }
 
     .topbar {
       display: flex;
       justify-content: flex-end;
-      padding: 12px 16px;
-      background: #1d1d1d;
-      border-bottom: 1px solid #333;
+      align-items: center;
+      padding: 12px 18px;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid #2e2e2e;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
+      backdrop-filter: blur(6px);
     }
 
     .home-btn {
-      background: #ffb400;
-      color: #111;
       border: none;
+      background: #f7b500;
+      color: #111;
       padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: bold;
+      border-radius: 10px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .home-btn:hover {
+      opacity: 0.92;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 22px 18px 40px;
     }
 
-    h1 {
+    .title {
       text-align: center;
-      margin-top: 0;
+      font-size: 52px;
+      font-weight: 800;
+      margin: 6px 0 18px;
+      letter-spacing: 2px;
     }
 
-    .status-grid {
+    .top-status {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
-    .panel {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 16px;
+    .mini-panel {
+      background: #1f1f1f;
+      border: 1px solid #313131;
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
 
-    .panel h2 {
-      margin-top: 0;
-      font-size: 20px;
-      margin-bottom: 12px;
+    .mini-panel .label {
+      font-size: 14px;
+      color: #bdbdbd;
+      margin-bottom: 8px;
     }
 
-    .line {
-      margin: 8px 0;
-      font-size: 16px;
+    .mini-panel .value {
+      font-size: 28px;
+      font-weight: bold;
     }
 
-    .battle-area {
+    .battle-board {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 18px;
+      margin-bottom: 18px;
     }
 
-    .bar-wrap {
+    .character-panel {
+      background: #1d1d1d;
+      border: 1px solid #333;
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 320px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .character-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      background: #2a2a2a;
+      border: 1px solid #3b3b3b;
+      flex-shrink: 0;
+    }
+
+    .hero-avatar {
+      background: linear-gradient(135deg, #2a3d75, #1f7acb);
+    }
+
+    .monster-avatar {
+      background: linear-gradient(135deg, #5d1f1f, #b93a3a);
+    }
+
+    .character-title h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .character-sub {
+      color: #bcbcbc;
+      font-size: 14px;
+    }
+
+    .stat-row {
+      margin-bottom: 14px;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 6px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .bar-bg {
       width: 100%;
       height: 18px;
-      background: #333;
       border-radius: 999px;
       overflow: hidden;
-      margin-top: 8px;
+      background: #353535;
     }
 
     .hp-bar {
       height: 100%;
-      background: #e74c3c;
-      transition: 0.25s;
+      background: linear-gradient(90deg, #db3b3b, #ff6666);
+      transition: width 0.25s ease;
     }
 
-    .shield-text {
-      color: #66c2ff;
+    .energy-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #00a6ff, #73d0ff);
+      transition: width 0.25s ease;
+    }
+
+    .shield-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      background: #1f4f88;
+      color: #d8efff;
+      border-radius: 999px;
       font-size: 14px;
-      margin-top: 6px;
+      font-weight: bold;
     }
 
-    .cards-area {
-      margin-bottom: 20px;
+    .monster-skill-note,
+    .hero-skill-note {
+      margin-top: 14px;
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      padding: 12px;
+      border-radius: 12px;
+      color: #ddd;
+      line-height: 1.6;
+      min-height: 74px;
+    }
+
+    .cards-panel,
+    .log-panel,
+    .shop-panel {
+      background: #1d1d1d;
+      border: 1px solid #333;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .section-sub {
+      color: #bdbdbd;
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.6;
     }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
     }
 
     .card {
-      background: #232323;
+      background: linear-gradient(180deg, #262626 0%, #1d1d1d 100%);
       border: 1px solid #444;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 14px;
-      min-height: 150px;
+      min-height: 220px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
 
-    .card-title {
-      font-size: 18px;
-      font-weight: bold;
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #666;
+    }
+
+    .card-top {
+      margin-bottom: 12px;
+    }
+
+    .card-type {
+      font-size: 13px;
+      color: #bbb;
       margin-bottom: 8px;
     }
 
+    .card-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
     .card-desc {
-      font-size: 14px;
-      color: #ddd;
-      line-height: 1.5;
-      margin-bottom: 12px;
+      color: #e8e8e8;
+      line-height: 1.7;
+      font-size: 15px;
+      min-height: 70px;
+    }
+
+    .card-cost {
+      margin-top: 10px;
+      color: #8fd8ff;
+      font-weight: bold;
     }
 
     .card button,
     .action-btn,
     .shop-btn {
-      background: #4caf50;
-      color: white;
       border: none;
-      padding: 10px 12px;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 12px 14px;
       cursor: pointer;
+      font-size: 15px;
       font-weight: bold;
+    }
+
+    .card button {
+      background: #4caf50;
+      color: #fff;
+      width: 100%;
+    }
+
+    .card button:hover:not(:disabled),
+    .action-btn:hover:not(:disabled),
+    .shop-btn:hover:not(:disabled) {
+      opacity: 0.92;
     }
 
     .card button:disabled,
     .action-btn:disabled,
     .shop-btn:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
     }
 
     .actions {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin: 18px 0;
       flex-wrap: wrap;
     }
 
-    .action-btn.end {
-      background: #ff7043;
+    .action-btn {
+      background: #ff7a3d;
+      color: #fff;
+      min-width: 140px;
     }
 
-    .log {
-      background: #101010;
-      border: 1px solid #333;
-      border-radius: 12px;
+    .action-btn.restart {
+      background: #4d7cff;
+    }
+
+    .log-panel {
+      margin-top: 18px;
+    }
+
+    .log-box {
+      background: #111;
+      border: 1px solid #2d2d2d;
+      border-radius: 14px;
       padding: 14px;
       min-height: 140px;
       white-space: pre-line;
-      line-height: 1.6;
+      line-height: 1.7;
+      color: #f2f2f2;
     }
 
-    .shop {
+    .shop-panel {
+      margin-top: 18px;
       display: none;
-      margin-top: 20px;
-      background: #1e1e1e;
-      border: 1px solid #555;
-      border-radius: 12px;
-      padding: 16px;
     }
 
     .shop-options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
+      gap: 14px;
     }
 
     .shop-item {
-      background: #252525;
+      background: linear-gradient(180deg, #262626 0%, #202020 100%);
       border: 1px solid #444;
-      border-radius: 10px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
     }
 
-    .small {
-      color: #aaa;
-      font-size: 13px;
+    .shop-item h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
     }
 
-    @media (max-width: 768px) {
-      .status-grid,
-      .battle-area {
+    .shop-desc {
+      color: #ddd;
+      line-height: 1.7;
+      min-height: 68px;
+      margin-bottom: 10px;
+    }
+
+    .shop-price {
+      color: #ffd56a;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .shop-btn {
+      background: #8c5bff;
+      color: #fff;
+      width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      .top-status {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .battle-board {
         grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 40px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .top-status {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 34px;
+      }
+
+      .character-head {
+        align-items: flex-start;
       }
     }
   </style>
@@ -215,80 +410,212 @@
   </div>
 
   <div class="container">
-    <h1>卡牌闯关</h1>
+    <div class="title">卡牌冒险</div>
 
-    <div class="status-grid">
-      <div class="panel">
-        <h2>进度</h2>
-        <div class="line">关卡：<span id="levelText">1</span> / 50</div>
-        <div class="line">金币：<span id="goldText">0</span></div>
-        <div class="line">当前状态：<span id="stageTypeText">普通关</span></div>
-        <div class="line small">每 3 关可进商店，每 5 关小BOSS，每 10 关大BOSS</div>
+    <div class="top-status">
+      <div class="mini-panel">
+        <div class="label">关卡</div>
+        <div class="value"><span id="levelText">1</span>/50</div>
       </div>
-
-      <div class="panel">
-        <h2>玩家资讯</h2>
-        <div class="line">HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span></div>
-        <div class="line">能量：<span id="energyText">5</span> / <span id="energyMaxText">5</span></div>
-        <div class="line">护盾：<span id="playerShieldText">0</span></div>
+      <div class="mini-panel">
+        <div class="label">金币</div>
+        <div class="value" id="goldText">0</div>
       </div>
-    </div>
-
-    <div class="battle-area">
-      <div class="panel">
-        <h2>玩家</h2>
-        <div>生命值</div>
-        <div class="bar-wrap">
-          <div class="hp-bar" id="playerHpBar" style="width: 100%;"></div>
-        </div>
-        <div class="shield-text">护盾：<span id="playerShieldText2">0</span></div>
+      <div class="mini-panel">
+        <div class="label">当前类型</div>
+        <div class="value" id="stageTypeText">普通关</div>
       </div>
-
-      <div class="panel">
-        <h2>怪物</h2>
-        <div class="line">名称：<span id="monsterNameText">史莱姆</span></div>
-        <div class="line">攻击：<span id="monsterAtkText">8</span></div>
-        <div>生命值</div>
-        <div class="bar-wrap">
-          <div class="hp-bar" id="monsterHpBar" style="width: 100%;"></div>
-        </div>
-        <div class="line">HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+      <div class="mini-panel">
+        <div class="label">当前手牌数</div>
+        <div class="value" id="handCountText">4</div>
       </div>
     </div>
 
-    <div class="panel cards-area">
-      <h2>手牌</h2>
-      <div class="small">每回合会补满能量，卡牌固定 3 张，适合纯网页简化版</div>
+    <div class="battle-board">
+      <div class="character-panel">
+        <div class="character-head">
+          <div class="avatar hero-avatar">🧙</div>
+          <div class="character-title">
+            <h2>主角</h2>
+            <div class="character-sub">你的回合制卡牌冒险者</div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-top">
+            <div>HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span> <span class="shield-badge">护盾 <span id="playerShieldText">0</span></span></div>
+          </div>
+          <div class="bar-bg">
+            <div class="hp-bar" id="playerHpBar" style="width:100%"></div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-top">
+            <div>能量：<span id="energyText">5</span> / <span id="energyMaxText">5</span></div>
+          </div>
+          <div class="bar-bg">
+            <div class="energy-bar" id="energyBar" style="width:100%"></div>
+          </div>
+        </div>
+
+        <div class="hero-skill-note" id="heroInfoText">
+          每回合会随机获得新卡牌。回合结束后，怪物会攻击你。
+        </div>
+      </div>
+
+      <div class="character-panel">
+        <div class="character-head">
+          <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
+          <div class="character-title">
+            <h2 id="monsterNameText">史莱姆</h2>
+            <div class="character-sub" id="monsterTypeText">普通怪物</div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-top">
+            <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+          </div>
+          <div class="bar-bg">
+            <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-top">
+            <div>攻击力：<span id="monsterAtkText">8</span></div>
+          </div>
+        </div>
+
+        <div class="monster-skill-note" id="monsterInfoText">
+          怪物会在你的回合结束后发动攻击。
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-panel">
+      <div class="section-title">卡牌</div>
+      <div class="section-sub">
+        每回合会随机发 4 张牌。商店买到的特殊卡牌，之后才有机会在发牌时出现。
+      </div>
       <div class="cards" id="cardsContainer"></div>
+
+      <div class="actions">
+        <button class="action-btn" id="endTurnBtn" onclick="endTurn()">结束回合</button>
+        <button class="action-btn restart" onclick="restartGame()">重新开始</button>
+      </div>
     </div>
 
-    <div class="actions">
-      <button class="action-btn end" onclick="endTurn()" id="endTurnBtn">结束回合</button>
-      <button class="action-btn" onclick="restartGame()">重新开始</button>
-    </div>
-
-    <div class="log" id="logBox">游戏开始，准备战斗！</div>
-
-    <div class="shop" id="shopBox">
-      <h2>商店</h2>
-      <div class="small">随机出现 3 个选项，选择其中 1 个</div>
+    <div class="shop-panel" id="shopBox">
+      <div class="section-title">商店</div>
+      <div class="section-sub">每过 3 关进入一次商店，随机出现 3 个选项，你可以选择购买其中一个。</div>
       <div class="shop-options" id="shopOptions"></div>
+    </div>
+
+    <div class="log-panel">
+      <div class="section-title">战斗纪录</div>
+      <div class="log-box" id="logBox">游戏开始，准备战斗。</div>
     </div>
   </div>
 
   <script>
     const HOME_URL = "https://0urrigvojb.github.io/bng-tools/";
 
-    const monsterNames = ["史莱姆", "骷髅兵", "狼人", "毒蜘蛛", "暗影盗贼", "石像鬼", "魔犬", "诅咒骑士"];
-    const miniBossNames = ["地牢守卫", "双刃兽人", "幽冥法师", "狂暴巨熊"];
-    const bossNames = ["深渊魔王", "黑炎骑士", "远古巨龙", "终焉领主"];
+    const normalMonsters = [
+      { name: "史莱姆", emoji: "🟢", note: "黏糊糊的怪物，攻击不高但数量常见。" },
+      { name: "骷髅兵", emoji: "💀", note: "基础亡灵怪物，动作直接。" },
+      { name: "毒蜘蛛", emoji: "🕷️", note: "速度快，给人压迫感。" },
+      { name: "狼人", emoji: "🐺", note: "攻击偏强，血量也不低。" },
+      { name: "石像鬼", emoji: "🗿", note: "防御感很强的怪物。" }
+    ];
+
+    const miniBossMonsters = [
+      { name: "地牢守卫", emoji: "🛡️", note: "小BOSS，拥有更高的生命与攻击。" },
+      { name: "幽冥法师", emoji: "🔮", note: "充满诡异气息的小BOSS。" },
+      { name: "双刃兽人", emoji: "🪓", note: "双刃武器，攻击力更高。" }
+    ];
+
+    const bossMonsters = [
+      { name: "深渊魔王", emoji: "😈", note: "大BOSS，拥有极高的压制力。" },
+      { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，火焰与重甲并存。" },
+      { name: "终焉领主", emoji: "👹", note: "后期强敌，攻防都更高。" }
+    ];
 
     let state = {};
+
+    function goHome() {
+      window.location.href = HOME_URL;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function chance(rate) {
+      return Math.random() < rate;
+    }
+
+    function getStageType(level) {
+      if (level % 10 === 0) return "大BOSS";
+      if (level % 5 === 0) return "小BOSS";
+      return "普通关";
+    }
+
+    function createMonster(level) {
+      const type = getStageType(level);
+      let pool;
+      let data;
+
+      if (type === "大BOSS") {
+        pool = bossMonsters;
+      } else if (type === "小BOSS") {
+        pool = miniBossMonsters;
+      } else {
+        pool = normalMonsters;
+      }
+
+      data = pool[randomInt(0, pool.length - 1)];
+
+      let hp = 0;
+      let atk = 0;
+
+      if (type === "普通关") {
+        hp = 30 + level * 8 + randomInt(0, 14);
+        atk = 6 + Math.floor(level * 1.5) + Math.floor(state.player.maxHp * 0.025);
+      } else if (type === "小BOSS") {
+        hp = 78 + level * 12 + randomInt(8, 20);
+        atk = 11 + Math.floor(level * 1.8) + Math.floor(state.player.maxHp * 0.035);
+      } else {
+        hp = 130 + level * 15 + randomInt(15, 35);
+        atk = 15 + Math.floor(level * 2.2) + Math.floor(state.player.maxHp * 0.045);
+      }
+
+      return {
+        type,
+        name: data.name,
+        emoji: data.emoji,
+        note: data.note,
+        hp,
+        maxHp: hp,
+        atk
+      };
+    }
+
+    function getReward(level) {
+      if (level % 10 === 0) return randomInt(10, 25);
+      if (level % 5 === 0) return randomInt(5, 20);
+      return randomInt(1, 10);
+    }
 
     function initGame() {
       state = {
         level: 1,
         gold: 0,
+        inShop: false,
+        gameOver: false,
+        deckSizePerTurn: 4,
+        hand: [],
         player: {
           hp: 100,
           maxHp: 100,
@@ -304,132 +631,130 @@
           regen: 0,
           doubleStrike: 0
         },
-        specialCards: [],
-        currentMonster: null,
-        inShop: false,
-        gameOver: false
+        ownedSpecialCards: [],
+        currentMonster: null
       };
 
-      startLevel();
+      startLevel(true);
       log("游戏开始，进入第 1 关。");
     }
 
-    function goHome() {
-      window.location.href = HOME_URL;
-    }
+    function getBaseCardPool() {
+      const atk1 = 12 + Math.floor(state.level * 0.8) + state.upgrades.atkBonus;
+      const atk2 = 18 + Math.floor(state.level * 1.0) + state.upgrades.atkBonus;
+      const def1 = 10 + Math.floor(state.level * 0.5) + state.upgrades.defBonus;
+      const def2 = 16 + Math.floor(state.level * 0.6) + state.upgrades.defBonus;
+      const heal1 = 12 + Math.floor(state.level * 0.6) + state.upgrades.healBonus;
+      const heal2 = 20 + Math.floor(state.level * 0.7) + state.upgrades.healBonus;
 
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function getStageType(level) {
-      if (level % 10 === 0) return "大BOSS";
-      if (level % 5 === 0) return "小BOSS";
-      return "普通关";
-    }
-
-    function createMonster(level) {
-      const type = getStageType(level);
-      let name = "";
-      let hp = 0;
-      let atk = 0;
-      const playerMaxHp = state.player.maxHp;
-
-      if (type === "普通关") {
-        name = monsterNames[randomInt(0, monsterNames.length - 1)];
-        hp = 28 + level * 8 + randomInt(0, 12);
-        atk = 6 + Math.floor(level * 1.5) + Math.floor(playerMaxHp * 0.03);
-      } else if (type === "小BOSS") {
-        name = miniBossNames[randomInt(0, miniBossNames.length - 1)];
-        hp = 70 + level * 12 + randomInt(8, 20);
-        atk = 10 + Math.floor(level * 1.8) + Math.floor(playerMaxHp * 0.04);
-      } else {
-        name = bossNames[randomInt(0, bossNames.length - 1)];
-        hp = 120 + level * 15 + randomInt(10, 30);
-        atk = 14 + Math.floor(level * 2.2) + Math.floor(playerMaxHp * 0.05);
-      }
-
-      return {
-        type,
-        name,
-        hp,
-        maxHp: hp,
-        atk
-      };
-    }
-
-    function getReward(level) {
-      if (level % 10 === 0) return randomInt(10, 25);
-      if (level % 5 === 0) return randomInt(5, 20);
-      return randomInt(1, 10);
-    }
-
-    function getCards() {
-      const atkBase = 14 + Math.floor(state.level * 0.8) + state.upgrades.atkBonus;
-      const defBase = 10 + Math.floor(state.level * 0.5) + state.upgrades.defBonus;
-      const healBase = 12 + Math.floor(state.level * 0.6) + state.upgrades.healBonus;
-
-      const baseCards = [
+      return [
         {
-          id: "attack",
-          name: "攻击",
-          desc: `造成 ${atkBase} 点伤害`,
+          id: "atk_1",
+          name: "斩击",
           type: "attack",
-          value: atkBase,
-          cost: 1
+          cardType: "攻击",
+          value: atk1,
+          cost: 1,
+          desc: `造成 ${atk1} 点伤害`
         },
         {
-          id: "defense",
-          name: "防御",
-          desc: `获得 ${defBase} 点护盾`,
+          id: "atk_2",
+          name: "重击",
+          type: "attack",
+          cardType: "攻击",
+          value: atk2,
+          cost: 2,
+          desc: `造成 ${atk2} 点伤害`
+        },
+        {
+          id: "def_1",
+          name: "格挡",
           type: "defense",
-          value: defBase,
-          cost: 1
+          cardType: "防御",
+          value: def1,
+          cost: 1,
+          desc: `获得 ${def1} 点护盾`
         },
         {
-          id: "heal",
-          name: "治疗",
-          desc: `恢复 ${healBase} 点生命`,
+          id: "def_2",
+          name: "坚守",
+          type: "defense",
+          cardType: "防御",
+          value: def2,
+          cost: 2,
+          desc: `获得 ${def2} 点护盾`
+        },
+        {
+          id: "heal_1",
+          name: "治愈",
           type: "heal",
-          value: healBase,
-          cost: 2
+          cardType: "治疗",
+          value: heal1,
+          cost: 2,
+          desc: `恢复 ${heal1} 点生命`
+        },
+        {
+          id: "heal_2",
+          name: "大治疗",
+          type: "heal",
+          cardType: "治疗",
+          value: heal2,
+          cost: 3,
+          desc: `恢复 ${heal2} 点生命`
         }
       ];
+    }
 
-      return [...baseCards, ...state.specialCards];
+    function getFullCardPool() {
+      return [...getBaseCardPool(), ...state.ownedSpecialCards];
+    }
+
+    function drawNewHand() {
+      const fullPool = getFullCardPool();
+      const hand = [];
+
+      for (let i = 0; i < state.deckSizePerTurn; i++) {
+        const card = fullPool[randomInt(0, fullPool.length - 1)];
+        hand.push({ ...card, uid: Date.now() + "_" + i + "_" + Math.random() });
+      }
+
+      state.hand = hand;
     }
 
     function renderCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
-      const cards = getCards();
-
-      cards.forEach(card => {
+      state.hand.forEach(card => {
         const div = document.createElement("div");
         div.className = "card";
 
-        const enoughEnergy = state.player.energy >= card.cost && !state.inShop && !state.gameOver;
+        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost;
 
         div.innerHTML = `
-          <div>
-            <div class="card-title">${card.name}</div>
+          <div class="card-top">
+            <div class="card-type">${card.cardType}</div>
+            <div class="card-name">${card.name}</div>
             <div class="card-desc">${card.desc}</div>
-            <div>消耗能量：${card.cost}</div>
+            <div class="card-cost">消耗能量：${card.cost}</div>
           </div>
-          <button ${enoughEnergy ? "" : "disabled"} onclick="playCard('${card.id}')">使用</button>
+          <button ${canUse ? "" : "disabled"}>使用这张牌</button>
         `;
 
+        div.querySelector("button").onclick = () => playCard(card.uid);
         container.appendChild(div);
       });
+
+      document.getElementById("handCountText").textContent = state.hand.length;
     }
 
-    function playCard(cardId) {
+    function playCard(uid) {
       if (state.inShop || state.gameOver) return;
 
-      const cards = getCards();
-      const card = cards.find(c => c.id === cardId);
-      if (!card) return;
+      const cardIndex = state.hand.findIndex(card => card.uid === uid);
+      if (cardIndex === -1) return;
+
+      const card = state.hand[cardIndex];
 
       if (state.player.energy < card.cost) {
         log("能量不足。");
@@ -440,57 +765,58 @@
 
       if (card.type === "attack") {
         let dmg = card.value;
+        let critText = "";
 
-        if (state.upgrades.critRate > 0) {
-          const roll = Math.random();
-          if (roll < state.upgrades.critRate) {
-            dmg = Math.floor(dmg * 1.6);
-            log(`暴击！造成 ${dmg} 点伤害！`);
-          } else {
-            log(`你使用【${card.name}】，造成 ${dmg} 点伤害。`);
-          }
-        } else {
-          log(`你使用【${card.name}】，造成 ${dmg} 点伤害。`);
+        if (state.upgrades.critRate > 0 && chance(state.upgrades.critRate)) {
+          dmg = Math.floor(dmg * 1.6);
+          critText = "（暴击）";
         }
 
-        damageMonster(dmg);
+        state.currentMonster.hp -= dmg;
+        if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
 
-        if (state.upgrades.doubleStrike > 0 && Math.random() < state.upgrades.doubleStrike && state.currentMonster.hp > 0) {
+        log(`你使用【${card.name}】${critText}，造成 ${dmg} 点伤害。`);
+
+        if (state.upgrades.doubleStrike > 0 && state.currentMonster.hp > 0 && chance(state.upgrades.doubleStrike)) {
           const extra = Math.floor(card.value * 0.7);
-          logAppend(`连击发动，再造成 ${extra} 点伤害！`);
-          damageMonster(extra);
+          state.currentMonster.hp -= extra;
+          if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
+          logAppend(`连击触发，再造成 ${extra} 点伤害。`);
         }
       }
 
       if (card.type === "defense") {
         state.player.shield += card.value;
-        log(`你使用【防御】，获得 ${card.value} 护盾。`);
+        log(`你使用【${card.name}】，获得 ${card.value} 点护盾。`);
       }
 
       if (card.type === "heal") {
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.value);
-        log(`你使用【治疗】，恢复 ${state.player.hp - before} 点生命。`);
+        log(`你使用【${card.name}】，恢复 ${state.player.hp - before} 点生命。`);
       }
 
       if (card.type === "special_attack") {
-        log(`你使用【烈焰斩】，造成 ${card.value} 点伤害。`);
-        damageMonster(card.value);
+        state.currentMonster.hp -= card.value;
+        if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
+        log(`你使用【${card.name}】，造成 ${card.value} 点伤害。`);
       }
 
-      if (card.type === "special_heal") {
-        const heal = card.value;
-        const shield = Math.floor(card.value * 0.7);
+      if (card.type === "special_heal_shield") {
         const before = state.player.hp;
-        state.player.hp = Math.min(state.player.maxHp, state.player.hp + heal);
-        state.player.shield += shield;
-        log(`你使用【圣光庇护】，恢复 ${state.player.hp - before} HP，并获得 ${shield} 护盾。`);
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
+        state.player.shield += card.shieldValue;
+        log(`你使用【${card.name}】，恢复 ${state.player.hp - before} HP，并获得 ${card.shieldValue} 点护盾。`);
       }
 
-      if (card.type === "special_energy") {
-        state.player.energy = Math.min(state.player.maxEnergy, state.player.energy + card.value);
-        log(`你使用【能量涌动】，回复 ${card.value} 点能量。`);
+      if (card.type === "special_energy_attack") {
+        state.currentMonster.hp -= card.damageValue;
+        if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
+        state.player.energy = Math.min(state.player.maxEnergy, state.player.energy + card.energyGain);
+        log(`你使用【${card.name}】，造成 ${card.damageValue} 点伤害，并回复 ${card.energyGain} 点能量。`);
       }
+
+      state.hand.splice(cardIndex, 1);
 
       if (state.currentMonster.hp <= 0) {
         winBattle();
@@ -500,42 +826,40 @@
       updateUI();
     }
 
-    function damageMonster(dmg) {
-      state.currentMonster.hp -= dmg;
-      if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
-    }
-
     function endTurn() {
       if (state.inShop || state.gameOver) return;
-      monsterAttack();
+      monsterTurn();
     }
 
-    function monsterAttack() {
+    function monsterTurn() {
       if (state.currentMonster.hp <= 0) return;
 
-      let dmg = state.currentMonster.atk;
+      let incoming = state.currentMonster.atk;
+      let shieldBefore = state.player.shield;
+      let hpDamage = 0;
 
       if (state.player.shield > 0) {
-        const blocked = Math.min(state.player.shield, dmg);
-        state.player.shield -= blocked;
-        dmg -= blocked;
+        const block = Math.min(state.player.shield, incoming);
+        state.player.shield -= block;
+        incoming -= block;
       }
 
-      if (dmg > 0) {
-        state.player.hp -= dmg;
+      if (incoming > 0) {
+        hpDamage = incoming;
+        state.player.hp -= hpDamage;
+        if (state.player.hp < 0) state.player.hp = 0;
       }
 
-      if (state.player.hp < 0) state.player.hp = 0;
-
-      let msg = `怪物攻击你，造成 ${state.currentMonster.atk} 点攻击`;
-      if (state.player.hp > 0) {
-        msg += `。你剩余 HP：${state.player.hp}`;
+      if (shieldBefore > 0) {
+        const consumed = shieldBefore - state.player.shield;
+        log(`怪物攻击了你，先扣除 ${consumed} 点护盾${hpDamage > 0 ? `，再扣除 ${hpDamage} 点生命` : "。"} `);
+      } else {
+        log(`怪物攻击了你，造成 ${hpDamage} 点生命伤害。`);
       }
-      log(msg);
 
       if (state.player.hp <= 0) {
         state.gameOver = true;
-        log("你被击败了，游戏结束。请按重新开始。");
+        logAppend("你被击败了，游戏结束。");
         updateUI();
         return;
       }
@@ -547,8 +871,8 @@
       }
 
       state.player.energy = state.player.maxEnergy;
-      state.player.shield = 0;
-      logAppend("新回合开始，你的能量已补满。");
+      drawNewHand();
+      logAppend("新的回合开始，你获得了新的随机卡牌，能量也已补满。");
 
       updateUI();
     }
@@ -557,7 +881,7 @@
       const reward = getReward(state.level);
       state.gold += reward;
 
-      log(`你击败了 ${state.currentMonster.name}！获得 ${reward} 金币。`);
+      log(`你击败了【${state.currentMonster.name}】！获得 ${reward} 金币。`);
 
       if (state.level >= 50) {
         state.gameOver = true;
@@ -566,22 +890,27 @@
         return;
       }
 
+      const clearedLevel = state.level;
       state.level++;
 
-      if ((state.level - 1) % 3 === 0) {
+      if (clearedLevel % 3 === 0) {
         openShop();
       } else {
         startLevel();
       }
     }
 
-    function startLevel() {
+    function startLevel(isFirst = false) {
       state.inShop = false;
       document.getElementById("shopBox").style.display = "none";
 
       state.currentMonster = createMonster(state.level);
       state.player.energy = state.player.maxEnergy;
-      state.player.shield = 0;
+      drawNewHand();
+
+      if (!isFirst) {
+        log(`进入第 ${state.level} 关：${state.currentMonster.name}`);
+      }
 
       updateUI();
     }
@@ -592,149 +921,154 @@
 
       const pool = [
         {
-          key: "energy",
           title: "增加能量球",
-          desc: "能量上限 +1",
+          desc: "能量上限 +1，并立即补满。",
+          getCost: () => randomInt(12, 22),
           action: () => {
             state.player.maxEnergy += 1;
             state.player.energy = state.player.maxEnergy;
-            log("购买成功：能量上限 +1");
+            log("购买成功：能量上限 +1。");
           }
         },
         {
-          key: "upgradeAttack",
           title: "升级攻击卡",
-          desc: "攻击卡伤害 +4",
+          desc: "所有基础攻击牌伤害 +4。",
+          getCost: () => randomInt(14, 24),
           action: () => {
             state.upgrades.atkBonus += 4;
-            log("购买成功：攻击卡升级");
+            log("购买成功：攻击牌强化。");
           }
         },
         {
-          key: "upgradeDefense",
           title: "升级防御卡",
-          desc: "防御卡护盾 +4",
+          desc: "所有基础防御牌护盾 +4。",
+          getCost: () => randomInt(14, 24),
           action: () => {
             state.upgrades.defBonus += 4;
-            log("购买成功：防御卡升级");
+            log("购买成功：防御牌强化。");
           }
         },
         {
-          key: "upgradeHeal",
           title: "升级治疗卡",
-          desc: "治疗卡恢复 +4",
+          desc: "所有基础治疗牌恢复 +4。",
+          getCost: () => randomInt(14, 24),
           action: () => {
             state.upgrades.healBonus += 4;
-            log("购买成功：治疗卡升级");
+            log("购买成功：治疗牌强化。");
           }
         },
         {
-          key: "effectCrit",
-          title: "卡牌附加效果",
-          desc: "增加 12% 暴击率",
+          title: "附加效果：暴击",
+          desc: "攻击牌增加 12% 暴击机率。",
+          getCost: () => randomInt(18, 28),
           action: () => {
             state.upgrades.critRate = Math.min(0.5, state.upgrades.critRate + 0.12);
-            log("购买成功：获得暴击效果");
+            log("购买成功：获得暴击效果。");
           }
         },
         {
-          key: "effectRegen",
-          title: "卡牌附加效果",
-          desc: "每回合结束后恢复 6 HP",
+          title: "附加效果：持续治疗",
+          desc: "每回合结束后恢复 6 点生命。",
+          getCost: () => randomInt(18, 28),
           action: () => {
             state.upgrades.regen += 6;
-            log("购买成功：获得持续治疗效果");
+            log("购买成功：获得持续治疗效果。");
           }
         },
         {
-          key: "effectDouble",
-          title: "卡牌附加效果",
-          desc: "攻击有 18% 机率触发连击",
+          title: "附加效果：连击",
+          desc: "攻击牌增加 18% 连击机率。",
+          getCost: () => randomInt(18, 28),
           action: () => {
             state.upgrades.doubleStrike = Math.min(0.45, state.upgrades.doubleStrike + 0.18);
-            log("购买成功：获得连击效果");
+            log("购买成功：获得连击效果。");
           }
         },
         {
-          key: "maxHp",
           title: "增加血量上限",
-          desc: "最大生命 +20，并恢复 20 HP",
+          desc: "最大生命 +20，并恢复 20 HP。",
+          getCost: () => randomInt(15, 25),
           action: () => {
             state.player.maxHp += 20;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 20);
-            log("购买成功：最大生命提升");
+            log("购买成功：血量上限提升。");
           }
         },
         {
-          key: "healNow",
           title: "补血",
-          desc: "恢复 35 HP",
+          desc: "立即恢复 35 HP。",
+          getCost: () => randomInt(10, 18),
           action: () => {
             const before = state.player.hp;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 35);
-            log(`购买成功：恢复 ${state.player.hp - before} HP`);
+            log(`购买成功：恢复 ${state.player.hp - before} 点生命。`);
           }
         },
         {
-          key: "specialCard1",
-          title: "获得特殊卡牌",
-          desc: "烈焰斩：高伤害攻击卡",
+          title: "特殊卡牌：烈焰斩",
+          desc: "之后会加入牌池。高伤害攻击牌，造成 34 点伤害。",
+          getCost: () => randomInt(18, 30),
           action: () => {
-            if (!state.specialCards.find(c => c.id === "special_flame")) {
-              state.specialCards.push({
-                id: "special_flame",
+            if (!state.ownedSpecialCards.find(c => c.id === "sp_flame")) {
+              state.ownedSpecialCards.push({
+                id: "sp_flame",
                 name: "烈焰斩",
-                desc: "造成 32 点伤害",
                 type: "special_attack",
-                value: 32,
-                cost: 3
+                cardType: "特殊攻击",
+                value: 34,
+                cost: 3,
+                desc: "造成 34 点伤害"
               });
-              log("购买成功：获得特殊卡【烈焰斩】");
+              log("购买成功：特殊卡【烈焰斩】已加入你的牌池。");
             } else {
-              state.gold += 10;
-              log("你已有此卡，改为补偿 10 金币。");
+              state.gold += 8;
+              log("你已经拥有这张特殊卡，补偿 8 金币。");
             }
           }
         },
         {
-          key: "specialCard2",
-          title: "获得特殊卡牌",
-          desc: "圣光庇护：治疗并获得护盾",
+          title: "特殊卡牌：圣光庇护",
+          desc: "之后会加入牌池。恢复生命并获得护盾。",
+          getCost: () => randomInt(18, 30),
           action: () => {
-            if (!state.specialCards.find(c => c.id === "special_holy")) {
-              state.specialCards.push({
-                id: "special_holy",
+            if (!state.ownedSpecialCards.find(c => c.id === "sp_holy")) {
+              state.ownedSpecialCards.push({
+                id: "sp_holy",
                 name: "圣光庇护",
-                desc: "恢复 20 HP 并获得 14 护盾",
-                type: "special_heal",
-                value: 20,
-                cost: 3
+                type: "special_heal_shield",
+                cardType: "特殊辅助",
+                healValue: 18,
+                shieldValue: 14,
+                cost: 3,
+                desc: "恢复 18 HP，并获得 14 点护盾"
               });
-              log("购买成功：获得特殊卡【圣光庇护】");
+              log("购买成功：特殊卡【圣光庇护】已加入你的牌池。");
             } else {
-              state.gold += 10;
-              log("你已有此卡，改为补偿 10 金币。");
+              state.gold += 8;
+              log("你已经拥有这张特殊卡，补偿 8 金币。");
             }
           }
         },
         {
-          key: "specialCard3",
-          title: "获得特殊卡牌",
-          desc: "能量涌动：恢复能量",
+          title: "特殊卡牌：能量冲击",
+          desc: "之后会加入牌池。造成伤害并回复能量。",
+          getCost: () => randomInt(18, 30),
           action: () => {
-            if (!state.specialCards.find(c => c.id === "special_energy")) {
-              state.specialCards.push({
-                id: "special_energy",
-                name: "能量涌动",
-                desc: "恢复 2 点能量",
-                type: "special_energy",
-                value: 2,
-                cost: 1
+            if (!state.ownedSpecialCards.find(c => c.id === "sp_energy")) {
+              state.ownedSpecialCards.push({
+                id: "sp_energy",
+                name: "能量冲击",
+                type: "special_energy_attack",
+                cardType: "特殊攻击",
+                damageValue: 16,
+                energyGain: 1,
+                cost: 1,
+                desc: "造成 16 点伤害，并回复 1 点能量"
               });
-              log("购买成功：获得特殊卡【能量涌动】");
+              log("购买成功：特殊卡【能量冲击】已加入你的牌池。");
             } else {
-              state.gold += 10;
-              log("你已有此卡，改为补偿 10 金币。");
+              state.gold += 8;
+              log("你已经拥有这张特殊卡，补偿 8 金币。");
             }
           }
         }
@@ -742,35 +1076,33 @@
 
       const selected = [];
       while (selected.length < 3) {
-        const item = pool[randomInt(0, pool.length - 1)];
-        if (!selected.includes(item)) selected.push(item);
+        const pick = pool[randomInt(0, pool.length - 1)];
+        if (!selected.includes(pick)) selected.push(pick);
       }
 
       const shopOptions = document.getElementById("shopOptions");
       shopOptions.innerHTML = "";
 
       selected.forEach(item => {
-        const cost = randomInt(12, 30);
+        const cost = item.getCost();
 
         const div = document.createElement("div");
         div.className = "shop-item";
         div.innerHTML = `
           <h3>${item.title}</h3>
-          <div style="margin-bottom:8px;">${item.desc}</div>
-          <div style="margin-bottom:10px;">价格：${cost} 金币</div>
+          <div class="shop-desc">${item.desc}</div>
+          <div class="shop-price">价格：${cost} 金币</div>
           <button class="shop-btn" ${state.gold >= cost ? "" : "disabled"}>购买</button>
         `;
 
-        const btn = div.querySelector("button");
-        btn.onclick = () => buyShopItem(item, cost);
-
+        div.querySelector("button").onclick = () => buyItem(item, cost);
         shopOptions.appendChild(div);
       });
 
       updateUI();
     }
 
-    function buyShopItem(item, cost) {
+    function buyItem(item, cost) {
       if (!state.inShop) return;
       if (state.gold < cost) {
         log("金币不足。");
@@ -779,9 +1111,9 @@
 
       state.gold -= cost;
       item.action();
+
       state.inShop = false;
       document.getElementById("shopBox").style.display = "none";
-
       startLevel();
     }
 
@@ -792,23 +1124,33 @@
 
       document.getElementById("playerHpText").textContent = state.player.hp;
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
+      document.getElementById("playerShieldText").textContent = state.player.shield;
       document.getElementById("energyText").textContent = state.player.energy;
       document.getElementById("energyMaxText").textContent = state.player.maxEnergy;
-      document.getElementById("playerShieldText").textContent = state.player.shield;
-      document.getElementById("playerShieldText2").textContent = state.player.shield;
 
-      const playerHpPercent = (state.player.hp / state.player.maxHp) * 100;
-      document.getElementById("playerHpBar").style.width = playerHpPercent + "%";
+      document.getElementById("playerHpBar").style.width =
+        ((state.player.hp / state.player.maxHp) * 100) + "%";
+
+      document.getElementById("energyBar").style.width =
+        ((state.player.energy / state.player.maxEnergy) * 100) + "%";
 
       document.getElementById("monsterNameText").textContent = state.currentMonster.name;
-      document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
+      document.getElementById("monsterTypeText").textContent = state.currentMonster.type;
+      document.getElementById("monsterEmojiText").textContent = state.currentMonster.emoji;
       document.getElementById("monsterHpText").textContent = state.currentMonster.hp;
       document.getElementById("monsterMaxHpText").textContent = state.currentMonster.maxHp;
+      document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
+      document.getElementById("monsterHpBar").style.width =
+        ((state.currentMonster.hp / state.currentMonster.maxHp) * 100) + "%";
 
-      const monsterHpPercent = (state.currentMonster.hp / state.currentMonster.maxHp) * 100;
-      document.getElementById("monsterHpBar").style.width = monsterHpPercent + "%";
+      document.getElementById("monsterInfoText").textContent =
+        `${state.currentMonster.note} 当前攻击力为 ${state.currentMonster.atk}。`;
+
+      document.getElementById("heroInfoText").textContent =
+        `本回合随机发牌 ${state.hand.length} 张。特殊卡数量：${state.ownedSpecialCards.length}。`;
 
       document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
+
       renderCards();
     }
 
