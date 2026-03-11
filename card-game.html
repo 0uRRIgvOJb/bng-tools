@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>卡牌冒险</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(180deg, #0f1115 0%, #181c22 100%);
+      background:
+        radial-gradient(circle at top, rgba(75, 55, 20, 0.18), transparent 28%),
+        linear-gradient(180deg, #0d1015 0%, #151a20 100%);
       color: #fff;
+      min-height: 100vh;
     }
 
     .topbar {
@@ -21,17 +22,17 @@
       justify-content: flex-end;
       align-items: center;
       padding: 12px 18px;
-      background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid #2a2f37;
+      background: rgba(0,0,0,0.35);
+      border-bottom: 1px solid #2a3038;
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 20;
       backdrop-filter: blur(6px);
     }
 
     .home-btn {
       border: none;
-      background: #f7b500;
+      background: #d8a642;
       color: #111;
       padding: 10px 16px;
       border-radius: 10px;
@@ -41,51 +42,19 @@
     }
 
     .container {
-      max-width: 1250px;
+      max-width: 1260px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 22px 18px 40px;
     }
 
     .title {
       text-align: center;
       font-size: 48px;
-      font-weight: 800;
-      margin: 8px 0 22px;
+      font-weight: 900;
       letter-spacing: 2px;
-    }
-
-    .top-status {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .mini-panel,
-    .character-panel,
-    .cards-panel,
-    .log-panel,
-    .shop-panel {
-      background: #1b1f27;
-      border: 1px solid #2d3440;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    }
-
-    .mini-panel {
-      padding: 16px;
-      text-align: center;
-    }
-
-    .mini-panel .label {
-      color: #aeb7c6;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    .mini-panel .value {
-      font-size: 28px;
-      font-weight: bold;
+      margin: 8px 0 20px;
+      color: #f8f1e4;
+      text-shadow: 0 0 12px rgba(216,166,66,0.18);
     }
 
     .battle-board {
@@ -95,9 +64,12 @@
       margin-bottom: 20px;
     }
 
-    .character-panel {
+    .panel {
+      background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
+      border: 1px solid #2d3440;
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
       padding: 20px;
-      min-height: 320px;
     }
 
     .character-head {
@@ -117,18 +89,15 @@
       font-size: 52px;
       flex-shrink: 0;
       border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .hero-avatar {
-      background: linear-gradient(135deg, #28476f, #2996db);
+      background: linear-gradient(135deg, #304965, #2c7dc3);
     }
 
     .monster-avatar {
-      background: linear-gradient(135deg, #612727, #b93b3b);
+      background: linear-gradient(135deg, #5e2525, #ae3d3d);
     }
 
     .character-title h2 {
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       font-size: 30px;
     }
 
@@ -139,7 +108,7 @@
     }
 
     .stat-row {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .stat-top {
@@ -147,8 +116,8 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 10px;
-      font-size: 16px;
       margin-bottom: 8px;
+      font-size: 16px;
       line-height: 1.6;
     }
 
@@ -162,7 +131,7 @@
 
     .hp-bar {
       height: 100%;
-      background: linear-gradient(90deg, #e24b4b, #ff7c7c);
+      background: linear-gradient(90deg, #d94a4a, #ff7a7a);
       transition: width 0.25s ease;
     }
 
@@ -175,47 +144,83 @@
     .shield-badge {
       display: inline-block;
       padding: 4px 10px;
-      background: #224f85;
-      color: #dcedff;
       border-radius: 999px;
+      background: #204f83;
+      color: #e3f4ff;
       font-size: 14px;
       font-weight: bold;
       vertical-align: middle;
     }
 
-    .info-note {
+    .note-box {
       margin-top: 12px;
-      background: #13171d;
-      border: 1px solid #272d37;
+      background: #12161c;
+      border: 1px solid #262d37;
       border-radius: 12px;
       padding: 12px;
       color: #d8dee8;
       line-height: 1.7;
+      min-height: 92px;
+    }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .player-side,
+    .monster-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .side-info {
+      background: #12161c;
+      border: 1px solid #262d37;
+      border-radius: 12px;
+      padding: 12px;
       min-height: 82px;
     }
 
-    .cards-panel,
-    .log-panel,
-    .shop-panel {
+    .side-label {
+      font-size: 13px;
+      color: #aeb7c6;
+      margin-bottom: 8px;
+    }
+
+    .side-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #f7eedf;
+    }
+
+    .monster-layout {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .cards-panel {
+      background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
+      border: 1px solid #2d3440;
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
       padding: 20px;
     }
 
     .section-title {
       font-size: 30px;
-      font-weight: bold;
+      font-weight: 900;
       margin-bottom: 10px;
-    }
-
-    .section-sub {
-      color: #b6beca;
-      font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.7;
     }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 14px;
     }
 
@@ -230,26 +235,12 @@
       justify-content: space-between;
     }
 
-    .card.attack {
-      border-color: rgba(255, 100, 100, 0.45);
-    }
+    .card.attack { border-color: rgba(255, 100, 100, 0.45); }
+    .card.defense { border-color: rgba(100, 190, 255, 0.45); }
+    .card.heal { border-color: rgba(100, 255, 140, 0.45); }
+    .card.special { border-color: rgba(184, 120, 255, 0.60); }
 
-    .card.defense {
-      border-color: rgba(100, 190, 255, 0.45);
-    }
-
-    .card.heal {
-      border-color: rgba(100, 255, 140, 0.45);
-    }
-
-    .card.special {
-      border-color: rgba(184, 120, 255, 0.6);
-      box-shadow: 0 0 0 1px rgba(184, 120, 255, 0.12) inset;
-    }
-
-    .card-top {
-      margin-bottom: 12px;
-    }
+    .card-top { margin-bottom: 12px; }
 
     .card-type {
       font-size: 13px;
@@ -278,26 +269,25 @@
 
     .card button,
     .action-btn,
-    .shop-btn,
-    .next-btn {
+    .modal-btn,
+    .avatar-option {
       border: none;
       border-radius: 12px;
-      padding: 12px 14px;
       cursor: pointer;
-      font-size: 15px;
       font-weight: bold;
     }
 
     .card button {
       width: 100%;
+      padding: 12px 14px;
       background: #3c8f47;
       color: #fff;
+      font-size: 15px;
     }
 
     .card button:disabled,
     .action-btn:disabled,
-    .shop-btn:disabled,
-    .next-btn:disabled {
+    .modal-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
@@ -311,17 +301,19 @@
 
     .action-btn {
       min-width: 140px;
-      background: #ff7a3d;
+      padding: 12px 16px;
+      font-size: 15px;
       color: #fff;
+      background: #8a4d2c;
     }
 
-    .action-btn.restart {
-      background: #4d7cff;
-    }
-
-    .next-btn {
-      background: #8c5bff;
-      color: #fff;
+    .log-panel {
+      margin-top: 20px;
+      background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
+      border: 1px solid #2d3440;
+      border-radius: 18px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+      padding: 20px;
     }
 
     .log-box {
@@ -335,15 +327,84 @@
       color: #f0f3f8;
     }
 
-    .shop-panel {
+    .empty-hand {
+      color: #b6beca;
+      grid-column: 1 / -1;
+      background: #12161c;
+      border: 1px dashed #38404f;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.62);
       display: none;
-      margin-top: 20px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(180deg, #1d2129 0%, #171b22 100%);
+      border: 1px solid #323a47;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.4);
+      padding: 22px;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .modal-sub {
+      color: #b6beca;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .modal-btn {
+      padding: 12px 18px;
+      font-size: 15px;
+      color: #fff;
+      background: #7a56d8;
+    }
+
+    .modal-btn.secondary {
+      background: #556274;
+    }
+
+    .modal-btn.danger {
+      background: #914b2b;
     }
 
     .shop-options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
+      margin-top: 8px;
     }
 
     .shop-item {
@@ -369,39 +430,81 @@
       color: #ffd56a;
       font-weight: bold;
       margin-bottom: 12px;
+      font-size: 18px;
     }
 
-    .shop-btn {
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .setup-block {
+      background: #12161c;
+      border: 1px solid #262d37;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .setup-block h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    .name-input {
       width: 100%;
-      background: #8c5bff;
-      color: #fff;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #3a4352;
+      background: #0f1318;
+      color: white;
+      font-size: 16px;
+      outline: none;
     }
 
-    .hidden {
-      display: none !important;
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .avatar-option {
+      min-height: 100px;
+      background: linear-gradient(180deg, #28303c 0%, #1d232c 100%);
+      border: 2px solid transparent;
+      color: white;
+      font-size: 42px;
+      transition: 0.18s;
+    }
+
+    .avatar-option.selected {
+      border-color: #d8a642;
+      box-shadow: 0 0 0 3px rgba(216,166,66,0.18);
+    }
+
+    .center-text {
+      text-align: center;
     }
 
     @media (max-width: 980px) {
-      .top-status {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .battle-board {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .top-status {
-        grid-template-columns: 1fr;
-      }
-
-      .cards {
+      .battle-board,
+      .monster-layout,
+      .player-grid {
         grid-template-columns: 1fr;
       }
 
       .title {
         font-size: 36px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-title {
+        font-size: 28px;
       }
     }
   </style>
@@ -414,105 +517,109 @@
   <div class="container">
     <div class="title">卡牌冒险</div>
 
-    <div class="top-status">
-      <div class="mini-panel">
-        <div class="label">关卡</div>
-        <div class="value"><span id="levelText">1</span>/50</div>
-      </div>
-      <div class="mini-panel">
-        <div class="label">金币</div>
-        <div class="value" id="goldText">0</div>
-      </div>
-      <div class="mini-panel">
-        <div class="label">当前类型</div>
-        <div class="value" id="stageTypeText">普通关</div>
-      </div>
-      <div class="mini-panel">
-        <div class="label">剩余手牌</div>
-        <div class="value" id="handCountText">0</div>
-      </div>
-    </div>
-
     <div class="battle-board">
-      <div class="character-panel">
+      <div class="panel">
         <div class="character-head">
-          <div class="avatar hero-avatar">🧙</div>
+          <div class="avatar" id="playerAvatarText">🧙</div>
           <div class="character-title">
-            <h2>主角</h2>
-            <div class="character-sub">每回合会随机发牌。使用后的卡牌会从本回合手牌中消失。</div>
+            <h2 id="playerNameTitle">角色</h2>
+            <div class="character-sub">你的冒险者资料</div>
           </div>
         </div>
 
-        <div class="stat-row">
-          <div class="stat-top">
-            <div>
-              HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span>
-              <span class="shield-badge">护盾 <span id="playerShieldText">0</span></span>
+        <div class="player-grid">
+          <div>
+            <div class="stat-row">
+              <div class="stat-top">
+                <div>
+                  HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span>
+                  <span class="shield-badge">护盾 <span id="playerShieldText">0</span></span>
+                </div>
+              </div>
+              <div class="bar-bg">
+                <div class="hp-bar" id="playerHpBar" style="width:100%"></div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-top">
+                <div>能量：<span id="energyText">5</span> / <span id="energyMaxText">5</span></div>
+              </div>
+              <div class="bar-bg">
+                <div class="energy-bar" id="energyBar" style="width:100%"></div>
+              </div>
+            </div>
+
+            <div class="note-box" id="heroInfoText">准备开始战斗。</div>
+          </div>
+
+          <div class="player-side">
+            <div class="side-info">
+              <div class="side-label">目前关卡</div>
+              <div class="side-value" id="levelText">1/50</div>
+            </div>
+            <div class="side-info">
+              <div class="side-label">金币</div>
+              <div class="side-value" id="goldText">0</div>
             </div>
           </div>
-          <div class="bar-bg">
-            <div class="hp-bar" id="playerHpBar" style="width:100%"></div>
-          </div>
         </div>
-
-        <div class="stat-row">
-          <div class="stat-top">
-            <div>能量：<span id="energyText">5</span> / <span id="energyMaxText">5</span></div>
-          </div>
-          <div class="bar-bg">
-            <div class="energy-bar" id="energyBar" style="width:100%"></div>
-          </div>
-        </div>
-
-        <div class="info-note" id="heroInfoText">准备开始战斗。</div>
       </div>
 
-      <div class="character-panel">
-        <div class="character-head">
-          <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
-          <div class="character-title">
-            <h2 id="monsterNameText">史莱姆</h2>
-            <div class="character-sub" id="monsterTypeText">普通关</div>
+      <div class="panel">
+        <div class="monster-layout">
+          <div>
+            <div class="character-head">
+              <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
+              <div class="character-title">
+                <h2 id="monsterNameText">史莱姆</h2>
+                <div class="character-sub" id="monsterTypeText">普通关</div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-top">
+                <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+              </div>
+              <div class="bar-bg">
+                <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-top">
+                <div>攻击力：<span id="monsterAtkText">8</span></div>
+              </div>
+            </div>
+
+            <div class="note-box" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
+          </div>
+
+          <div class="monster-side">
+            <div class="side-info">
+              <div class="side-label">战斗状态</div>
+              <div class="side-value" id="battleTurnText">玩家回合</div>
+            </div>
+            <div class="side-info">
+              <div class="side-label">剩余手牌</div>
+              <div class="side-value" id="handCountText">4</div>
+            </div>
+            <div class="side-info">
+              <div class="side-label">可进商店</div>
+              <div class="side-value" id="shopHintText">否</div>
+            </div>
           </div>
         </div>
-
-        <div class="stat-row">
-          <div class="stat-top">
-            <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
-          </div>
-          <div class="bar-bg">
-            <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
-          </div>
-        </div>
-
-        <div class="stat-row">
-          <div class="stat-top">
-            <div>攻击力：<span id="monsterAtkText">8</span></div>
-          </div>
-        </div>
-
-        <div class="info-note" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
       </div>
     </div>
 
     <div class="cards-panel">
-      <div class="section-title">手牌</div>
-      <div class="section-sub">
-        每回合随机发 4 张牌。用过的牌会立即消失，直到下一回合才重新随机发牌。
-      </div>
+      <div class="section-title">卡牌</div>
       <div class="cards" id="cardsContainer"></div>
 
       <div class="actions">
         <button class="action-btn" id="endTurnBtn" onclick="endTurn()">结束回合</button>
-        <button class="action-btn restart" onclick="restartGame()">重新开始</button>
-        <button class="next-btn hidden" id="nextBattleBtn" onclick="afterBattleContinue()">继续</button>
       </div>
-    </div>
-
-    <div class="shop-panel" id="shopBox">
-      <div class="section-title">商店</div>
-      <div class="section-sub">每通过 3 关后进入商店。随机出现 3 个选项，你只能购买其中一个。</div>
-      <div class="shop-options" id="shopOptions"></div>
     </div>
 
     <div class="log-panel">
@@ -521,30 +628,82 @@
     </div>
   </div>
 
+  <!-- 开始设定弹窗 -->
+  <div class="modal-overlay show" id="setupModal">
+    <div class="modal-box">
+      <div class="modal-title">开始冒险</div>
+      <div class="modal-sub">先输入角色名称，并选择一个角色图案。</div>
+
+      <div class="setup-grid">
+        <div class="setup-block">
+          <h3>角色名称</h3>
+          <input class="name-input" id="playerNameInput" maxlength="16" placeholder="请输入角色名称" />
+        </div>
+
+        <div class="setup-block">
+          <h3>选择角色图案</h3>
+          <div class="avatar-grid" id="avatarGrid"></div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="confirmSetup()">开始游戏</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商店弹窗 -->
+  <div class="modal-overlay" id="shopModal">
+    <div class="modal-box">
+      <div class="modal-title">商店</div>
+      <div class="modal-sub">你可以购买一个项目，也可以直接关闭商店。</div>
+      <div class="shop-options" id="shopOptions"></div>
+
+      <div class="modal-actions">
+        <button class="modal-btn secondary" onclick="closeShop()">关闭商店</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏结束弹窗 -->
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="modal-box center-text" style="max-width:620px;">
+      <div class="modal-title" id="gameOverTitle">游戏结束</div>
+      <div class="modal-sub" id="gameOverDesc">请重新开始。</div>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="modal-btn danger" onclick="restartFromModal()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const HOME_URL = "https://0urrigvojb.github.io/bng-tools/";
 
+    const avatarChoices = ["🧙","🛡️","⚔️","🧝","🧛","🧞","👸","🤴"];
     const normalMonsters = [
       { name: "史莱姆", emoji: "🟢", note: "黏糊糊的基础怪物。" },
       { name: "骷髅兵", emoji: "💀", note: "常见亡灵，攻击直来直往。" },
-      { name: "毒蜘蛛", emoji: "🕷️", note: "有压迫感的快速怪物。" },
-      { name: "狼人", emoji: "🐺", note: "力量偏高的近战怪。" },
-      { name: "暗影盗贼", emoji: "🗡️", note: "行动迅速，攻击偏高。" }
+      { name: "毒蜘蛛", emoji: "🕷️", note: "速度不慢，带来压迫感。" },
+      { name: "狼人", emoji: "🐺", note: "近战力量较强。" },
+      { name: "暗影盗贼", emoji: "🗡️", note: "擅长迅速突袭。" }
     ];
-
     const miniBossMonsters = [
       { name: "地牢守卫", emoji: "🛡️", note: "小BOSS，生命更厚。" },
       { name: "幽冥法师", emoji: "🔮", note: "小BOSS，威压更强。" },
       { name: "双刃兽人", emoji: "🪓", note: "小BOSS，攻击力更高。" }
     ];
-
     const bossMonsters = [
-      { name: "深渊魔王", emoji: "😈", note: "大BOSS，血量和伤害都大幅提升。" },
-      { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，重甲与黑炎并存。" },
-      { name: "终焉领主", emoji: "👹", note: "大BOSS，压迫感极强。" }
+      { name: "深渊魔王", emoji: "😈", note: "大BOSS，压制力极高。" },
+      { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，火焰与重甲并存。" },
+      { name: "终焉领主", emoji: "👹", note: "大BOSS，后期强敌。" }
     ];
 
     let state = {};
+    let selectedAvatar = avatarChoices[0];
+
+    let audioCtx = null;
+    let bgmStarted = false;
+    let bgmTimers = [];
 
     function goHome() {
       window.location.href = HOME_URL;
@@ -567,7 +726,6 @@
     function createMonster(level) {
       const type = getStageType(level);
       let pool = normalMonsters;
-
       if (type === "小BOSS") pool = miniBossMonsters;
       if (type === "大BOSS") pool = bossMonsters;
 
@@ -575,16 +733,15 @@
 
       let hp = 0;
       let atk = 0;
-
       if (type === "普通关") {
-        hp = 30 + level * 8 + randomInt(0, 12);
-        atk = 6 + Math.floor(level * 1.5) + Math.floor(state.player.maxHp * 0.025);
+        hp = 30 + level * 8 + randomInt(0, 10);
+        atk = 6 + Math.floor(level * 1.4) + Math.floor(state.player.maxHp * 0.02);
       } else if (type === "小BOSS") {
-        hp = 78 + level * 12 + randomInt(8, 18);
-        atk = 11 + Math.floor(level * 1.8) + Math.floor(state.player.maxHp * 0.035);
+        hp = 72 + level * 10 + randomInt(5, 15);
+        atk = 10 + Math.floor(level * 1.7) + Math.floor(state.player.maxHp * 0.03);
       } else {
-        hp = 130 + level * 15 + randomInt(12, 30);
-        atk = 15 + Math.floor(level * 2.2) + Math.floor(state.player.maxHp * 0.045);
+        hp = 118 + level * 13 + randomInt(8, 20);
+        atk = 14 + Math.floor(level * 2) + Math.floor(state.player.maxHp * 0.04);
       }
 
       return {
@@ -606,13 +763,16 @@
 
     function initGame() {
       state = {
+        started: false,
+        playerName: "角色",
+        playerAvatar: selectedAvatar || avatarChoices[0],
         level: 1,
         gold: 0,
         inShop: false,
         gameOver: false,
-        awaitingNextAction: false,
         deckSizePerTurn: 4,
         hand: [],
+        turnLabel: "玩家回合",
         player: {
           hp: 100,
           maxHp: 100,
@@ -631,74 +791,58 @@
         ownedSpecialCards: [],
         currentMonster: null
       };
+    }
 
+    function renderAvatarChoices() {
+      const grid = document.getElementById("avatarGrid");
+      grid.innerHTML = "";
+      avatarChoices.forEach(icon => {
+        const btn = document.createElement("button");
+        btn.className = "avatar-option" + (icon === selectedAvatar ? " selected" : "");
+        btn.textContent = icon;
+        btn.onclick = () => {
+          selectedAvatar = icon;
+          renderAvatarChoices();
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function confirmSetup() {
+      const name = document.getElementById("playerNameInput").value.trim();
+      state.playerName = name || "冒险者";
+      state.playerAvatar = selectedAvatar || avatarChoices[0];
+      state.started = true;
+
+      document.getElementById("setupModal").classList.remove("show");
+
+      applyPlayerIdentity();
       startLevel(true);
-      log("游戏开始，进入第 1 关。");
+      log(`欢迎你，${state.playerName}。冒险开始，进入第 1 关。`);
+
+      startAudioSystem();
+    }
+
+    function applyPlayerIdentity() {
+      document.getElementById("playerNameTitle").textContent = state.playerName;
+      document.getElementById("playerAvatarText").textContent = state.playerAvatar;
     }
 
     function getBaseCardPool() {
       const atk1 = 12 + Math.floor(state.level * 0.8) + state.upgrades.atkBonus;
-      const atk2 = 18 + Math.floor(state.level * 1.0) + state.upgrades.atkBonus;
+      const atk2 = 18 + Math.floor(state.level * 0.95) + state.upgrades.atkBonus;
       const def1 = 10 + Math.floor(state.level * 0.5) + state.upgrades.defBonus;
       const def2 = 16 + Math.floor(state.level * 0.6) + state.upgrades.defBonus;
-      const heal1 = 12 + Math.floor(state.level * 0.6) + state.upgrades.healBonus;
-      const heal2 = 20 + Math.floor(state.level * 0.7) + state.upgrades.healBonus;
+      const heal1 = 12 + Math.floor(state.level * 0.55) + state.upgrades.healBonus;
+      const heal2 = 18 + Math.floor(state.level * 0.65) + state.upgrades.healBonus;
 
       return [
-        {
-          id: "atk_1",
-          name: "斩击",
-          type: "attack",
-          cardType: "攻击",
-          value: atk1,
-          cost: 1,
-          desc: `造成 ${atk1} 点伤害`
-        },
-        {
-          id: "atk_2",
-          name: "重击",
-          type: "attack",
-          cardType: "攻击",
-          value: atk2,
-          cost: 2,
-          desc: `造成 ${atk2} 点伤害`
-        },
-        {
-          id: "def_1",
-          name: "格挡",
-          type: "defense",
-          cardType: "防御",
-          value: def1,
-          cost: 1,
-          desc: `获得 ${def1} 点护盾`
-        },
-        {
-          id: "def_2",
-          name: "坚守",
-          type: "defense",
-          cardType: "防御",
-          value: def2,
-          cost: 2,
-          desc: `获得 ${def2} 点护盾`
-        },
-        {
-          id: "heal_1",
-          name: "治愈",
-          type: "heal",
-          cardType: "治疗",
-          value: heal1,
-          cost: 2,
-          desc: `恢复 ${heal1} 点生命`
-        },
-        {
-          id: "heal_2",
-          name: "大治疗",
-          type: "heal",
-          cardType: "治疗",
-          value: heal2,
-          cost: 3,
-          desc: `恢复 ${heal2} 点生命`
-        }
+        { id: "atk_1", name: "斩击", type: "attack", cardType: "攻击", value: atk1, cost: 1, desc: `造成 ${atk1} 点伤害` },
+        { id: "atk_2", name: "重击", type: "attack", cardType: "攻击", value: atk2, cost: 2, desc: `造成 ${atk2} 点伤害` },
+        { id: "def_1", name: "格挡", type: "defense", cardType: "防御", value: def1, cost: 1, desc: `获得 ${def1} 点护盾` },
+        { id: "def_2", name: "坚守", type: "defense", cardType: "防御", value: def2, cost: 2, desc: `获得 ${def2} 点护盾` },
+        { id: "heal_1", name: "治愈", type: "heal", cardType: "治疗", value: heal1, cost: 2, desc: `恢复 ${heal1} 点生命` },
+        { id: "heal_2", name: "大治疗", type: "heal", cardType: "治疗", value: heal2, cost: 3, desc: `恢复 ${heal2} 点生命` }
       ];
     }
 
@@ -708,17 +852,15 @@
 
     function drawNewHand() {
       const pool = getFullCardPool();
-      const newHand = [];
-
+      const hand = [];
       for (let i = 0; i < state.deckSizePerTurn; i++) {
         const picked = pool[randomInt(0, pool.length - 1)];
-        newHand.push({
+        hand.push({
           ...picked,
           uid: `${Date.now()}_${i}_${Math.random()}`
         });
       }
-
-      state.hand = newHand;
+      state.hand = hand;
     }
 
     function getCardClass(card) {
@@ -733,22 +875,19 @@
       container.innerHTML = "";
 
       if (state.hand.length === 0) {
-        const empty = document.createElement("div");
-        empty.style.color = "#b6beca";
-        empty.style.gridColumn = "1 / -1";
-        empty.textContent = "本回合已经没有手牌了，请结束回合。";
-        container.appendChild(empty);
+        const div = document.createElement("div");
+        div.className = "empty-hand";
+        div.textContent = "本回合已经没有手牌了，请结束回合。";
+        container.appendChild(div);
+        document.getElementById("handCountText").textContent = "0";
+        return;
       }
 
       state.hand.forEach(card => {
         const div = document.createElement("div");
         div.className = `card ${getCardClass(card)}`;
 
-        const canUse =
-          !state.inShop &&
-          !state.gameOver &&
-          !state.awaitingNextAction &&
-          state.player.energy >= card.cost;
+        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost;
 
         div.innerHTML = `
           <div class="card-top">
@@ -764,17 +903,16 @@
         container.appendChild(div);
       });
 
-      document.getElementById("handCountText").textContent = state.hand.length;
+      document.getElementById("handCountText").textContent = String(state.hand.length);
     }
 
     function playCard(uid) {
-      if (state.inShop || state.gameOver || state.awaitingNextAction) return;
+      if (state.inShop || state.gameOver) return;
 
-      const cardIndex = state.hand.findIndex(card => card.uid === uid);
-      if (cardIndex === -1) return;
+      const index = state.hand.findIndex(c => c.uid === uid);
+      if (index === -1) return;
 
-      const card = state.hand[cardIndex];
-
+      const card = state.hand[index];
       if (state.player.energy < card.cost) {
         log("能量不足。");
         return;
@@ -785,40 +923,42 @@
       if (card.type === "attack") {
         let dmg = card.value;
         let critText = "";
-
         if (state.upgrades.critRate > 0 && chance(state.upgrades.critRate)) {
           dmg = Math.floor(dmg * 1.6);
           critText = "（暴击）";
         }
-
         state.currentMonster.hp -= dmg;
         if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
-
         log(`你使用【${card.name}】${critText}，造成 ${dmg} 点伤害。`);
+        playSfx("attack");
 
         if (state.upgrades.doubleStrike > 0 && state.currentMonster.hp > 0 && chance(state.upgrades.doubleStrike)) {
           const extra = Math.floor(card.value * 0.7);
           state.currentMonster.hp -= extra;
           if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
           logAppend(`连击触发，再造成 ${extra} 点伤害。`);
+          playSfx("attack");
         }
       }
 
       if (card.type === "defense") {
         state.player.shield += card.value;
         log(`你使用【${card.name}】，获得 ${card.value} 点护盾。`);
+        playSfx("shield");
       }
 
       if (card.type === "heal") {
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.value);
         log(`你使用【${card.name}】，恢复 ${state.player.hp - before} 点生命。`);
+        playSfx("heal");
       }
 
       if (card.type === "special_attack") {
         state.currentMonster.hp -= card.value;
         if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
         log(`你使用【${card.name}】，造成 ${card.value} 点伤害。`);
+        playSfx("attack");
       }
 
       if (card.type === "special_heal_shield") {
@@ -826,6 +966,8 @@
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
         state.player.shield += card.shieldValue;
         log(`你使用【${card.name}】，恢复 ${state.player.hp - before} HP，并获得 ${card.shieldValue} 点护盾。`);
+        playSfx("heal");
+        playSfx("shield");
       }
 
       if (card.type === "special_energy_attack") {
@@ -833,9 +975,10 @@
         if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
         state.player.energy = Math.min(state.player.maxEnergy, state.player.energy + card.energyGain);
         log(`你使用【${card.name}】，造成 ${card.damageValue} 点伤害，并回复 ${card.energyGain} 点能量。`);
+        playSfx("attack");
       }
 
-      state.hand.splice(cardIndex, 1);
+      state.hand.splice(index, 1);
 
       if (state.currentMonster.hp <= 0) {
         winBattle();
@@ -846,12 +989,14 @@
     }
 
     function endTurn() {
-      if (state.inShop || state.gameOver || state.awaitingNextAction) return;
+      if (state.inShop || state.gameOver) return;
       monsterTurn();
     }
 
     function monsterTurn() {
       if (state.currentMonster.hp <= 0) return;
+
+      state.turnLabel = "怪物回合";
 
       let incoming = state.currentMonster.atk;
       const shieldBefore = state.player.shield;
@@ -869,6 +1014,8 @@
         if (state.player.hp < 0) state.player.hp = 0;
       }
 
+      playSfx("monster");
+
       if (shieldBefore > 0) {
         const consumed = shieldBefore - state.player.shield;
         if (hpDamage > 0) {
@@ -882,7 +1029,7 @@
 
       if (state.player.hp <= 0) {
         state.gameOver = true;
-        logAppend("你被击败了，游戏结束。");
+        showGameOver(false);
         updateUI();
         return;
       }
@@ -894,6 +1041,7 @@
       }
 
       state.player.energy = state.player.maxEnergy;
+      state.turnLabel = "玩家回合";
       drawNewHand();
       logAppend("新的回合开始，你获得了新的随机手牌，能量已补满。");
 
@@ -901,55 +1049,40 @@
     }
 
     function winBattle() {
-      const reward = getReward(state.level);
       const clearedLevel = state.level;
+      const reward = getReward(clearedLevel);
 
       state.gold += reward;
-      state.awaitingNextAction = true;
+      state.player.shield = 0; // 每个关卡结束清零护盾
+      state.hand = [];
 
       log(`你击败了【${state.currentMonster.name}】！获得 ${reward} 金币。`);
 
       if (clearedLevel >= 50) {
         state.gameOver = true;
-        logAppend("恭喜你通过全部 50 关！");
+        showGameOver(true);
         updateUI();
         return;
       }
 
       state.level += 1;
-      state.hand = [];
 
       if (clearedLevel % 3 === 0) {
-        logAppend("你通过了第 3 的倍数关卡，可以进入商店。点击【继续】前往商店。");
-      } else {
-        logAppend(`点击【继续】进入第 ${state.level} 关。`);
-      }
-
-      updateUI();
-    }
-
-    function afterBattleContinue() {
-      if (!state.awaitingNextAction || state.gameOver) return;
-
-      state.awaitingNextAction = false;
-
-      const justCleared = state.level - 1;
-
-      if (justCleared % 3 === 0) {
+        logAppend("你通过了商店关卡，已开启商店。");
         openShop();
       } else {
         startLevel();
       }
-
-      updateUI();
     }
 
     function startLevel(isFirst = false) {
       state.inShop = false;
-      document.getElementById("shopBox").style.display = "none";
+      closeShopOverlayOnly();
 
       state.currentMonster = createMonster(state.level);
       state.player.energy = state.player.maxEnergy;
+      state.player.shield = 0;
+      state.turnLabel = "玩家回合";
       drawNewHand();
 
       if (!isFirst) {
@@ -959,15 +1092,19 @@
       updateUI();
     }
 
+    function getShopPrice(minBase, maxBase) {
+      const base = randomInt(minBase, maxBase);
+      const reduce = Math.floor((state.level - 1) / 3) * 2;
+      return Math.max(3, base - reduce);
+    }
+
     function openShop() {
       state.inShop = true;
-      document.getElementById("shopBox").style.display = "block";
-
       const pool = [
         {
           title: "增加能量球",
           desc: "能量上限 +1，并立即补满。",
-          getCost: () => randomInt(12, 22),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             state.player.maxEnergy += 1;
             state.player.energy = state.player.maxEnergy;
@@ -977,7 +1114,7 @@
         {
           title: "升级攻击卡",
           desc: "所有基础攻击牌伤害 +4。",
-          getCost: () => randomInt(14, 24),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             state.upgrades.atkBonus += 4;
             log("购买成功：攻击牌强化。");
@@ -986,7 +1123,7 @@
         {
           title: "升级防御卡",
           desc: "所有基础防御牌护盾 +4。",
-          getCost: () => randomInt(14, 24),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             state.upgrades.defBonus += 4;
             log("购买成功：防御牌强化。");
@@ -995,7 +1132,7 @@
         {
           title: "升级治疗卡",
           desc: "所有基础治疗牌恢复 +4。",
-          getCost: () => randomInt(14, 24),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             state.upgrades.healBonus += 4;
             log("购买成功：治疗牌强化。");
@@ -1004,7 +1141,7 @@
         {
           title: "附加效果：暴击",
           desc: "攻击牌增加 12% 暴击机率。",
-          getCost: () => randomInt(18, 28),
+          getCost: () => getShopPrice(12, 18),
           action: () => {
             state.upgrades.critRate = Math.min(0.5, state.upgrades.critRate + 0.12);
             log("购买成功：获得暴击效果。");
@@ -1013,7 +1150,7 @@
         {
           title: "附加效果：持续治疗",
           desc: "每回合结束后恢复 6 点生命。",
-          getCost: () => randomInt(18, 28),
+          getCost: () => getShopPrice(12, 18),
           action: () => {
             state.upgrades.regen += 6;
             log("购买成功：获得持续治疗效果。");
@@ -1022,7 +1159,7 @@
         {
           title: "附加效果：连击",
           desc: "攻击牌增加 18% 连击机率。",
-          getCost: () => randomInt(18, 28),
+          getCost: () => getShopPrice(12, 18),
           action: () => {
             state.upgrades.doubleStrike = Math.min(0.45, state.upgrades.doubleStrike + 0.18);
             log("购买成功：获得连击效果。");
@@ -1031,7 +1168,7 @@
         {
           title: "增加血量上限",
           desc: "最大生命 +20，并恢复 20 HP。",
-          getCost: () => randomInt(15, 25),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             state.player.maxHp += 20;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 20);
@@ -1041,7 +1178,7 @@
         {
           title: "补血",
           desc: "立即恢复 35 HP。",
-          getCost: () => randomInt(10, 18),
+          getCost: () => getShopPrice(6, 12),
           action: () => {
             const before = state.player.hp;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 35);
@@ -1051,7 +1188,7 @@
         {
           title: "特殊卡牌：烈焰斩",
           desc: "之后会加入牌池。高伤害攻击牌，造成 34 点伤害。",
-          getCost: () => randomInt(18, 30),
+          getCost: () => getShopPrice(12, 18),
           action: () => {
             if (!state.ownedSpecialCards.find(c => c.id === "sp_flame")) {
               state.ownedSpecialCards.push({
@@ -1065,15 +1202,15 @@
               });
               log("购买成功：特殊卡【烈焰斩】已加入牌池。");
             } else {
-              state.gold += 8;
-              log("你已拥有这张特殊卡，补偿 8 金币。");
+              state.gold += 5;
+              log("你已拥有这张特殊卡，补偿 5 金币。");
             }
           }
         },
         {
           title: "特殊卡牌：圣光庇护",
           desc: "之后会加入牌池。恢复生命并获得护盾。",
-          getCost: () => randomInt(18, 30),
+          getCost: () => getShopPrice(12, 18),
           action: () => {
             if (!state.ownedSpecialCards.find(c => c.id === "sp_holy")) {
               state.ownedSpecialCards.push({
@@ -1088,15 +1225,15 @@
               });
               log("购买成功：特殊卡【圣光庇护】已加入牌池。");
             } else {
-              state.gold += 8;
-              log("你已拥有这张特殊卡，补偿 8 金币。");
+              state.gold += 5;
+              log("你已拥有这张特殊卡，补偿 5 金币。");
             }
           }
         },
         {
           title: "特殊卡牌：能量冲击",
           desc: "之后会加入牌池。造成伤害并回复能量。",
-          getCost: () => randomInt(18, 30),
+          getCost: () => getShopPrice(10, 16),
           action: () => {
             if (!state.ownedSpecialCards.find(c => c.id === "sp_energy")) {
               state.ownedSpecialCards.push({
@@ -1111,8 +1248,8 @@
               });
               log("购买成功：特殊卡【能量冲击】已加入牌池。");
             } else {
-              state.gold += 8;
-              log("你已拥有这张特殊卡，补偿 8 金币。");
+              state.gold += 5;
+              log("你已拥有这张特殊卡，补偿 5 金币。");
             }
           }
         }
@@ -1129,6 +1266,7 @@
 
       selected.forEach(item => {
         const cost = item.getCost();
+        const canBuy = state.gold >= cost;
 
         const div = document.createElement("div");
         div.className = "shop-item";
@@ -1136,15 +1274,27 @@
           <h3>${item.title}</h3>
           <div class="shop-desc">${item.desc}</div>
           <div class="shop-price">价格：${cost} 金币</div>
-          <button class="shop-btn" ${state.gold >= cost ? "" : "disabled"}>购买</button>
+          <button class="modal-btn" ${canBuy ? "" : "disabled"}>购买</button>
         `;
 
         div.querySelector("button").onclick = () => buyItem(item, cost);
         shopOptions.appendChild(div);
       });
 
-      log("你进入了商店，可以购买 1 个选项。");
+      document.getElementById("shopModal").classList.add("show");
       updateUI();
+    }
+
+    function closeShopOverlayOnly() {
+      document.getElementById("shopModal").classList.remove("show");
+    }
+
+    function closeShop() {
+      if (!state.inShop) return;
+      state.inShop = false;
+      closeShopOverlayOnly();
+      log("你离开了商店。");
+      startLevel();
     }
 
     function buyItem(item, cost) {
@@ -1156,17 +1306,45 @@
 
       state.gold -= cost;
       item.action();
-
       state.inShop = false;
-      document.getElementById("shopBox").style.display = "none";
+      closeShopOverlayOnly();
       startLevel();
     }
 
+    function showGameOver(isWin) {
+      const title = document.getElementById("gameOverTitle");
+      const desc = document.getElementById("gameOverDesc");
+
+      if (isWin) {
+        title.textContent = "全部通关";
+        desc.textContent = `${state.playerName} 成功通过全部 50 关。`;
+        logAppend("恭喜你通过全部 50 关！");
+      } else {
+        title.textContent = "角色死亡";
+        desc.textContent = `${state.playerName} 在第 ${state.level} 关倒下了。`;
+        logAppend("你被击败了，游戏结束。");
+      }
+
+      document.getElementById("gameOverModal").classList.add("show");
+    }
+
+    function restartFromModal() {
+      document.getElementById("gameOverModal").classList.remove("show");
+      document.getElementById("setupModal").classList.add("show");
+      document.getElementById("playerNameInput").value = state.playerName || "";
+      initGame();
+      applyPlayerIdentity();
+      renderAvatarChoices();
+    }
+
     function updateUI() {
-      document.getElementById("levelText").textContent = state.level;
+      applyPlayerIdentity();
+
+      document.getElementById("levelText").textContent = `${state.level}/50`;
       document.getElementById("goldText").textContent = state.gold;
-      document.getElementById("stageTypeText").textContent = getStageType(state.level);
-      document.getElementById("handCountText").textContent = state.hand.length;
+      document.getElementById("handCountText").textContent = String(state.hand.length);
+      document.getElementById("battleTurnText").textContent = state.turnLabel;
+      document.getElementById("shopHintText").textContent = ((state.level - 1) % 3 === 0 && state.level > 1) ? "是" : "否";
 
       document.getElementById("playerHpText").textContent = state.player.hp;
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
@@ -1175,9 +1353,9 @@
       document.getElementById("energyMaxText").textContent = state.player.maxEnergy;
 
       document.getElementById("playerHpBar").style.width =
-        ((state.player.hp / state.player.maxHp) * 100) + "%";
+        `${(state.player.hp / state.player.maxHp) * 100}%`;
       document.getElementById("energyBar").style.width =
-        ((state.player.energy / state.player.maxEnergy) * 100) + "%";
+        `${(state.player.energy / state.player.maxEnergy) * 100}%`;
 
       if (state.currentMonster) {
         document.getElementById("monsterNameText").textContent = state.currentMonster.name;
@@ -1187,23 +1365,15 @@
         document.getElementById("monsterMaxHpText").textContent = state.currentMonster.maxHp;
         document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
         document.getElementById("monsterHpBar").style.width =
-          ((state.currentMonster.hp / state.currentMonster.maxHp) * 100) + "%";
+          `${(state.currentMonster.hp / state.currentMonster.maxHp) * 100}%`;
         document.getElementById("monsterInfoText").textContent =
           `${state.currentMonster.note} 当前攻击力为 ${state.currentMonster.atk}。`;
       }
 
       document.getElementById("heroInfoText").textContent =
-        `本回合剩余手牌 ${state.hand.length} 张，已拥有特殊卡 ${state.ownedSpecialCards.length} 张。`;
+        `已拥有特殊卡 ${state.ownedSpecialCards.length} 张。`;
 
-      document.getElementById("endTurnBtn").disabled =
-        state.inShop || state.gameOver || state.awaitingNextAction;
-
-      const nextBtn = document.getElementById("nextBattleBtn");
-      if (state.awaitingNextAction && !state.gameOver) {
-        nextBtn.classList.remove("hidden");
-      } else {
-        nextBtn.classList.add("hidden");
-      }
+      document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
 
       renderCards();
     }
@@ -1216,11 +1386,110 @@
       document.getElementById("logBox").textContent += "\n" + text;
     }
 
-    function restartGame() {
-      initGame();
+    /* =========================
+       音效 / 背景音乐（纯网页内建）
+       ========================= */
+    function startAudioSystem() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        audioCtx = new AudioContextClass();
+      }
+
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+
+      if (!bgmStarted) {
+        bgmStarted = true;
+        startMedievalBgm();
+      }
     }
 
+    function playTone(freq, duration, type = "sine", volume = 0.03, when = 0) {
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime + when;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.03);
+    }
+
+    function playSfx(kind) {
+      if (!audioCtx) return;
+
+      if (kind === "attack") {
+        playTone(220, 0.08, "sawtooth", 0.04, 0);
+        playTone(165, 0.12, "triangle", 0.03, 0.03);
+      }
+
+      if (kind === "heal") {
+        playTone(523.25, 0.18, "sine", 0.03, 0);
+        playTone(659.25, 0.18, "sine", 0.025, 0.06);
+      }
+
+      if (kind === "shield") {
+        playTone(246.94, 0.12, "square", 0.025, 0);
+        playTone(293.66, 0.12, "square", 0.02, 0.08);
+      }
+
+      if (kind === "monster") {
+        playTone(130.81, 0.15, "sawtooth", 0.04, 0);
+        playTone(98, 0.18, "triangle", 0.03, 0.04);
+      }
+    }
+
+    function clearBgmTimers() {
+      bgmTimers.forEach(id => clearTimeout(id));
+      bgmTimers = [];
+    }
+
+    function schedulePhrase(startAt, notes, type = "triangle", volume = 0.012, step = 0.46) {
+      notes.forEach((freq, i) => {
+        if (freq > 0) playTone(freq, 0.34, type, volume, startAt + i * step);
+      });
+      return startAt + notes.length * step;
+    }
+
+    function startMedievalBgm() {
+      if (!audioCtx) return;
+      clearBgmTimers();
+
+      const loopDuration = 15.5;
+
+      const playLoop = () => {
+        let t = 0;
+        t = schedulePhrase(t, [293.66, 349.23, 392.00, 440.00, 392.00, 349.23], "triangle", 0.015, 0.42);
+        t = schedulePhrase(t, [293.66, 392.00, 440.00, 493.88, 440.00, 392.00], "triangle", 0.015, 0.42);
+        t = schedulePhrase(t, [349.23, 392.00, 440.00, 392.00, 349.23, 293.66], "triangle", 0.015, 0.42);
+
+        const drone = [146.83, 146.83, 174.61, 146.83, 146.83, 130.81];
+        drone.forEach((freq, i) => playTone(freq, 1.8, "sine", 0.008, i * 2.5));
+
+        const timer = setTimeout(playLoop, loopDuration * 1000);
+        bgmTimers.push(timer);
+      };
+
+      playLoop();
+    }
+
+    /* 初始化 */
     initGame();
+    renderAvatarChoices();
+    applyPlayerIdentity();
+    updateUI();
   </script>
 </body>
 </html>
