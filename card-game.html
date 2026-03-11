@@ -72,7 +72,7 @@
     }
 
     .container {
-      max-width: 1260px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 22px 18px 40px;
     }
@@ -89,12 +89,21 @@
 
     .battle-board {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.35fr;
       gap: 18px;
       margin-bottom: 20px;
+      align-items: start;
     }
 
-    .panel {
+    .right-side-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .panel,
+    .cards-panel,
+    .log-panel {
       background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
       border: 1px solid #2d3440;
       border-radius: 18px;
@@ -206,10 +215,9 @@
       gap: 10px;
     }
 
-    /* 重点：怪物资讯左，战斗资讯固定右，竖着呈现 */
     .monster-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 180px;
+      grid-template-columns: minmax(0, 1fr) 190px;
       gap: 14px;
       align-items: stretch;
     }
@@ -249,12 +257,9 @@
       word-break: break-word;
     }
 
-    .cards-panel {
-      background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
-      border: 1px solid #2d3440;
-      border-radius: 18px;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
-      padding: 20px;
+    .side-log-panel {
+      margin-top: 0;
+      width: 100%;
     }
 
     .section-title {
@@ -352,21 +357,14 @@
       background: #8a4d2c;
     }
 
-    .log-panel {
-      margin-top: 20px;
-      background: linear-gradient(180deg, #1b1f27 0%, #171b22 100%);
-      border: 1px solid #2d3440;
-      border-radius: 18px;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
-      padding: 20px;
-    }
-
     .log-box {
       background: #10141a;
       border: 1px solid #262d37;
       border-radius: 14px;
       padding: 14px;
-      min-height: 150px;
+      min-height: 220px;
+      max-height: 320px;
+      overflow-y: auto;
       white-space: pre-line;
       line-height: 1.75;
       color: #f0f3f8;
@@ -531,8 +529,13 @@
       text-align: center;
     }
 
+    @media (max-width: 1100px) {
+      .battle-board {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 980px) {
-      .battle-board,
       .player-grid,
       .monster-layout {
         grid-template-columns: 1fr;
@@ -577,6 +580,7 @@
     <div class="title">卡牌冒险</div>
 
     <div class="battle-board">
+      <!-- 玩家 -->
       <div class="panel">
         <div class="character-head">
           <div class="avatar" id="playerAvatarText">🧙</div>
@@ -625,49 +629,57 @@
         </div>
       </div>
 
-      <div class="panel">
-        <div class="monster-layout">
-          <div class="monster-main">
-            <div class="character-head">
-              <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
-              <div class="character-title">
-                <h2 id="monsterNameText">史莱姆</h2>
-                <div class="character-sub" id="monsterTypeText">普通关</div>
+      <!-- 右侧：怪物 + 战斗纪录 -->
+      <div class="right-side-wrap">
+        <div class="panel">
+          <div class="monster-layout">
+            <div class="monster-main">
+              <div class="character-head">
+                <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
+                <div class="character-title">
+                  <h2 id="monsterNameText">史莱姆</h2>
+                  <div class="character-sub" id="monsterTypeText">普通关</div>
+                </div>
               </div>
+
+              <div class="stat-row">
+                <div class="stat-top">
+                  <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+                </div>
+                <div class="bar-bg">
+                  <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
+                </div>
+              </div>
+
+              <div class="stat-row">
+                <div class="stat-top">
+                  <div>攻击力：<span id="monsterAtkText">8</span></div>
+                </div>
+              </div>
+
+              <div class="note-box" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
             </div>
 
-            <div class="stat-row">
-              <div class="stat-top">
-                <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+            <div class="monster-side">
+              <div class="side-info">
+                <div class="side-label">战斗资讯</div>
+                <div class="side-value" id="battleTurnText">玩家回合</div>
               </div>
-              <div class="bar-bg">
-                <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
+              <div class="side-info">
+                <div class="side-label">剩余手牌</div>
+                <div class="side-value" id="handCountText">4</div>
+              </div>
+              <div class="side-info">
+                <div class="side-label">商店状态</div>
+                <div class="side-value" id="shopHintText">未开启</div>
               </div>
             </div>
-
-            <div class="stat-row">
-              <div class="stat-top">
-                <div>攻击力：<span id="monsterAtkText">8</span></div>
-              </div>
-            </div>
-
-            <div class="note-box" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
           </div>
+        </div>
 
-          <div class="monster-side">
-            <div class="side-info">
-              <div class="side-label">战斗资讯</div>
-              <div class="side-value" id="battleTurnText">玩家回合</div>
-            </div>
-            <div class="side-info">
-              <div class="side-label">剩余手牌</div>
-              <div class="side-value" id="handCountText">4</div>
-            </div>
-            <div class="side-info">
-              <div class="side-label">商店状态</div>
-              <div class="side-value" id="shopHintText">未开启</div>
-            </div>
-          </div>
+        <div class="log-panel side-log-panel">
+          <div class="section-title">战斗纪录</div>
+          <div class="log-box" id="logBox">游戏开始，准备战斗。</div>
         </div>
       </div>
     </div>
@@ -679,11 +691,6 @@
       <div class="actions">
         <button class="action-btn" id="endTurnBtn" onclick="endTurn()">结束回合</button>
       </div>
-    </div>
-
-    <div class="log-panel">
-      <div class="section-title">战斗纪录</div>
-      <div class="log-box" id="logBox">游戏开始，准备战斗。</div>
     </div>
   </div>
 
@@ -773,7 +780,6 @@
 
     let state = {};
     let selectedAvatar = avatarChoices[0];
-
     let audioCtx = null;
     let musicVolume = 0.8;
     let sfxVolume = 0.9;
@@ -890,11 +896,9 @@
       state.started = true;
 
       document.getElementById("setupModal").classList.remove("show");
-
       applyPlayerIdentity();
       startLevel(true);
       log(`欢迎你，${state.playerName}。冒险开始，进入第 1 关。`);
-
       initAudio();
       playBgm();
     }
@@ -1029,30 +1033,6 @@
         playSfx("heal");
       }
 
-      if (card.type === "special_attack") {
-        state.currentMonster.hp -= card.value;
-        if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
-        log(`你使用【${card.name}】，造成 ${card.value} 点伤害。`);
-        playSfx("attack");
-      }
-
-      if (card.type === "special_heal_shield") {
-        const before = state.player.hp;
-        state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
-        state.player.shield += card.shieldValue;
-        log(`你使用【${card.name}】，恢复 ${state.player.hp - before} HP，并获得 ${card.shieldValue} 点护盾。`);
-        playSfx("heal");
-        playSfx("shield");
-      }
-
-      if (card.type === "special_energy_attack") {
-        state.currentMonster.hp -= card.damageValue;
-        if (state.currentMonster.hp < 0) state.currentMonster.hp = 0;
-        state.player.energy = Math.min(state.player.maxEnergy, state.player.energy + card.energyGain);
-        log(`你使用【${card.name}】，造成 ${card.damageValue} 点伤害，并回复 ${card.energyGain} 点能量。`);
-        playSfx("attack");
-      }
-
       state.hand.splice(index, 1);
 
       if (state.currentMonster.hp <= 0) {
@@ -1152,7 +1132,6 @@
 
     function continueAfterClear() {
       document.getElementById("levelClearModal").classList.remove("show");
-
       state.level += 1;
 
       if (state.pendingShop) {
@@ -1404,10 +1383,13 @@
 
     function log(text) {
       document.getElementById("logBox").textContent = text;
+      document.getElementById("logBox").scrollTop = document.getElementById("logBox").scrollHeight;
     }
 
     function logAppend(text) {
-      document.getElementById("logBox").textContent += "\n" + text;
+      const box = document.getElementById("logBox");
+      box.textContent += "\n" + text;
+      box.scrollTop = box.scrollHeight;
     }
 
     function initAudio() {
