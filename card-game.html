@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>卡牌冒险</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#1e1e1e;
+    color:white;
+    text-align:center;
+}
+
+.topbar{
+    position:absolute;
+    top:10px;
+    right:10px;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#cards button{
+    display:block;
+    width:200px;
+    margin:10px auto;
+}
+
+.box{
+    margin:20px auto;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<a href="https://0urrigvojb.github.io/bng-tools/">
+<button>回首页</button>
+</a>
+</div>
+
+<h1>卡牌冒险</h1>
+
+<div class="box">
+关卡：<span id="level">1</span>/50
+</div>
+
+<div class="box">
+玩家 HP：<span id="playerHP"></span> /
+<span id="playerMaxHP"></span>
+</div>
+
+<div class="box">
+能量：<span id="energy"></span>
+</div>
+
+<div class="box">
+金币：<span id="gold"></span>
+</div>
+
+<div class="box">
+怪物 HP：<span id="monsterHP"></span>
+</div>
+
+<h2>卡牌</h2>
+<div id="cards"></div>
+
+<button onclick="endTurn()">结束回合</button>
+
+<div id="log"></div>
+
+<script>
+
+let level=1
+let playerHP=100
+let playerMaxHP=100
+let energyMax=5
+let energy=5
+let gold=0
+
+let monsterHP=0
+let monsterAtk=0
+
+let deck=[]
+
+function log(text){
+document.getElementById("log").innerHTML=text
+}
+
+function generateMonster(){
+
+let base=20+level*10
+
+if(level%10==0){
+base*=3
+}
+else if(level%5==0){
+base*=2
+}
+
+monsterHP=base
+monsterAtk=5+level*3
+
+}
+
+function generateCards(){
+
+deck=[]
+
+let types=["attack","defense","heal"]
+
+for(let i=0;i<3;i++){
+
+let type=types[Math.floor(Math.random()*types.length)]
+
+let card={
+type:type,
+value:10+Math.floor(Math.random()*10),
+cost:1+Math.floor(Math.random()*3)
+}
+
+deck.push(card)
+
+}
+
+renderCards()
+
+}
+
+function renderCards(){
+
+let div=document.getElementById("cards")
+div.innerHTML=""
+
+deck.forEach((card,i)=>{
+
+let btn=document.createElement("button")
+
+let text=""
+
+if(card.type=="attack") text="攻击 "+card.value
+if(card.type=="defense") text="护盾 "+card.value
+if(card.type=="heal") text="治疗 "+card.value
+
+btn.innerText=text+" (能量 "+card.cost+")"
+
+btn.onclick=()=>playCard(i)
+
+div.appendChild(btn)
+
+})
+
+}
+
+function playCard(i){
+
+let card=deck[i]
+
+if(energy<card.cost){
+log("能量不足")
+return
+}
+
+energy-=card.cost
+
+if(card.type=="attack"){
+monsterHP-=card.value
+log("造成 "+card.value+" 伤害")
+}
+
+if(card.type=="heal"){
+playerHP+=card.value
+if(playerHP>playerMaxHP) playerHP=playerMaxHP
+}
+
+if(card.type=="defense"){
+log("获得护盾 "+card.value)
+}
+
+update()
+
+if(monsterHP<=0){
+victory()
+}
+
+}
+
+function monsterTurn(){
+
+playerHP-=monsterAtk
+
+if(playerHP<=0){
+alert("你输了")
+location.reload()
+}
+
+}
+
+function endTurn(){
+
+monsterTurn()
+
+energy=energyMax
+
+update()
+
+}
+
+function victory(){
+
+let reward=1+Math.floor(Math.random()*10)
+
+if(level%5==0) reward=5+Math.floor(Math.random()*15)
+
+if(level%10==0) reward=10+Math.floor(Math.random()*15)
+
+gold+=reward
+
+alert("胜利 获得金币 "+reward)
+
+level++
+
+if(level>50){
+alert("通关！")
+location.reload()
+}
+
+if(level%3==0){
+shop()
+}
+
+startLevel()
+
+}
+
+function shop(){
+
+let options=[
+"energy",
+"hp",
+"heal",
+"card",
+"upgrade"
+]
+
+let picks=[]
+
+for(let i=0;i<3;i++){
+
+picks.push(options[Math.floor(Math.random()*options.length)])
+
+}
+
+let text="商店\n"
+
+picks.forEach((o,i)=>{
+
+text+=i+":"+o+"\n"
+
+})
+
+let choose=prompt(text)
+
+let opt=picks[choose]
+
+if(opt=="energy"){
+energyMax++
+}
+
+if(opt=="hp"){
+playerMaxHP+=20
+}
+
+if(opt=="heal"){
+playerHP=playerMaxHP
+}
+
+if(opt=="card"){
+deck.push({type:"attack",value:25,cost:2})
+}
+
+if(opt=="upgrade"){
+deck.forEach(c=>c.value+=5)
+}
+
+}
+
+function startLevel(){
+
+generateMonster()
+
+generateCards()
+
+energy=energyMax
+
+update()
+
+}
+
+function update(){
+
+document.getElementById("level").innerText=level
+document.getElementById("playerHP").innerText=playerHP
+document.getElementById("playerMaxHP").innerText=playerMaxHP
+document.getElementById("energy").innerText=energy+"/"+energyMax
+document.getElementById("gold").innerText=gold
+document.getElementById("monsterHP").innerText=monsterHP
+
+}
+
+startLevel()
+
+</script>
+
+</body>
+</html>
