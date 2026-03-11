@@ -19,8 +19,10 @@
 
     .topbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
       padding: 12px 18px;
       background: rgba(0,0,0,0.35);
       border-bottom: 1px solid #2a3038;
@@ -28,6 +30,34 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(6px);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #171b22;
+      border: 1px solid #2d3440;
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+
+    .volume-wrap span {
+      color: #ddd;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .volume-wrap input[type="range"] {
+      width: 160px;
+      cursor: pointer;
     }
 
     .home-btn {
@@ -170,7 +200,24 @@
       align-items: stretch;
     }
 
-    .player-side,
+    .player-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 重点：怪物资讯左，战斗资讯固定右，竖着呈现 */
+    .monster-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .monster-main {
+      min-width: 0;
+    }
+
     .monster-side {
       display: flex;
       flex-direction: column;
@@ -182,7 +229,10 @@
       border: 1px solid #262d37;
       border-radius: 12px;
       padding: 12px;
-      min-height: 82px;
+      min-height: 88px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .side-label {
@@ -192,16 +242,11 @@
     }
 
     .side-value {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       color: #f7eedf;
-    }
-
-    .monster-layout {
-      display: grid;
-      grid-template-columns: 1fr 180px;
-      gap: 14px;
-      align-items: stretch;
+      line-height: 1.25;
+      word-break: break-word;
     }
 
     .cards-panel {
@@ -488,8 +533,8 @@
 
     @media (max-width: 980px) {
       .battle-board,
-      .monster-layout,
-      .player-grid {
+      .player-grid,
+      .monster-layout {
         grid-template-columns: 1fr;
       }
 
@@ -506,11 +551,25 @@
       .modal-title {
         font-size: 28px;
       }
+
+      .volume-wrap input[type="range"] {
+        width: 120px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
+    <div class="topbar-left">
+      <div class="volume-wrap">
+        <span>音乐音量</span>
+        <input type="range" id="musicVolumeSlider" min="0" max="100" value="80" />
+      </div>
+      <div class="volume-wrap">
+        <span>音效音量</span>
+        <input type="range" id="sfxVolumeSlider" min="0" max="100" value="90" />
+      </div>
+    </div>
     <button class="home-btn" onclick="goHome()">回首頁</button>
   </div>
 
@@ -568,7 +627,7 @@
 
       <div class="panel">
         <div class="monster-layout">
-          <div>
+          <div class="monster-main">
             <div class="character-head">
               <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
               <div class="character-title">
@@ -597,7 +656,7 @@
 
           <div class="monster-side">
             <div class="side-info">
-              <div class="side-label">战斗状态</div>
+              <div class="side-label">战斗资讯</div>
               <div class="side-value" id="battleTurnText">玩家回合</div>
             </div>
             <div class="side-info">
@@ -605,8 +664,8 @@
               <div class="side-value" id="handCountText">4</div>
             </div>
             <div class="side-info">
-              <div class="side-label">可进商店</div>
-              <div class="side-value" id="shopHintText">否</div>
+              <div class="side-label">商店状态</div>
+              <div class="side-value" id="shopHintText">未开启</div>
             </div>
           </div>
         </div>
@@ -628,7 +687,10 @@
     </div>
   </div>
 
-  <!-- 开始设定弹窗 -->
+  <audio id="bgmPlayer" loop preload="auto">
+    <source src="./assets/bgm/medieval-theme.mp3" type="audio/mpeg" />
+  </audio>
+
   <div class="modal-overlay show" id="setupModal">
     <div class="modal-box">
       <div class="modal-title">开始冒险</div>
@@ -652,7 +714,17 @@
     </div>
   </div>
 
-  <!-- 商店弹窗 -->
+  <div class="modal-overlay" id="levelClearModal">
+    <div class="modal-box center-text" style="max-width:620px;">
+      <div class="modal-title" id="levelClearTitle">通关成功</div>
+      <div class="modal-sub" id="levelClearDesc">恭喜通关。</div>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="modal-btn" onclick="continueAfterClear()">继续游戏</button>
+        <button class="modal-btn danger" onclick="restartFromModal()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="shopModal">
     <div class="modal-box">
       <div class="modal-title">商店</div>
@@ -665,7 +737,6 @@
     </div>
   </div>
 
-  <!-- 游戏结束弹窗 -->
   <div class="modal-overlay" id="gameOverModal">
     <div class="modal-box center-text" style="max-width:620px;">
       <div class="modal-title" id="gameOverTitle">游戏结束</div>
@@ -678,8 +749,8 @@
 
   <script>
     const HOME_URL = "https://0urrigvojb.github.io/bng-tools/";
-
     const avatarChoices = ["🧙","🛡️","⚔️","🧝","🧛","🧞","👸","🤴"];
+
     const normalMonsters = [
       { name: "史莱姆", emoji: "🟢", note: "黏糊糊的基础怪物。" },
       { name: "骷髅兵", emoji: "💀", note: "常见亡灵，攻击直来直往。" },
@@ -687,11 +758,13 @@
       { name: "狼人", emoji: "🐺", note: "近战力量较强。" },
       { name: "暗影盗贼", emoji: "🗡️", note: "擅长迅速突袭。" }
     ];
+
     const miniBossMonsters = [
       { name: "地牢守卫", emoji: "🛡️", note: "小BOSS，生命更厚。" },
       { name: "幽冥法师", emoji: "🔮", note: "小BOSS，威压更强。" },
       { name: "双刃兽人", emoji: "🪓", note: "小BOSS，攻击力更高。" }
     ];
+
     const bossMonsters = [
       { name: "深渊魔王", emoji: "😈", note: "大BOSS，压制力极高。" },
       { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，火焰与重甲并存。" },
@@ -702,8 +775,8 @@
     let selectedAvatar = avatarChoices[0];
 
     let audioCtx = null;
-    let bgmStarted = false;
-    let bgmTimers = [];
+    let musicVolume = 0.8;
+    let sfxVolume = 0.9;
 
     function goHome() {
       window.location.href = HOME_URL;
@@ -770,6 +843,8 @@
         gold: 0,
         inShop: false,
         gameOver: false,
+        pendingShop: false,
+        justClearedLevel: 0,
         deckSizePerTurn: 4,
         hand: [],
         turnLabel: "玩家回合",
@@ -820,7 +895,8 @@
       startLevel(true);
       log(`欢迎你，${state.playerName}。冒险开始，进入第 1 关。`);
 
-      startAudioSystem();
+      initAudio();
+      playBgm();
     }
 
     function applyPlayerIdentity() {
@@ -886,7 +962,6 @@
       state.hand.forEach(card => {
         const div = document.createElement("div");
         div.className = `card ${getCardClass(card)}`;
-
         const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost;
 
         div.innerHTML = `
@@ -1053,8 +1128,10 @@
       const reward = getReward(clearedLevel);
 
       state.gold += reward;
-      state.player.shield = 0; // 每个关卡结束清零护盾
+      state.player.shield = 0;
       state.hand = [];
+      state.justClearedLevel = clearedLevel;
+      state.pendingShop = clearedLevel % 3 === 0;
 
       log(`你击败了【${state.currentMonster.name}】！获得 ${reward} 金币。`);
 
@@ -1065,14 +1142,26 @@
         return;
       }
 
+      document.getElementById("levelClearTitle").textContent = `第 ${clearedLevel} 关通关`;
+      document.getElementById("levelClearDesc").textContent =
+        `恭喜 ${state.playerName} 成功通过第 ${clearedLevel} 关！获得 ${reward} 金币。`;
+      document.getElementById("levelClearModal").classList.add("show");
+
+      updateUI();
+    }
+
+    function continueAfterClear() {
+      document.getElementById("levelClearModal").classList.remove("show");
+
       state.level += 1;
 
-      if (clearedLevel % 3 === 0) {
-        logAppend("你通过了商店关卡，已开启商店。");
+      if (state.pendingShop) {
+        state.pendingShop = false;
         openShop();
-      } else {
-        startLevel();
+        return;
       }
+
+      startLevel();
     }
 
     function startLevel(isFirst = false) {
@@ -1100,6 +1189,7 @@
 
     function openShop() {
       state.inShop = true;
+
       const pool = [
         {
           title: "增加能量球",
@@ -1184,74 +1274,6 @@
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 35);
             log(`购买成功：恢复 ${state.player.hp - before} 点生命。`);
           }
-        },
-        {
-          title: "特殊卡牌：烈焰斩",
-          desc: "之后会加入牌池。高伤害攻击牌，造成 34 点伤害。",
-          getCost: () => getShopPrice(12, 18),
-          action: () => {
-            if (!state.ownedSpecialCards.find(c => c.id === "sp_flame")) {
-              state.ownedSpecialCards.push({
-                id: "sp_flame",
-                name: "烈焰斩",
-                type: "special_attack",
-                cardType: "特殊攻击",
-                value: 34,
-                cost: 3,
-                desc: "造成 34 点伤害"
-              });
-              log("购买成功：特殊卡【烈焰斩】已加入牌池。");
-            } else {
-              state.gold += 5;
-              log("你已拥有这张特殊卡，补偿 5 金币。");
-            }
-          }
-        },
-        {
-          title: "特殊卡牌：圣光庇护",
-          desc: "之后会加入牌池。恢复生命并获得护盾。",
-          getCost: () => getShopPrice(12, 18),
-          action: () => {
-            if (!state.ownedSpecialCards.find(c => c.id === "sp_holy")) {
-              state.ownedSpecialCards.push({
-                id: "sp_holy",
-                name: "圣光庇护",
-                type: "special_heal_shield",
-                cardType: "特殊辅助",
-                healValue: 18,
-                shieldValue: 14,
-                cost: 3,
-                desc: "恢复 18 HP，并获得 14 点护盾"
-              });
-              log("购买成功：特殊卡【圣光庇护】已加入牌池。");
-            } else {
-              state.gold += 5;
-              log("你已拥有这张特殊卡，补偿 5 金币。");
-            }
-          }
-        },
-        {
-          title: "特殊卡牌：能量冲击",
-          desc: "之后会加入牌池。造成伤害并回复能量。",
-          getCost: () => getShopPrice(10, 16),
-          action: () => {
-            if (!state.ownedSpecialCards.find(c => c.id === "sp_energy")) {
-              state.ownedSpecialCards.push({
-                id: "sp_energy",
-                name: "能量冲击",
-                type: "special_energy_attack",
-                cardType: "特殊攻击",
-                damageValue: 16,
-                energyGain: 1,
-                cost: 1,
-                desc: "造成 16 点伤害，并回复 1 点能量"
-              });
-              log("购买成功：特殊卡【能量冲击】已加入牌池。");
-            } else {
-              state.gold += 5;
-              log("你已拥有这张特殊卡，补偿 5 金币。");
-            }
-          }
         }
       ];
 
@@ -1330,11 +1352,14 @@
 
     function restartFromModal() {
       document.getElementById("gameOverModal").classList.remove("show");
+      document.getElementById("levelClearModal").classList.remove("show");
+      document.getElementById("shopModal").classList.remove("show");
       document.getElementById("setupModal").classList.add("show");
       document.getElementById("playerNameInput").value = state.playerName || "";
       initGame();
       applyPlayerIdentity();
       renderAvatarChoices();
+      updateUI();
     }
 
     function updateUI() {
@@ -1344,7 +1369,7 @@
       document.getElementById("goldText").textContent = state.gold;
       document.getElementById("handCountText").textContent = String(state.hand.length);
       document.getElementById("battleTurnText").textContent = state.turnLabel;
-      document.getElementById("shopHintText").textContent = ((state.level - 1) % 3 === 0 && state.level > 1) ? "是" : "否";
+      document.getElementById("shopHintText").textContent = state.pendingShop ? "通关后开启" : "未开启";
 
       document.getElementById("playerHpText").textContent = state.player.hp;
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
@@ -1374,7 +1399,6 @@
         `已拥有特殊卡 ${state.ownedSpecialCards.length} 张。`;
 
       document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
-
       renderCards();
     }
 
@@ -1386,28 +1410,36 @@
       document.getElementById("logBox").textContent += "\n" + text;
     }
 
-    /* =========================
-       音效 / 背景音乐（纯网页内建）
-       ========================= */
-    function startAudioSystem() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
+    function initAudio() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass && !audioCtx) {
         audioCtx = new AudioContextClass();
       }
 
+      const bgm = document.getElementById("bgmPlayer");
+      bgm.volume = musicVolume;
+
+      document.getElementById("musicVolumeSlider").addEventListener("input", (e) => {
+        musicVolume = Number(e.target.value) / 100;
+        bgm.volume = musicVolume;
+      });
+
+      document.getElementById("sfxVolumeSlider").addEventListener("input", (e) => {
+        sfxVolume = Number(e.target.value) / 100;
+      });
+    }
+
+    function playBgm() {
+      const bgm = document.getElementById("bgmPlayer");
+      bgm.volume = musicVolume;
+      bgm.play().catch(() => {});
+    }
+
+    function playTone(freq, duration, type = "sine", volume = 0.08, when = 0) {
+      if (!audioCtx) return;
       if (audioCtx.state === "suspended") {
         audioCtx.resume();
       }
-
-      if (!bgmStarted) {
-        bgmStarted = true;
-        startMedievalBgm();
-      }
-    }
-
-    function playTone(freq, duration, type = "sine", volume = 0.03, when = 0) {
-      if (!audioCtx) return;
 
       const now = audioCtx.currentTime + when;
       const osc = audioCtx.createOscillator();
@@ -1417,7 +1449,7 @@
       osc.frequency.setValueAtTime(freq, now);
 
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, volume * sfxVolume), now + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
       osc.connect(gain);
@@ -1431,61 +1463,26 @@
       if (!audioCtx) return;
 
       if (kind === "attack") {
-        playTone(220, 0.08, "sawtooth", 0.04, 0);
-        playTone(165, 0.12, "triangle", 0.03, 0.03);
+        playTone(260, 0.08, "sawtooth", 0.18, 0);
+        playTone(180, 0.12, "triangle", 0.14, 0.03);
       }
 
       if (kind === "heal") {
-        playTone(523.25, 0.18, "sine", 0.03, 0);
-        playTone(659.25, 0.18, "sine", 0.025, 0.06);
+        playTone(523.25, 0.18, "sine", 0.16, 0);
+        playTone(659.25, 0.18, "sine", 0.13, 0.06);
       }
 
       if (kind === "shield") {
-        playTone(246.94, 0.12, "square", 0.025, 0);
-        playTone(293.66, 0.12, "square", 0.02, 0.08);
+        playTone(246.94, 0.12, "square", 0.14, 0);
+        playTone(293.66, 0.12, "square", 0.12, 0.08);
       }
 
       if (kind === "monster") {
-        playTone(130.81, 0.15, "sawtooth", 0.04, 0);
-        playTone(98, 0.18, "triangle", 0.03, 0.04);
+        playTone(130.81, 0.15, "sawtooth", 0.18, 0);
+        playTone(98, 0.18, "triangle", 0.15, 0.04);
       }
     }
 
-    function clearBgmTimers() {
-      bgmTimers.forEach(id => clearTimeout(id));
-      bgmTimers = [];
-    }
-
-    function schedulePhrase(startAt, notes, type = "triangle", volume = 0.012, step = 0.46) {
-      notes.forEach((freq, i) => {
-        if (freq > 0) playTone(freq, 0.34, type, volume, startAt + i * step);
-      });
-      return startAt + notes.length * step;
-    }
-
-    function startMedievalBgm() {
-      if (!audioCtx) return;
-      clearBgmTimers();
-
-      const loopDuration = 15.5;
-
-      const playLoop = () => {
-        let t = 0;
-        t = schedulePhrase(t, [293.66, 349.23, 392.00, 440.00, 392.00, 349.23], "triangle", 0.015, 0.42);
-        t = schedulePhrase(t, [293.66, 392.00, 440.00, 493.88, 440.00, 392.00], "triangle", 0.015, 0.42);
-        t = schedulePhrase(t, [349.23, 392.00, 440.00, 392.00, 349.23, 293.66], "triangle", 0.015, 0.42);
-
-        const drone = [146.83, 146.83, 174.61, 146.83, 146.83, 130.81];
-        drone.forEach((freq, i) => playTone(freq, 1.8, "sine", 0.008, i * 2.5));
-
-        const timer = setTimeout(playLoop, loopDuration * 1000);
-        bgmTimers.push(timer);
-      };
-
-      playLoop();
-    }
-
-    /* 初始化 */
     initGame();
     renderAvatarChoices();
     applyPlayerIdentity();
