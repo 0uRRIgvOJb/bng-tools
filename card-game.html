@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>卡牌冒险</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-family: Arial, "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(180deg, #111 0%, #1b1b1b 100%);
+      background: linear-gradient(180deg, #0f1115 0%, #181c22 100%);
       color: #fff;
     }
 
@@ -19,11 +21,11 @@
       justify-content: flex-end;
       align-items: center;
       padding: 12px 18px;
-      background: rgba(0, 0, 0, 0.35);
-      border-bottom: 1px solid #2e2e2e;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid #2a2f37;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 50;
       backdrop-filter: blur(6px);
     }
 
@@ -38,44 +40,47 @@
       font-size: 15px;
     }
 
-    .home-btn:hover {
-      opacity: 0.92;
-    }
-
     .container {
-      max-width: 1180px;
+      max-width: 1250px;
       margin: 0 auto;
-      padding: 22px 18px 40px;
+      padding: 20px;
     }
 
     .title {
       text-align: center;
-      font-size: 52px;
+      font-size: 48px;
       font-weight: 800;
-      margin: 6px 0 18px;
+      margin: 8px 0 22px;
       letter-spacing: 2px;
     }
 
     .top-status {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 18px;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .mini-panel,
+    .character-panel,
+    .cards-panel,
+    .log-panel,
+    .shop-panel {
+      background: #1b1f27;
+      border: 1px solid #2d3440;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
     .mini-panel {
-      background: #1f1f1f;
-      border: 1px solid #313131;
-      border-radius: 14px;
-      padding: 14px 16px;
+      padding: 16px;
       text-align: center;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
 
     .mini-panel .label {
+      color: #aeb7c6;
       font-size: 14px;
-      color: #bdbdbd;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .mini-panel .value {
@@ -87,16 +92,12 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .character-panel {
-      background: #1d1d1d;
-      border: 1px solid #333;
-      border-radius: 18px;
-      padding: 18px;
+      padding: 20px;
       min-height: 320px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     }
 
     .character-head {
@@ -114,105 +115,102 @@
       align-items: center;
       justify-content: center;
       font-size: 52px;
-      background: #2a2a2a;
-      border: 1px solid #3b3b3b;
       flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .hero-avatar {
-      background: linear-gradient(135deg, #2a3d75, #1f7acb);
+      background: linear-gradient(135deg, #28476f, #2996db);
     }
 
     .monster-avatar {
-      background: linear-gradient(135deg, #5d1f1f, #b93a3a);
+      background: linear-gradient(135deg, #612727, #b93b3b);
     }
 
     .character-title h2 {
       margin: 0 0 8px;
-      font-size: 28px;
+      font-size: 30px;
     }
 
     .character-sub {
-      color: #bcbcbc;
+      color: #b6beca;
       font-size: 14px;
+      line-height: 1.6;
     }
 
     .stat-row {
-      margin-bottom: 14px;
+      margin-bottom: 18px;
     }
 
     .stat-top {
       display: flex;
       justify-content: space-between;
-      font-size: 16px;
-      margin-bottom: 6px;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
+      font-size: 16px;
+      margin-bottom: 8px;
+      line-height: 1.6;
     }
 
     .bar-bg {
       width: 100%;
       height: 18px;
       border-radius: 999px;
+      background: #313844;
       overflow: hidden;
-      background: #353535;
     }
 
     .hp-bar {
       height: 100%;
-      background: linear-gradient(90deg, #db3b3b, #ff6666);
+      background: linear-gradient(90deg, #e24b4b, #ff7c7c);
       transition: width 0.25s ease;
     }
 
     .energy-bar {
       height: 100%;
-      background: linear-gradient(90deg, #00a6ff, #73d0ff);
+      background: linear-gradient(90deg, #2aa8ff, #7cd5ff);
       transition: width 0.25s ease;
     }
 
     .shield-badge {
       display: inline-block;
-      padding: 5px 10px;
-      background: #1f4f88;
-      color: #d8efff;
+      padding: 4px 10px;
+      background: #224f85;
+      color: #dcedff;
       border-radius: 999px;
       font-size: 14px;
       font-weight: bold;
+      vertical-align: middle;
     }
 
-    .monster-skill-note,
-    .hero-skill-note {
-      margin-top: 14px;
-      background: #151515;
-      border: 1px solid #2a2a2a;
-      padding: 12px;
+    .info-note {
+      margin-top: 12px;
+      background: #13171d;
+      border: 1px solid #272d37;
       border-radius: 12px;
-      color: #ddd;
-      line-height: 1.6;
-      min-height: 74px;
+      padding: 12px;
+      color: #d8dee8;
+      line-height: 1.7;
+      min-height: 82px;
     }
 
     .cards-panel,
     .log-panel,
     .shop-panel {
-      background: #1d1d1d;
-      border: 1px solid #333;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      padding: 20px;
     }
 
     .section-title {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
       margin-bottom: 10px;
     }
 
     .section-sub {
-      color: #bdbdbd;
+      color: #b6beca;
       font-size: 14px;
       margin-bottom: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .cards {
@@ -222,20 +220,31 @@
     }
 
     .card {
-      background: linear-gradient(180deg, #262626 0%, #1d1d1d 100%);
-      border: 1px solid #444;
+      background: linear-gradient(180deg, #262d38 0%, #1a2029 100%);
+      border: 1px solid #38404f;
       border-radius: 16px;
-      padding: 14px;
+      padding: 16px;
       min-height: 220px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.15s ease, border-color 0.15s ease;
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: #666;
+    .card.attack {
+      border-color: rgba(255, 100, 100, 0.45);
+    }
+
+    .card.defense {
+      border-color: rgba(100, 190, 255, 0.45);
+    }
+
+    .card.heal {
+      border-color: rgba(100, 255, 140, 0.45);
+    }
+
+    .card.special {
+      border-color: rgba(184, 120, 255, 0.6);
+      box-shadow: 0 0 0 1px rgba(184, 120, 255, 0.12) inset;
     }
 
     .card-top {
@@ -244,7 +253,7 @@
 
     .card-type {
       font-size: 13px;
-      color: #bbb;
+      color: #aab4c5;
       margin-bottom: 8px;
     }
 
@@ -255,21 +264,22 @@
     }
 
     .card-desc {
-      color: #e8e8e8;
+      color: #e6ebf3;
       line-height: 1.7;
       font-size: 15px;
-      min-height: 70px;
+      min-height: 72px;
     }
 
     .card-cost {
-      margin-top: 10px;
+      margin-top: 8px;
       color: #8fd8ff;
       font-weight: bold;
     }
 
     .card button,
     .action-btn,
-    .shop-btn {
+    .shop-btn,
+    .next-btn {
       border: none;
       border-radius: 12px;
       padding: 12px 14px;
@@ -279,20 +289,15 @@
     }
 
     .card button {
-      background: #4caf50;
-      color: #fff;
       width: 100%;
-    }
-
-    .card button:hover:not(:disabled),
-    .action-btn:hover:not(:disabled),
-    .shop-btn:hover:not(:disabled) {
-      opacity: 0.92;
+      background: #3c8f47;
+      color: #fff;
     }
 
     .card button:disabled,
     .action-btn:disabled,
-    .shop-btn:disabled {
+    .shop-btn:disabled,
+    .next-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
@@ -300,38 +305,39 @@
     .actions {
       display: flex;
       gap: 12px;
-      margin: 18px 0;
       flex-wrap: wrap;
+      margin-top: 18px;
     }
 
     .action-btn {
+      min-width: 140px;
       background: #ff7a3d;
       color: #fff;
-      min-width: 140px;
     }
 
     .action-btn.restart {
       background: #4d7cff;
     }
 
-    .log-panel {
-      margin-top: 18px;
+    .next-btn {
+      background: #8c5bff;
+      color: #fff;
     }
 
     .log-box {
-      background: #111;
-      border: 1px solid #2d2d2d;
+      background: #10141a;
+      border: 1px solid #262d37;
       border-radius: 14px;
       padding: 14px;
-      min-height: 140px;
+      min-height: 150px;
       white-space: pre-line;
-      line-height: 1.7;
-      color: #f2f2f2;
+      line-height: 1.75;
+      color: #f0f3f8;
     }
 
     .shop-panel {
-      margin-top: 18px;
       display: none;
+      margin-top: 20px;
     }
 
     .shop-options {
@@ -341,8 +347,8 @@
     }
 
     .shop-item {
-      background: linear-gradient(180deg, #262626 0%, #202020 100%);
-      border: 1px solid #444;
+      background: linear-gradient(180deg, #262d38 0%, #1d232c 100%);
+      border: 1px solid #39404f;
       border-radius: 16px;
       padding: 14px;
     }
@@ -353,9 +359,9 @@
     }
 
     .shop-desc {
-      color: #ddd;
+      color: #dbe1eb;
       line-height: 1.7;
-      min-height: 68px;
+      min-height: 72px;
       margin-bottom: 10px;
     }
 
@@ -366,12 +372,16 @@
     }
 
     .shop-btn {
+      width: 100%;
       background: #8c5bff;
       color: #fff;
-      width: 100%;
     }
 
-    @media (max-width: 900px) {
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
       .top-status {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -379,13 +389,9 @@
       .battle-board {
         grid-template-columns: 1fr;
       }
-
-      .title {
-        font-size: 40px;
-      }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 600px) {
       .top-status {
         grid-template-columns: 1fr;
       }
@@ -395,11 +401,7 @@
       }
 
       .title {
-        font-size: 34px;
-      }
-
-      .character-head {
-        align-items: flex-start;
+        font-size: 36px;
       }
     }
   </style>
@@ -426,8 +428,8 @@
         <div class="value" id="stageTypeText">普通关</div>
       </div>
       <div class="mini-panel">
-        <div class="label">当前手牌数</div>
-        <div class="value" id="handCountText">4</div>
+        <div class="label">剩余手牌</div>
+        <div class="value" id="handCountText">0</div>
       </div>
     </div>
 
@@ -437,13 +439,16 @@
           <div class="avatar hero-avatar">🧙</div>
           <div class="character-title">
             <h2>主角</h2>
-            <div class="character-sub">你的回合制卡牌冒险者</div>
+            <div class="character-sub">每回合会随机发牌。使用后的卡牌会从本回合手牌中消失。</div>
           </div>
         </div>
 
         <div class="stat-row">
           <div class="stat-top">
-            <div>HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span> <span class="shield-badge">护盾 <span id="playerShieldText">0</span></span></div>
+            <div>
+              HP：<span id="playerHpText">100</span> / <span id="playerMaxHpText">100</span>
+              <span class="shield-badge">护盾 <span id="playerShieldText">0</span></span>
+            </div>
           </div>
           <div class="bar-bg">
             <div class="hp-bar" id="playerHpBar" style="width:100%"></div>
@@ -459,9 +464,7 @@
           </div>
         </div>
 
-        <div class="hero-skill-note" id="heroInfoText">
-          每回合会随机获得新卡牌。回合结束后，怪物会攻击你。
-        </div>
+        <div class="info-note" id="heroInfoText">准备开始战斗。</div>
       </div>
 
       <div class="character-panel">
@@ -469,7 +472,7 @@
           <div class="avatar monster-avatar" id="monsterEmojiText">👾</div>
           <div class="character-title">
             <h2 id="monsterNameText">史莱姆</h2>
-            <div class="character-sub" id="monsterTypeText">普通怪物</div>
+            <div class="character-sub" id="monsterTypeText">普通关</div>
           </div>
         </div>
 
@@ -488,28 +491,27 @@
           </div>
         </div>
 
-        <div class="monster-skill-note" id="monsterInfoText">
-          怪物会在你的回合结束后发动攻击。
-        </div>
+        <div class="info-note" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
       </div>
     </div>
 
     <div class="cards-panel">
-      <div class="section-title">卡牌</div>
+      <div class="section-title">手牌</div>
       <div class="section-sub">
-        每回合会随机发 4 张牌。商店买到的特殊卡牌，之后才有机会在发牌时出现。
+        每回合随机发 4 张牌。用过的牌会立即消失，直到下一回合才重新随机发牌。
       </div>
       <div class="cards" id="cardsContainer"></div>
 
       <div class="actions">
         <button class="action-btn" id="endTurnBtn" onclick="endTurn()">结束回合</button>
         <button class="action-btn restart" onclick="restartGame()">重新开始</button>
+        <button class="next-btn hidden" id="nextBattleBtn" onclick="afterBattleContinue()">继续</button>
       </div>
     </div>
 
     <div class="shop-panel" id="shopBox">
       <div class="section-title">商店</div>
-      <div class="section-sub">每过 3 关进入一次商店，随机出现 3 个选项，你可以选择购买其中一个。</div>
+      <div class="section-sub">每通过 3 关后进入商店。随机出现 3 个选项，你只能购买其中一个。</div>
       <div class="shop-options" id="shopOptions"></div>
     </div>
 
@@ -523,23 +525,23 @@
     const HOME_URL = "https://0urrigvojb.github.io/bng-tools/";
 
     const normalMonsters = [
-      { name: "史莱姆", emoji: "🟢", note: "黏糊糊的怪物，攻击不高但数量常见。" },
-      { name: "骷髅兵", emoji: "💀", note: "基础亡灵怪物，动作直接。" },
-      { name: "毒蜘蛛", emoji: "🕷️", note: "速度快，给人压迫感。" },
-      { name: "狼人", emoji: "🐺", note: "攻击偏强，血量也不低。" },
-      { name: "石像鬼", emoji: "🗿", note: "防御感很强的怪物。" }
+      { name: "史莱姆", emoji: "🟢", note: "黏糊糊的基础怪物。" },
+      { name: "骷髅兵", emoji: "💀", note: "常见亡灵，攻击直来直往。" },
+      { name: "毒蜘蛛", emoji: "🕷️", note: "有压迫感的快速怪物。" },
+      { name: "狼人", emoji: "🐺", note: "力量偏高的近战怪。" },
+      { name: "暗影盗贼", emoji: "🗡️", note: "行动迅速，攻击偏高。" }
     ];
 
     const miniBossMonsters = [
-      { name: "地牢守卫", emoji: "🛡️", note: "小BOSS，拥有更高的生命与攻击。" },
-      { name: "幽冥法师", emoji: "🔮", note: "充满诡异气息的小BOSS。" },
-      { name: "双刃兽人", emoji: "🪓", note: "双刃武器，攻击力更高。" }
+      { name: "地牢守卫", emoji: "🛡️", note: "小BOSS，生命更厚。" },
+      { name: "幽冥法师", emoji: "🔮", note: "小BOSS，威压更强。" },
+      { name: "双刃兽人", emoji: "🪓", note: "小BOSS，攻击力更高。" }
     ];
 
     const bossMonsters = [
-      { name: "深渊魔王", emoji: "😈", note: "大BOSS，拥有极高的压制力。" },
-      { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，火焰与重甲并存。" },
-      { name: "终焉领主", emoji: "👹", note: "后期强敌，攻防都更高。" }
+      { name: "深渊魔王", emoji: "😈", note: "大BOSS，血量和伤害都大幅提升。" },
+      { name: "黑炎骑士", emoji: "🔥", note: "大BOSS，重甲与黑炎并存。" },
+      { name: "终焉领主", emoji: "👹", note: "大BOSS，压迫感极强。" }
     ];
 
     let state = {};
@@ -564,30 +566,24 @@
 
     function createMonster(level) {
       const type = getStageType(level);
-      let pool;
-      let data;
+      let pool = normalMonsters;
 
-      if (type === "大BOSS") {
-        pool = bossMonsters;
-      } else if (type === "小BOSS") {
-        pool = miniBossMonsters;
-      } else {
-        pool = normalMonsters;
-      }
+      if (type === "小BOSS") pool = miniBossMonsters;
+      if (type === "大BOSS") pool = bossMonsters;
 
-      data = pool[randomInt(0, pool.length - 1)];
+      const data = pool[randomInt(0, pool.length - 1)];
 
       let hp = 0;
       let atk = 0;
 
       if (type === "普通关") {
-        hp = 30 + level * 8 + randomInt(0, 14);
+        hp = 30 + level * 8 + randomInt(0, 12);
         atk = 6 + Math.floor(level * 1.5) + Math.floor(state.player.maxHp * 0.025);
       } else if (type === "小BOSS") {
-        hp = 78 + level * 12 + randomInt(8, 20);
+        hp = 78 + level * 12 + randomInt(8, 18);
         atk = 11 + Math.floor(level * 1.8) + Math.floor(state.player.maxHp * 0.035);
       } else {
-        hp = 130 + level * 15 + randomInt(15, 35);
+        hp = 130 + level * 15 + randomInt(12, 30);
         atk = 15 + Math.floor(level * 2.2) + Math.floor(state.player.maxHp * 0.045);
       }
 
@@ -614,6 +610,7 @@
         gold: 0,
         inShop: false,
         gameOver: false,
+        awaitingNextAction: false,
         deckSizePerTurn: 4,
         hand: [],
         player: {
@@ -710,26 +707,48 @@
     }
 
     function drawNewHand() {
-      const fullPool = getFullCardPool();
-      const hand = [];
+      const pool = getFullCardPool();
+      const newHand = [];
 
       for (let i = 0; i < state.deckSizePerTurn; i++) {
-        const card = fullPool[randomInt(0, fullPool.length - 1)];
-        hand.push({ ...card, uid: Date.now() + "_" + i + "_" + Math.random() });
+        const picked = pool[randomInt(0, pool.length - 1)];
+        newHand.push({
+          ...picked,
+          uid: `${Date.now()}_${i}_${Math.random()}`
+        });
       }
 
-      state.hand = hand;
+      state.hand = newHand;
+    }
+
+    function getCardClass(card) {
+      if (card.type === "attack") return "attack";
+      if (card.type === "defense") return "defense";
+      if (card.type === "heal") return "heal";
+      return "special";
     }
 
     function renderCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
+      if (state.hand.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.color = "#b6beca";
+        empty.style.gridColumn = "1 / -1";
+        empty.textContent = "本回合已经没有手牌了，请结束回合。";
+        container.appendChild(empty);
+      }
+
       state.hand.forEach(card => {
         const div = document.createElement("div");
-        div.className = "card";
+        div.className = `card ${getCardClass(card)}`;
 
-        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost;
+        const canUse =
+          !state.inShop &&
+          !state.gameOver &&
+          !state.awaitingNextAction &&
+          state.player.energy >= card.cost;
 
         div.innerHTML = `
           <div class="card-top">
@@ -749,7 +768,7 @@
     }
 
     function playCard(uid) {
-      if (state.inShop || state.gameOver) return;
+      if (state.inShop || state.gameOver || state.awaitingNextAction) return;
 
       const cardIndex = state.hand.findIndex(card => card.uid === uid);
       if (cardIndex === -1) return;
@@ -827,7 +846,7 @@
     }
 
     function endTurn() {
-      if (state.inShop || state.gameOver) return;
+      if (state.inShop || state.gameOver || state.awaitingNextAction) return;
       monsterTurn();
     }
 
@@ -835,13 +854,13 @@
       if (state.currentMonster.hp <= 0) return;
 
       let incoming = state.currentMonster.atk;
-      let shieldBefore = state.player.shield;
+      const shieldBefore = state.player.shield;
       let hpDamage = 0;
 
       if (state.player.shield > 0) {
-        const block = Math.min(state.player.shield, incoming);
-        state.player.shield -= block;
-        incoming -= block;
+        const blocked = Math.min(state.player.shield, incoming);
+        state.player.shield -= blocked;
+        incoming -= blocked;
       }
 
       if (incoming > 0) {
@@ -852,9 +871,13 @@
 
       if (shieldBefore > 0) {
         const consumed = shieldBefore - state.player.shield;
-        log(`怪物攻击了你，先扣除 ${consumed} 点护盾${hpDamage > 0 ? `，再扣除 ${hpDamage} 点生命` : "。"} `);
+        if (hpDamage > 0) {
+          log(`怪物攻击你，先扣除 ${consumed} 点护盾，再扣除 ${hpDamage} 点生命。`);
+        } else {
+          log(`怪物攻击你，护盾吸收了 ${consumed} 点伤害。`);
+        }
       } else {
-        log(`怪物攻击了你，造成 ${hpDamage} 点生命伤害。`);
+        log(`怪物攻击你，造成 ${hpDamage} 点生命伤害。`);
       }
 
       if (state.player.hp <= 0) {
@@ -872,32 +895,53 @@
 
       state.player.energy = state.player.maxEnergy;
       drawNewHand();
-      logAppend("新的回合开始，你获得了新的随机卡牌，能量也已补满。");
+      logAppend("新的回合开始，你获得了新的随机手牌，能量已补满。");
 
       updateUI();
     }
 
     function winBattle() {
       const reward = getReward(state.level);
+      const clearedLevel = state.level;
+
       state.gold += reward;
+      state.awaitingNextAction = true;
 
       log(`你击败了【${state.currentMonster.name}】！获得 ${reward} 金币。`);
 
-      if (state.level >= 50) {
+      if (clearedLevel >= 50) {
         state.gameOver = true;
         logAppend("恭喜你通过全部 50 关！");
         updateUI();
         return;
       }
 
-      const clearedLevel = state.level;
-      state.level++;
+      state.level += 1;
+      state.hand = [];
 
       if (clearedLevel % 3 === 0) {
+        logAppend("你通过了第 3 的倍数关卡，可以进入商店。点击【继续】前往商店。");
+      } else {
+        logAppend(`点击【继续】进入第 ${state.level} 关。`);
+      }
+
+      updateUI();
+    }
+
+    function afterBattleContinue() {
+      if (!state.awaitingNextAction || state.gameOver) return;
+
+      state.awaitingNextAction = false;
+
+      const justCleared = state.level - 1;
+
+      if (justCleared % 3 === 0) {
         openShop();
       } else {
         startLevel();
       }
+
+      updateUI();
     }
 
     function startLevel(isFirst = false) {
@@ -1019,10 +1063,10 @@
                 cost: 3,
                 desc: "造成 34 点伤害"
               });
-              log("购买成功：特殊卡【烈焰斩】已加入你的牌池。");
+              log("购买成功：特殊卡【烈焰斩】已加入牌池。");
             } else {
               state.gold += 8;
-              log("你已经拥有这张特殊卡，补偿 8 金币。");
+              log("你已拥有这张特殊卡，补偿 8 金币。");
             }
           }
         },
@@ -1042,10 +1086,10 @@
                 cost: 3,
                 desc: "恢复 18 HP，并获得 14 点护盾"
               });
-              log("购买成功：特殊卡【圣光庇护】已加入你的牌池。");
+              log("购买成功：特殊卡【圣光庇护】已加入牌池。");
             } else {
               state.gold += 8;
-              log("你已经拥有这张特殊卡，补偿 8 金币。");
+              log("你已拥有这张特殊卡，补偿 8 金币。");
             }
           }
         },
@@ -1065,10 +1109,10 @@
                 cost: 1,
                 desc: "造成 16 点伤害，并回复 1 点能量"
               });
-              log("购买成功：特殊卡【能量冲击】已加入你的牌池。");
+              log("购买成功：特殊卡【能量冲击】已加入牌池。");
             } else {
               state.gold += 8;
-              log("你已经拥有这张特殊卡，补偿 8 金币。");
+              log("你已拥有这张特殊卡，补偿 8 金币。");
             }
           }
         }
@@ -1099,6 +1143,7 @@
         shopOptions.appendChild(div);
       });
 
+      log("你进入了商店，可以购买 1 个选项。");
       updateUI();
     }
 
@@ -1121,6 +1166,7 @@
       document.getElementById("levelText").textContent = state.level;
       document.getElementById("goldText").textContent = state.gold;
       document.getElementById("stageTypeText").textContent = getStageType(state.level);
+      document.getElementById("handCountText").textContent = state.hand.length;
 
       document.getElementById("playerHpText").textContent = state.player.hp;
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
@@ -1130,26 +1176,34 @@
 
       document.getElementById("playerHpBar").style.width =
         ((state.player.hp / state.player.maxHp) * 100) + "%";
-
       document.getElementById("energyBar").style.width =
         ((state.player.energy / state.player.maxEnergy) * 100) + "%";
 
-      document.getElementById("monsterNameText").textContent = state.currentMonster.name;
-      document.getElementById("monsterTypeText").textContent = state.currentMonster.type;
-      document.getElementById("monsterEmojiText").textContent = state.currentMonster.emoji;
-      document.getElementById("monsterHpText").textContent = state.currentMonster.hp;
-      document.getElementById("monsterMaxHpText").textContent = state.currentMonster.maxHp;
-      document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
-      document.getElementById("monsterHpBar").style.width =
-        ((state.currentMonster.hp / state.currentMonster.maxHp) * 100) + "%";
-
-      document.getElementById("monsterInfoText").textContent =
-        `${state.currentMonster.note} 当前攻击力为 ${state.currentMonster.atk}。`;
+      if (state.currentMonster) {
+        document.getElementById("monsterNameText").textContent = state.currentMonster.name;
+        document.getElementById("monsterTypeText").textContent = state.currentMonster.type;
+        document.getElementById("monsterEmojiText").textContent = state.currentMonster.emoji;
+        document.getElementById("monsterHpText").textContent = state.currentMonster.hp;
+        document.getElementById("monsterMaxHpText").textContent = state.currentMonster.maxHp;
+        document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
+        document.getElementById("monsterHpBar").style.width =
+          ((state.currentMonster.hp / state.currentMonster.maxHp) * 100) + "%";
+        document.getElementById("monsterInfoText").textContent =
+          `${state.currentMonster.note} 当前攻击力为 ${state.currentMonster.atk}。`;
+      }
 
       document.getElementById("heroInfoText").textContent =
-        `本回合随机发牌 ${state.hand.length} 张。特殊卡数量：${state.ownedSpecialCards.length}。`;
+        `本回合剩余手牌 ${state.hand.length} 张，已拥有特殊卡 ${state.ownedSpecialCards.length} 张。`;
 
-      document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
+      document.getElementById("endTurnBtn").disabled =
+        state.inShop || state.gameOver || state.awaitingNextAction;
+
+      const nextBtn = document.getElementById("nextBattleBtn");
+      if (state.awaitingNextAction && !state.gameOver) {
+        nextBtn.classList.remove("hidden");
+      } else {
+        nextBtn.classList.add("hidden");
+      }
 
       renderCards();
     }
