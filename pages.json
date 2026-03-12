@@ -1,12 +1,12 @@
 [
   {
     "name": "BNG电子对帐",
-    "file": "tool.html"
+    "file": "tool.html",
     "type": "工具"
   },
  {
     "name": "卡牌冒险",
-    "file": "card-game.html"
+    "file": "card-game.html",
     "type": "其他"
   }
 ]
