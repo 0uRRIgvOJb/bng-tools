@@ -467,6 +467,23 @@
       background: #914b2b;
     }
 
+    .shop-balance {
+      background: #12161c;
+      border: 1px solid #262d37;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 18px;
+      color: #ffd56a;
+      font-weight: bold;
+    }
+
+    .shop-tip {
+      color: #b6beca;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
     .shop-options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -498,6 +515,12 @@
       font-weight: bold;
       margin-bottom: 12px;
       font-size: 18px;
+    }
+
+    .shop-owned {
+      color: #7ef0a6;
+      font-size: 13px;
+      margin-bottom: 10px;
     }
 
     .setup-grid {
@@ -634,7 +657,7 @@
 
             <div class="stat-row">
               <div class="stat-top">
-                <div>能量：<span id="energyText">3</span> / <span id="energyMaxText">3</span></div>
+                <div>能量：<span id="energyText">4</span> / <span id="energyMaxText">4</span></div>
               </div>
               <div class="bar-bg">
                 <div class="energy-bar" id="energyBar" style="width:100%"></div>
@@ -759,7 +782,8 @@
   <div class="modal-overlay" id="shopModal">
     <div class="modal-box">
       <div class="modal-title">商店</div>
-      <div class="modal-sub">你可以购买一个项目，也可以直接关闭商店。</div>
+      <div class="shop-balance">当前金币：<span id="shopGoldText">0</span></div>
+      <div class="shop-tip">商店中的 3 个商品都可以购买。只要金币够，你可以全部买完，再自己关闭商店。</div>
       <div class="shop-options" id="shopOptions"></div>
       <div class="modal-actions">
         <button class="modal-btn secondary" onclick="closeShop()">关闭商店</button>
@@ -800,6 +824,124 @@
       { name: "黑炎骑士", emoji: "🔥", race: "fireboss", note: "高血量，擅长持续压制。" },
       { name: "终焉领主", emoji: "👹", race: "finalboss", note: "拥有多种危险技能。" }
     ];
+
+    const specialCardCatalog = {
+      holy_hammer: {
+        key: "holy_hammer",
+        name: "神圣锤",
+        create(level) {
+          return {
+            id: "holy_hammer",
+            name: "神圣锤",
+            type: "holy_hammer",
+            cardType: "效果牌",
+            damageValue: 16 + Math.floor(level * 0.6),
+            healValue: 8 + Math.floor(level * 0.25),
+            cost: 2,
+            desc: "造成伤害并恢复少量生命"
+          };
+        }
+      },
+      burst_shield: {
+        key: "burst_shield",
+        name: "爆裂神盾",
+        create(level) {
+          return {
+            id: "burst_shield",
+            name: "爆裂神盾",
+            type: "burst_shield",
+            cardType: "效果牌",
+            shieldValue: 30 + Math.floor(level * 0.7),
+            bombValue: 22 + Math.floor(level * 0.6),
+            cost: 2,
+            desc: "提供独立护盾，3回合后若未耗尽则爆炸伤敌"
+          };
+        }
+      },
+      flame_slash: {
+        key: "flame_slash",
+        name: "烈焰斩",
+        create(level) {
+          return {
+            id: "flame_slash",
+            name: "烈焰斩",
+            type: "flame_slash",
+            cardType: "效果牌",
+            damageValue: 15 + Math.floor(level * 0.65),
+            burnChance: 0.45,
+            burnDamage: 5 + Math.floor(level * 0.18),
+            burnTurns: 4,
+            cost: 2,
+            desc: "造成伤害，并几率附加4回合燃烧"
+          };
+        }
+      },
+      shadow_step: {
+        key: "shadow_step",
+        name: "暗影步",
+        create(level) {
+          return {
+            id: "shadow_step",
+            name: "暗影步",
+            type: "shadow_step",
+            cardType: "效果牌",
+            dodgeGain: 0.22,
+            cost: 1,
+            desc: "提升本关卡内的闪避几率"
+          };
+        }
+      },
+      mercy_water: {
+        key: "mercy_water",
+        name: "我佛慈悲水",
+        create(level) {
+          return {
+            id: "mercy_water",
+            name: "我佛慈悲水",
+            type: "mercy_water",
+            cardType: "效果牌",
+            healValue: 8 + Math.floor(level * 0.2),
+            hotValue: 6 + Math.floor(level * 0.2),
+            hotTurns: 5,
+            cost: 2,
+            desc: "少量治疗并提供5回合持续治疗"
+          };
+        }
+      },
+      mercy_palm: {
+        key: "mercy_palm",
+        name: "大慈大悲掌",
+        create(level) {
+          return {
+            id: "mercy_palm",
+            name: "大慈大悲掌",
+            type: "mercy_palm",
+            cardType: "效果牌",
+            damageValue: 16 + Math.floor(level * 0.55),
+            blindTurns: 1,
+            cost: 2,
+            desc: "造成中等伤害，并使怪物几率攻击失误"
+          };
+        }
+      },
+      cannon: {
+        key: "cannon",
+        name: "加农炮",
+        create(level) {
+          return {
+            id: "cannon",
+            name: "加农炮",
+            type: "cannon",
+            cardType: "效果牌",
+            damageValue: 30 + Math.floor(level * 0.8),
+            selfDamageChance: 0.3,
+            selfDamage: 6 + Math.floor(level * 0.15),
+            cost: 3,
+            desc: "造成大量伤害，但有几率反伤自己"
+          };
+        }
+      }
+    };
 
     let state = {};
     let selectedAvatar = avatarChoices[0];
@@ -970,11 +1112,12 @@
         deckSizePerTurn: 4,
         hand: [],
         turnLabel: "玩家回合",
+        shopItemsBoughtThisVisit: 0,
         player: {
           hp: 100,
           maxHp: 100,
-          energy: 3,
-          maxEnergy: 3,
+          energy: 4,
+          maxEnergy: 4,
           shield: 0,
           blindTurns: 0,
           dodgeChance: 0,
@@ -994,7 +1137,7 @@
           regen: 0,
           doubleStrike: 0
         },
-        ownedSpecialCards: [],
+        ownedSpecialCardKeys: [],
         currentMonster: null
       };
       logEntries = [];
@@ -1034,6 +1177,13 @@
       document.getElementById("playerAvatarText").textContent = state.playerAvatar;
     }
 
+    function getOwnedSpecialCards() {
+      return state.ownedSpecialCardKeys
+        .map(key => specialCardCatalog[key])
+        .filter(Boolean)
+        .map(item => item.create(state.level));
+    }
+
     function getBaseCardPool() {
       const atk1 = 12 + Math.floor(state.level * 0.8) + state.upgrades.atkBonus;
       const atk2 = 18 + Math.floor(state.level * 0.95) + state.upgrades.atkBonus;
@@ -1053,7 +1203,7 @@
     }
 
     function getFullCardPool() {
-      return [...getBaseCardPool(), ...state.ownedSpecialCards];
+      return [...getBaseCardPool(), ...getOwnedSpecialCards()];
     }
 
     function drawNewHand() {
@@ -1467,6 +1617,7 @@
       state.player.poisonTurns = 0;
       state.player.poisonDamage = 0;
       state.turnLabel = "玩家回合";
+      state.shopItemsBoughtThisVisit = 0;
       drawNewHand();
 
       if (!isFirst) {
@@ -1482,6 +1633,41 @@
       return base + raise;
     }
 
+    function ownsSpecialCard(key) {
+      return state.ownedSpecialCardKeys.includes(key);
+    }
+
+    function addSpecialCardToPool(key) {
+      if (!ownsSpecialCard(key)) {
+        state.ownedSpecialCardKeys.push(key);
+      }
+    }
+
+    function renderShopItems(selected) {
+      const shopOptions = document.getElementById("shopOptions");
+      const shopGoldText = document.getElementById("shopGoldText");
+      shopOptions.innerHTML = "";
+      shopGoldText.textContent = state.gold;
+
+      selected.forEach(item => {
+        const cost = item.cost;
+        const canBuy = state.gold >= cost && !item.disabledByOwnership;
+        const div = document.createElement("div");
+        div.className = "shop-item";
+
+        div.innerHTML = `
+          <h3>${item.title}</h3>
+          <div class="shop-desc">${item.desc}</div>
+          ${item.ownedText ? `<div class="shop-owned">${item.ownedText}</div>` : ""}
+          <div class="shop-price">价格：${cost} 金币</div>
+          <button class="modal-btn" ${canBuy ? "" : "disabled"}>${item.disabledByOwnership ? "已拥有" : "购买"}</button>
+        `;
+
+        div.querySelector("button").onclick = () => buyItem(item, selected);
+        shopOptions.appendChild(div);
+      });
+    }
+
     function openShop() {
       state.inShop = true;
 
@@ -1489,8 +1675,8 @@
         {
           title: "增加能量球",
           desc: "能量上限 +1，并立即补满。",
-          getCost: () => getShopPrice(18, 28),
-          action: () => {
+          cost: getShopPrice(18, 28),
+          apply() {
             state.player.maxEnergy += 1;
             state.player.energy = state.player.maxEnergy;
             log("购买成功：能量上限 +1。", "system");
@@ -1499,8 +1685,8 @@
         {
           title: "升级攻击卡",
           desc: "所有基础攻击牌伤害 +4。",
-          getCost: () => getShopPrice(18, 28),
-          action: () => {
+          cost: getShopPrice(18, 28),
+          apply() {
             state.upgrades.atkBonus += 4;
             log("购买成功：攻击牌强化。", "system");
           }
@@ -1508,8 +1694,8 @@
         {
           title: "升级防御卡",
           desc: "所有基础防御牌护盾 +4。",
-          getCost: () => getShopPrice(18, 28),
-          action: () => {
+          cost: getShopPrice(18, 28),
+          apply() {
             state.upgrades.defBonus += 4;
             log("购买成功：防御牌强化。", "system");
           }
@@ -1517,8 +1703,8 @@
         {
           title: "升级治疗卡",
           desc: "所有基础治疗牌恢复 +4。",
-          getCost: () => getShopPrice(18, 28),
-          action: () => {
+          cost: getShopPrice(18, 28),
+          apply() {
             state.upgrades.healBonus += 4;
             log("购买成功：治疗牌强化。", "system");
           }
@@ -1526,8 +1712,8 @@
         {
           title: "附加效果：暴击",
           desc: "攻击牌增加 12% 暴击机率。",
-          getCost: () => getShopPrice(24, 36),
-          action: () => {
+          cost: getShopPrice(24, 36),
+          apply() {
             state.upgrades.critRate = Math.min(0.5, state.upgrades.critRate + 0.12);
             log("购买成功：获得暴击效果。", "system");
           }
@@ -1535,8 +1721,8 @@
         {
           title: "附加效果：持续治疗",
           desc: "每回合结束后恢复 6 点生命。",
-          getCost: () => getShopPrice(24, 36),
-          action: () => {
+          cost: getShopPrice(24, 36),
+          apply() {
             state.upgrades.regen += 6;
             log("购买成功：获得持续治疗效果。", "system");
           }
@@ -1544,8 +1730,8 @@
         {
           title: "附加效果：连击",
           desc: "攻击牌增加 18% 连击机率。",
-          getCost: () => getShopPrice(24, 36),
-          action: () => {
+          cost: getShopPrice(24, 36),
+          apply() {
             state.upgrades.doubleStrike = Math.min(0.45, state.upgrades.doubleStrike + 0.18);
             log("购买成功：获得连击效果。", "system");
           }
@@ -1553,8 +1739,8 @@
         {
           title: "增加血量上限",
           desc: "最大生命 +20，并恢复 20 HP。",
-          getCost: () => getShopPrice(20, 30),
-          action: () => {
+          cost: getShopPrice(20, 30),
+          apply() {
             state.player.maxHp += 20;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 20);
             log("购买成功：血量上限提升。", "system");
@@ -1563,8 +1749,8 @@
         {
           title: "补血",
           desc: "立即恢复 35 HP。",
-          getCost: () => getShopPrice(14, 22),
-          action: () => {
+          cost: getShopPrice(14, 22),
+          apply() {
             const before = state.player.hp;
             state.player.hp = Math.min(state.player.maxHp, state.player.hp + 35);
             log(`购买成功：恢复 ${state.player.hp - before} 点生命。`, "heal");
@@ -1573,131 +1759,72 @@
 
         {
           title: "效果牌：神圣锤",
-          desc: "可重复购买。造成伤害并恢复少量生命。",
-          getCost: () => getShopPrice(22, 34),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `holy_hammer_${Date.now()}_${Math.random()}`,
-              name: "神圣锤",
-              type: "holy_hammer",
-              cardType: "效果牌",
-              damageValue: 16 + Math.floor(state.level * 0.6),
-              healValue: 8 + Math.floor(state.level * 0.25),
-              cost: 2,
-              desc: "造成伤害并恢复少量生命"
-            });
-            log("购买成功：神圣锤加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(22, 34),
+          key: "holy_hammer",
+          apply() {
+            addSpecialCardToPool("holy_hammer");
+            log("购买成功：神圣锤加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：爆裂神盾",
-          desc: "可重复购买。提供独立护盾，3回合后若未耗尽则爆炸。",
-          getCost: () => getShopPrice(24, 36),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `burst_shield_${Date.now()}_${Math.random()}`,
-              name: "爆裂神盾",
-              type: "burst_shield",
-              cardType: "效果牌",
-              shieldValue: 30 + Math.floor(state.level * 0.7),
-              bombValue: 22 + Math.floor(state.level * 0.6),
-              cost: 2,
-              desc: "提供独立护盾，3回合后若未耗尽则爆炸伤敌"
-            });
-            log("购买成功：爆裂神盾加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 36),
+          key: "burst_shield",
+          apply() {
+            addSpecialCardToPool("burst_shield");
+            log("购买成功：爆裂神盾加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：烈焰斩",
-          desc: "可重复购买。造成伤害，并几率附加燃烧。",
-          getCost: () => getShopPrice(22, 34),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `flame_slash_${Date.now()}_${Math.random()}`,
-              name: "烈焰斩",
-              type: "flame_slash",
-              cardType: "效果牌",
-              damageValue: 15 + Math.floor(state.level * 0.65),
-              burnChance: 0.45,
-              burnDamage: 5 + Math.floor(state.level * 0.18),
-              burnTurns: 4,
-              cost: 2,
-              desc: "造成伤害，并几率附加4回合燃烧"
-            });
-            log("购买成功：烈焰斩加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(22, 34),
+          key: "flame_slash",
+          apply() {
+            addSpecialCardToPool("flame_slash");
+            log("购买成功：烈焰斩加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：暗影步",
-          desc: "可重复购买。增加本关闪避几率。",
-          getCost: () => getShopPrice(18, 28),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `shadow_step_${Date.now()}_${Math.random()}`,
-              name: "暗影步",
-              type: "shadow_step",
-              cardType: "效果牌",
-              dodgeGain: 0.22,
-              cost: 1,
-              desc: "提升本关卡内的闪避几率"
-            });
-            log("购买成功：暗影步加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(18, 28),
+          key: "shadow_step",
+          apply() {
+            addSpecialCardToPool("shadow_step");
+            log("购买成功：暗影步加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：我佛慈悲水",
-          desc: "可重复购买。治疗并提供5回合持续治疗。",
-          getCost: () => getShopPrice(20, 30),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `mercy_water_${Date.now()}_${Math.random()}`,
-              name: "我佛慈悲水",
-              type: "mercy_water",
-              cardType: "效果牌",
-              healValue: 8 + Math.floor(state.level * 0.2),
-              hotValue: 6 + Math.floor(state.level * 0.2),
-              hotTurns: 5,
-              cost: 2,
-              desc: "少量治疗并提供5回合持续治疗"
-            });
-            log("购买成功：我佛慈悲水加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(20, 30),
+          key: "mercy_water",
+          apply() {
+            addSpecialCardToPool("mercy_water");
+            log("购买成功：我佛慈悲水加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：大慈大悲掌",
-          desc: "可重复购买。造成中等伤害并给予致盲效果。",
-          getCost: () => getShopPrice(22, 34),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `mercy_palm_${Date.now()}_${Math.random()}`,
-              name: "大慈大悲掌",
-              type: "mercy_palm",
-              cardType: "效果牌",
-              damageValue: 16 + Math.floor(state.level * 0.55),
-              blindTurns: 1,
-              cost: 2,
-              desc: "造成中等伤害，并使怪物几率攻击失误"
-            });
-            log("购买成功：大慈大悲掌加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(22, 34),
+          key: "mercy_palm",
+          apply() {
+            addSpecialCardToPool("mercy_palm");
+            log("购买成功：大慈大悲掌加入角色卡池。", "system");
           }
         },
         {
           title: "效果牌：加农炮",
-          desc: "可重复购买。造成大量伤害，但有几率反伤自己。",
-          getCost: () => getShopPrice(24, 38),
-          action: () => {
-            state.ownedSpecialCards.push({
-              id: `cannon_${Date.now()}_${Math.random()}`,
-              name: "加农炮",
-              type: "cannon",
-              cardType: "效果牌",
-              damageValue: 30 + Math.floor(state.level * 0.8),
-              selfDamageChance: 0.3,
-              selfDamage: 6 + Math.floor(state.level * 0.15),
-              cost: 3,
-              desc: "造成大量伤害，但有几率反伤自己"
-            });
-            log("购买成功：加农炮加入牌池。", "system");
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 38),
+          key: "cannon",
+          apply() {
+            addSpecialCardToPool("cannon");
+            log("购买成功：加农炮加入角色卡池。", "system");
           }
         }
       ];
@@ -1705,29 +1832,20 @@
       const selected = [];
       while (selected.length < 3) {
         const pick = pool[randomInt(0, pool.length - 1)];
-        if (!selected.includes(pick)) selected.push(pick);
+        if (!selected.includes(pick)) selected.push({ ...pick });
       }
 
-      const shopOptions = document.getElementById("shopOptions");
-      shopOptions.innerHTML = "";
-
       selected.forEach(item => {
-        const cost = item.getCost();
-        const canBuy = state.gold >= cost;
-
-        const div = document.createElement("div");
-        div.className = "shop-item";
-        div.innerHTML = `
-          <h3>${item.title}</h3>
-          <div class="shop-desc">${item.desc}</div>
-          <div class="shop-price">价格：${cost} 金币</div>
-          <button class="modal-btn" ${canBuy ? "" : "disabled"}>购买</button>
-        `;
-
-        div.querySelector("button").onclick = () => buyItem(item, cost);
-        shopOptions.appendChild(div);
+        if (item.key && ownsSpecialCard(item.key)) {
+          item.disabledByOwnership = true;
+          item.ownedText = "你已经拥有这张效果牌";
+        } else {
+          item.disabledByOwnership = false;
+          item.ownedText = "";
+        }
       });
 
+      renderShopItems(selected);
       document.getElementById("shopModal").classList.add("show");
       updateUI();
     }
@@ -1744,18 +1862,26 @@
       startLevel();
     }
 
-    function buyItem(item, cost) {
+    function buyItem(item, selectedList) {
       if (!state.inShop) return;
-      if (state.gold < cost) {
+      if (item.disabledByOwnership) return;
+
+      if (state.gold < item.cost) {
         log("金币不足。", "system");
         return;
       }
 
-      state.gold -= cost;
-      item.action();
-      state.inShop = false;
-      closeShopOverlayOnly();
-      startLevel();
+      state.gold -= item.cost;
+      item.apply();
+      state.shopItemsBoughtThisVisit++;
+
+      if (item.key) {
+        item.disabledByOwnership = true;
+        item.ownedText = "你已经拥有这张效果牌";
+      }
+
+      renderShopItems(selectedList);
+      updateUI();
     }
 
     function showGameOver(isWin) {
@@ -1840,7 +1966,7 @@
       }
 
       document.getElementById("heroInfoText").textContent =
-        `已拥有特殊卡 ${state.ownedSpecialCards.length} 张，闪避率 ${(state.player.dodgeChance * 100).toFixed(0)}%，中毒剩余 ${state.player.poisonTurns} 回合。`;
+        `已拥有效果牌 ${state.ownedSpecialCardKeys.length} 张，闪避率 ${(state.player.dodgeChance * 100).toFixed(0)}%，中毒剩余 ${state.player.poisonTurns} 回合。`;
 
       document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
       renderCards();
