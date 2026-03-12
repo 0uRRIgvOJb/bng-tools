@@ -665,6 +665,190 @@
       100% { opacity: 0; transform: scale(1.06); }
     }
 
+    /* ===== 桌面版版面优化：让手牌固定在底部，不用一直上下滚动 ===== */
+    @media (min-width: 1100px) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .topbar {
+        padding: 10px 16px;
+      }
+
+      .container {
+        max-width: 100%;
+        height: calc(100vh - 74px);
+        padding: 14px 14px 12px;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: 12px;
+        overflow: hidden;
+      }
+
+      .title {
+        margin: 0;
+        font-size: 34px;
+      }
+
+      .battle-board {
+        margin-bottom: 0;
+        min-height: 0;
+        height: 100%;
+        grid-template-columns: minmax(320px, 1fr) minmax(300px, 0.82fr) minmax(320px, 1fr);
+      }
+
+      .panel,
+      .log-panel {
+        padding: 16px;
+        min-height: 0;
+      }
+
+      .panel {
+        overflow: auto;
+      }
+
+      .character-head {
+        margin-bottom: 12px;
+      }
+
+      .avatar {
+        width: 82px;
+        height: 82px;
+        font-size: 44px;
+      }
+
+      .character-title h2 {
+        font-size: 26px;
+      }
+
+      .stat-row {
+        margin-bottom: 12px;
+      }
+
+      .note-box {
+        min-height: 86px;
+        max-height: 118px;
+        overflow: auto;
+      }
+
+      .status-area {
+        padding: 10px;
+      }
+
+      .skills-wrap,
+      .enemy-team {
+        max-height: 160px;
+        overflow: auto;
+      }
+
+      .side-info {
+        padding: 12px;
+      }
+
+      .section-title {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .log-box {
+        min-height: 0;
+        max-height: none;
+        height: calc(100vh - 270px);
+      }
+
+      .cards-panel {
+        padding: 14px 14px 12px;
+        border-radius: 18px;
+        position: relative;
+        z-index: 5;
+      }
+
+      .cards-panel .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .cards-panel .section-title::after {
+        content: "手牌区已固定在下方";
+        font-size: 13px;
+        font-weight: normal;
+        color: #a9b4c4;
+      }
+
+      .cards {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(230px, 250px);
+        grid-template-columns: none;
+        gap: 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 4px 4px 8px;
+        scroll-behavior: smooth;
+      }
+
+      .cards::-webkit-scrollbar,
+      .panel::-webkit-scrollbar,
+      .log-box::-webkit-scrollbar,
+      .note-box::-webkit-scrollbar,
+      .skills-wrap::-webkit-scrollbar,
+      .enemy-team::-webkit-scrollbar {
+        height: 10px;
+        width: 10px;
+      }
+
+      .cards::-webkit-scrollbar-thumb,
+      .panel::-webkit-scrollbar-thumb,
+      .log-box::-webkit-scrollbar-thumb,
+      .note-box::-webkit-scrollbar-thumb,
+      .skills-wrap::-webkit-scrollbar-thumb,
+      .enemy-team::-webkit-scrollbar-thumb {
+        background: #445063;
+        border-radius: 999px;
+      }
+
+      .card {
+        min-height: 198px;
+        padding: 14px;
+      }
+
+      .card-top {
+        margin-bottom: 8px;
+      }
+
+      .card-name {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .card-desc {
+        min-height: 60px;
+        max-height: 78px;
+        overflow: auto;
+        font-size: 14px;
+      }
+
+      .card-cost {
+        margin-top: 6px;
+        font-size: 14px;
+      }
+
+      .card button {
+        padding: 11px 12px;
+      }
+
+      .actions {
+        margin-top: 12px;
+        justify-content: flex-end;
+      }
+
+      .action-btn {
+        min-width: 170px;
+      }
+    }
+
     @media (max-width: 1280px) {
       .battle-board { grid-template-columns: 1fr; }
       .log-box { min-height: 260px; max-height: 360px; }
