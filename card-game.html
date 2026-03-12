@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -6,7 +7,6 @@
   <title>卡牌冒险</title>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Arial, "Microsoft JhengHei", sans-serif;
@@ -15,6 +15,19 @@
         linear-gradient(180deg, #0d1015 0%, #151a20 100%);
       color: #fff;
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body.screen-shake {
+      animation: screenShake 0.32s linear;
+    }
+    @keyframes screenShake {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-4px, 2px); }
+      40% { transform: translate(4px, -2px); }
+      60% { transform: translate(-3px, -2px); }
+      80% { transform: translate(3px, 2px); }
+      100% { transform: translate(0, 0); }
     }
 
     .topbar {
@@ -28,7 +41,7 @@
       border-bottom: 1px solid #2a3038;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
       backdrop-filter: blur(6px);
     }
 
@@ -60,7 +73,7 @@
       cursor: pointer;
     }
 
-    .home-btn {
+    .music-btn, .home-btn {
       border: none;
       background: #d8a642;
       color: #111;
@@ -70,6 +83,8 @@
       font-weight: bold;
       font-size: 15px;
     }
+
+    .music-btn { background: #6ec0ff; }
 
     .container {
       max-width: 1600px;
@@ -103,16 +118,11 @@
       border-radius: 18px;
       box-shadow: 0 10px 26px rgba(0,0,0,0.28);
       padding: 20px;
+      position: relative;
     }
 
-    .middle-log-wrap {
-      width: 100%;
-    }
-
-    .side-log-panel {
-      margin-top: 0;
-      width: 100%;
-    }
+    .middle-log-wrap { width: 100%; }
+    .side-log-panel { margin-top: 0; width: 100%; }
 
     .character-head {
       display: flex;
@@ -132,11 +142,11 @@
       flex-shrink: 0;
       border: 1px solid rgba(255,255,255,0.08);
       background: linear-gradient(135deg, #304965, #2c7dc3);
+      position: relative;
+      overflow: hidden;
     }
 
-    .monster-avatar {
-      background: linear-gradient(135deg, #5e2525, #ae3d3d);
-    }
+    .monster-avatar { background: linear-gradient(135deg, #5e2525, #ae3d3d); }
 
     .character-title h2 {
       margin: 0 0 6px;
@@ -149,9 +159,7 @@
       line-height: 1.6;
     }
 
-    .stat-row {
-      margin-bottom: 16px;
-    }
+    .stat-row { margin-bottom: 16px; }
 
     .stat-top {
       display: flex;
@@ -169,19 +177,19 @@
       border-radius: 999px;
       background: #313844;
       overflow: hidden;
+      position: relative;
     }
 
-    .hp-bar {
+    .hp-bar,
+    .energy-bar,
+    .shield-bar {
       height: 100%;
-      background: linear-gradient(90deg, #d94a4a, #ff7a7a);
       transition: width 0.25s ease;
     }
 
-    .energy-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #2aa8ff, #7cd5ff);
-      transition: width 0.25s ease;
-    }
+    .hp-bar { background: linear-gradient(90deg, #d94a4a, #ff7a7a); }
+    .energy-bar { background: linear-gradient(90deg, #2aa8ff, #7cd5ff); }
+    .shield-bar { background: linear-gradient(90deg, #76bdff, #d7efff); }
 
     .shield-badge {
       display: inline-block;
@@ -205,6 +213,45 @@
       min-height: 120px;
     }
 
+    .status-area {
+      margin-top: 12px;
+      background: #10141a;
+      border: 1px solid #262d37;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .status-title {
+      color: #c7cfdb;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .status-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 26px;
+    }
+
+    .status-tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #223040;
+      color: #e6f0ff;
+      font-size: 12px;
+      border: 1px solid #33465c;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
+    }
+
+    .tag-poison { background: rgba(61, 122, 58, 0.25); border-color: #4a8752; }
+    .tag-blind { background: rgba(122, 114, 58, 0.25); border-color: #a69743; }
+    .tag-stun { background: rgba(120, 120, 140, 0.25); border-color: #8b90a7; }
+    .tag-confuse { background: rgba(112, 64, 145, 0.25); border-color: #9159cf; }
+    .tag-burn { background: rgba(145, 72, 40, 0.25); border-color: #cf7645; }
+    .tag-vuln { background: rgba(152, 65, 65, 0.25); border-color: #e07d7d; }
+    .tag-chain { background: rgba(36, 115, 132, 0.25); border-color: #4fc8e6; }
+
     .player-grid {
       display: grid;
       grid-template-columns: 1fr 180px;
@@ -212,7 +259,7 @@
       align-items: stretch;
     }
 
-    .player-side {
+    .player-side, .monster-side {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -223,16 +270,6 @@
       grid-template-columns: minmax(0, 1fr) 190px;
       gap: 14px;
       align-items: stretch;
-    }
-
-    .monster-main {
-      min-width: 0;
-    }
-
-    .monster-side {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     .side-info {
@@ -276,6 +313,88 @@
       border: 1px solid #33465c;
     }
 
+    .enemy-team {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .enemy-card {
+      background: #12161c;
+      border: 1px solid #2b3340;
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      position: relative;
+      min-height: 136px;
+    }
+
+    .enemy-card.selected {
+      border-color: #d8a642;
+      box-shadow: 0 0 0 2px rgba(216,166,66,0.15), 0 0 16px rgba(216,166,66,0.18);
+      transform: translateY(-1px);
+    }
+
+    .enemy-card.dead {
+      opacity: 0.42;
+      filter: grayscale(0.85);
+      cursor: default;
+    }
+
+    .enemy-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .enemy-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #5e2525, #ae3d3d);
+      font-size: 24px;
+    }
+
+    .enemy-name {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .enemy-mini {
+      color: #b7c1cf;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .enemy-status-mini {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .mini-tag {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #24303c;
+      border: 1px solid #33414e;
+    }
+
+    .target-hint {
+      margin-top: 12px;
+      color: #ffd56a;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
     .section-title {
       font-size: 30px;
       font-weight: 900;
@@ -293,10 +412,12 @@
       border: 1px solid #38404f;
       border-radius: 16px;
       padding: 16px;
-      min-height: 230px;
+      min-height: 240px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
+      overflow: hidden;
     }
 
     .card.attack { border-color: rgba(255, 100, 100, 0.45); }
@@ -305,31 +426,10 @@
     .card.special { border-color: rgba(184, 120, 255, 0.60); box-shadow: 0 0 0 1px rgba(184,120,255,0.15) inset; }
 
     .card-top { margin-bottom: 12px; }
-
-    .card-type {
-      font-size: 13px;
-      color: #aab4c5;
-      margin-bottom: 8px;
-    }
-
-    .card-name {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .card-desc {
-      color: #e6ebf3;
-      line-height: 1.7;
-      font-size: 15px;
-      min-height: 88px;
-    }
-
-    .card-cost {
-      margin-top: 8px;
-      color: #8fd8ff;
-      font-weight: bold;
-    }
+    .card-type { font-size: 13px; color: #aab4c5; margin-bottom: 8px; }
+    .card-name { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+    .card-desc { color: #e6ebf3; line-height: 1.7; font-size: 15px; min-height: 88px; }
+    .card-cost { margin-top: 8px; color: #8fd8ff; font-weight: bold; }
 
     .card button,
     .action-btn,
@@ -383,10 +483,7 @@
       color: #f0f3f8;
     }
 
-    .log-line {
-      margin-bottom: 8px;
-    }
-
+    .log-line { margin-bottom: 8px; }
     .log-attack { color: #ff8b8b; }
     .log-heal { color: #7ef0a6; }
     .log-shield { color: #73c4ff; }
@@ -417,9 +514,7 @@
       backdrop-filter: blur(6px);
     }
 
-    .modal-overlay.show {
-      display: flex;
-    }
+    .modal-overlay.show { display: flex; }
 
     .modal-box {
       width: 100%;
@@ -459,13 +554,8 @@
       background: #7a56d8;
     }
 
-    .modal-btn.secondary {
-      background: #556274;
-    }
-
-    .modal-btn.danger {
-      background: #914b2b;
-    }
+    .modal-btn.secondary { background: #556274; }
+    .modal-btn.danger { background: #914b2b; }
 
     .shop-balance {
       background: #12161c;
@@ -498,30 +588,10 @@
       padding: 14px;
     }
 
-    .shop-item h3 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .shop-desc {
-      color: #dbe1eb;
-      line-height: 1.7;
-      min-height: 72px;
-      margin-bottom: 10px;
-    }
-
-    .shop-price {
-      color: #ffd56a;
-      font-weight: bold;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-
-    .shop-owned {
-      color: #7ef0a6;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
+    .shop-item h3 { margin: 0 0 10px; font-size: 22px; }
+    .shop-desc { color: #dbe1eb; line-height: 1.7; min-height: 72px; margin-bottom: 10px; }
+    .shop-price { color: #ffd56a; font-weight: bold; margin-bottom: 12px; font-size: 18px; }
+    .shop-owned { color: #7ef0a6; font-size: 13px; margin-bottom: 10px; }
 
     .setup-grid {
       display: grid;
@@ -536,10 +606,7 @@
       padding: 16px;
     }
 
-    .setup-block h3 {
-      margin: 0 0 12px;
-      font-size: 22px;
-    }
+    .setup-block h3 { margin: 0 0 12px; font-size: 22px; }
 
     .name-input {
       width: 100%;
@@ -572,44 +639,46 @@
       box-shadow: 0 0 0 3px rgba(216,166,66,0.18);
     }
 
-    .center-text {
-      text-align: center;
+    .center-text { text-align: center; }
+
+    .fx-hit::after,
+    .fx-poison::after,
+    .fx-stun::after,
+    .fx-heal::after,
+    .fx-blink::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      animation: effectFade 0.45s ease forwards;
+    }
+
+    .fx-hit::after { background: radial-gradient(circle, rgba(255, 0, 0, 0.35), rgba(255,0,0,0)); }
+    .fx-poison::after { background: radial-gradient(circle, rgba(58, 187, 72, 0.35), rgba(58,187,72,0)); }
+    .fx-stun::after { background: radial-gradient(circle, rgba(220, 220, 255, 0.35), rgba(220,220,255,0)); }
+    .fx-heal::after { background: radial-gradient(circle, rgba(107, 255, 154, 0.35), rgba(107,255,154,0)); }
+    .fx-blink::after { background: radial-gradient(circle, rgba(255, 224, 125, 0.35), rgba(255,224,125,0)); }
+
+    @keyframes effectFade {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.06); }
     }
 
     @media (max-width: 1280px) {
-      .battle-board {
-        grid-template-columns: 1fr;
-      }
-
-      .log-box {
-        min-height: 260px;
-        max-height: 360px;
-      }
+      .battle-board { grid-template-columns: 1fr; }
+      .log-box { min-height: 260px; max-height: 360px; }
     }
 
     @media (max-width: 980px) {
-      .player-grid,
-      .monster-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .title {
-        font-size: 36px;
-      }
+      .player-grid, .monster-layout { grid-template-columns: 1fr; }
+      .title { font-size: 36px; }
     }
 
     @media (max-width: 600px) {
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .modal-title {
-        font-size: 28px;
-      }
-
-      .volume-wrap input[type="range"] {
-        width: 120px;
-      }
+      .cards { grid-template-columns: 1fr; }
+      .modal-title { font-size: 28px; }
+      .volume-wrap input[type="range"] { width: 120px; }
     }
   </style>
 </head>
@@ -624,6 +693,7 @@
         <span>音效音量</span>
         <input type="range" id="sfxVolumeSlider" min="0" max="100" value="90" />
       </div>
+      <button class="music-btn" id="musicToggleBtn">背景音乐：开</button>
     </div>
     <button class="home-btn" onclick="goHome()">回首頁</button>
   </div>
@@ -665,6 +735,10 @@
             </div>
 
             <div class="note-box" id="heroInfoText">准备开始战斗。</div>
+            <div class="status-area">
+              <div class="status-title">角色状态栏</div>
+              <div class="status-tags" id="playerStatusBox"></div>
+            </div>
           </div>
 
           <div class="player-side">
@@ -675,6 +749,10 @@
             <div class="side-info">
               <div class="side-label">金币</div>
               <div class="side-value" id="goldText">0</div>
+            </div>
+            <div class="side-info">
+              <div class="side-label">当前目标</div>
+              <div class="side-value" id="targetText">史莱姆</div>
             </div>
           </div>
         </div>
@@ -700,7 +778,10 @@
 
             <div class="stat-row">
               <div class="stat-top">
-                <div>HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span></div>
+                <div>
+                  HP：<span id="monsterHpText">30</span> / <span id="monsterMaxHpText">30</span>
+                  <span class="shield-badge">护盾 <span id="monsterShieldText">0</span></span>
+                </div>
               </div>
               <div class="bar-bg">
                 <div class="hp-bar" id="monsterHpBar" style="width:100%"></div>
@@ -715,6 +796,14 @@
 
             <div class="note-box" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
             <div class="skills-wrap" id="monsterSkillsBox"></div>
+
+            <div class="status-area">
+              <div class="status-title">敌方状态栏</div>
+              <div class="status-tags" id="monsterStatusBox"></div>
+            </div>
+
+            <div class="enemy-team" id="enemyTeamBox"></div>
+            <div class="target-hint">点击下方敌人卡片可以切换攻击目标。</div>
           </div>
 
           <div class="monster-side">
@@ -743,10 +832,6 @@
       </div>
     </div>
   </div>
-
-  <audio id="bgmPlayer" loop preload="auto">
-    <source src="./assets/bgm/medieval-theme.mp3" type="audio/mpeg" />
-  </audio>
 
   <div class="modal-overlay show" id="setupModal">
     <div class="modal-box">
@@ -783,7 +868,7 @@
     <div class="modal-box">
       <div class="modal-title">商店</div>
       <div class="shop-balance">当前金币：<span id="shopGoldText">0</span></div>
-      <div class="shop-tip">商店中的 3 个商品都可以购买。只要金币够，你可以全部买完，再自己关闭商店。</div>
+      <div class="shop-tip">商店中的 3 个商品都可以购买。效果牌购买后永久加入本局卡池。同回合抽牌时，效果牌最多只会出现 2 张。</div>
       <div class="shop-options" id="shopOptions"></div>
       <div class="modal-actions">
         <button class="modal-btn secondary" onclick="closeShop()">关闭商店</button>
@@ -838,7 +923,7 @@
             damageValue: 16 + Math.floor(level * 0.6),
             healValue: 8 + Math.floor(level * 0.25),
             cost: 2,
-            desc: "造成伤害并恢复少量生命"
+            desc: "造成伤害并恢复少量生命；若目标处于混乱，额外吸血。"
           };
         }
       },
@@ -854,7 +939,7 @@
             shieldValue: 30 + Math.floor(level * 0.7),
             bombValue: 22 + Math.floor(level * 0.6),
             cost: 2,
-            desc: "提供独立护盾，3回合后若未耗尽则爆炸伤敌"
+            desc: "提供独立护盾，3回合后若未耗尽则爆炸伤敌。"
           };
         }
       },
@@ -872,7 +957,7 @@
             burnDamage: 5 + Math.floor(level * 0.18),
             burnTurns: 4,
             cost: 2,
-            desc: "造成伤害，并几率附加4回合燃烧"
+            desc: "造成伤害，并几率附加燃烧。"
           };
         }
       },
@@ -887,7 +972,7 @@
             cardType: "效果牌",
             dodgeGain: 0.22,
             cost: 1,
-            desc: "提升本关卡内的闪避几率"
+            desc: "提升本关卡内的闪避几率。"
           };
         }
       },
@@ -904,7 +989,7 @@
             hotValue: 6 + Math.floor(level * 0.2),
             hotTurns: 5,
             cost: 2,
-            desc: "少量治疗并提供5回合持续治疗"
+            desc: "少量治疗并提供持续治疗。"
           };
         }
       },
@@ -920,7 +1005,7 @@
             damageValue: 16 + Math.floor(level * 0.55),
             blindTurns: 1,
             cost: 2,
-            desc: "造成中等伤害，并使怪物几率攻击失误"
+            desc: "造成中等伤害，并使怪物进入致盲。"
           };
         }
       },
@@ -933,11 +1018,46 @@
             name: "加农炮",
             type: "cannon",
             cardType: "效果牌",
-            damageValue: 30 + Math.floor(level * 0.8),
-            selfDamageChance: 0.3,
-            selfDamage: 6 + Math.floor(level * 0.15),
+            damageValue: 42 + Math.floor(level * 1.15),
+            selfDamageChance: 0.28,
+            selfDamage: 6 + Math.floor(level * 0.2),
             cost: 3,
-            desc: "造成大量伤害，但有几率反伤自己"
+            desc: "高额伤害；若目标中毒，触发毒爆追加伤害。"
+          };
+        }
+      },
+      war_hammer: {
+        key: "war_hammer",
+        name: "战锤一击",
+        create(level) {
+          return {
+            id: "war_hammer",
+            name: "战锤一击",
+            type: "war_hammer",
+            cardType: "效果牌",
+            damageValue: 20 + Math.floor(level * 0.8),
+            stunChance: 0.45,
+            stunTurns: 1,
+            cost: 2,
+            desc: "造成中等伤害，并有几率晕眩敌方一回合。"
+          };
+        }
+      },
+      phantom_charm: {
+        key: "phantom_charm",
+        name: "幽冥魅惑",
+        create(level) {
+          return {
+            id: "phantom_charm",
+            name: "幽冥魅惑",
+            type: "phantom_charm",
+            cardType: "效果牌",
+            damageValue: 10 + Math.floor(level * 0.45),
+            confuseTurns: 1,
+            atkDownRate: 0.2,
+            selfHitChance: 0.35,
+            cost: 2,
+            desc: "少量伤害并使敌方混乱：攻击稍降，且有几率攻击自己。"
           };
         }
       }
@@ -949,6 +1069,9 @@
     let musicVolume = 0.8;
     let sfxVolume = 0.9;
     let logEntries = [];
+    let musicEnabled = true;
+    let bgmLoopHandle = null;
+    let bgmStep = 0;
 
     function goHome() {
       window.location.href = HOME_URL;
@@ -968,6 +1091,21 @@
       return "普通关";
     }
 
+    function createEnemyStatus() {
+      return {
+        blindTurns: 0,
+        burnDamage: 0,
+        burnTurns: 0,
+        stunTurns: 0,
+        confuseTurns: 0,
+        confuseSelfHitChance: 0,
+        atkDownRate: 0,
+        vulnerableStunBonusHits: 0,
+        poisonDamage: 0,
+        poisonTurns: 0
+      };
+    }
+
     function buildMonsterSkills(race, type, level) {
       const skills = {
         trueDamageChance: 0,
@@ -984,56 +1122,80 @@
         poisonChance: 0,
         poisonDamage: 0,
         poisonTurns: 0,
-        burnDamage: 0,
-        burnTurns: 0,
-        monsterBlindTurns: 0
+        stunChance: 0,
+        stunTurns: 1,
+        confuseChance: 0,
+        confuseTurns: 1,
+        warcryShieldChance: 0,
+        warcryShieldValue: 0,
+        summonChance: 0,
+        canSummon: false
       };
 
       if (race === "slime") {
         skills.healChance = 0.22;
         skills.healPercent = 0.10;
+        skills.warcryShieldChance = 0.22;
+        skills.warcryShieldValue = 8 + Math.floor(level * 0.3);
       }
       if (race === "undead") {
         skills.tenacityChance = 0.35;
+        skills.warcryShieldChance = 0.16;
+        skills.warcryShieldValue = 10 + Math.floor(level * 0.35);
+        skills.canSummon = true;
+        skills.summonChance = 0.16;
       }
       if (race === "poison") {
         skills.poisonChance = 0.5;
         skills.poisonDamage = 3 + Math.floor(level / 8);
         skills.poisonTurns = 3;
+        skills.confuseChance = 0.15;
       }
       if (race === "beast") {
         skills.multiAttackChance = 0.25;
         skills.multiAttackHits = 2;
+        skills.stunChance = 0.12;
       }
       if (race === "shadow") {
         skills.blindChance = 0.32;
         skills.blindTurns = 1;
         skills.trueDamageChance = 0.18;
+        skills.confuseChance = 0.22;
       }
       if (race === "tank") {
         skills.tenacityChance = 0.55;
         skills.healChance = 0.15;
         skills.healPercent = 0.08;
+        skills.warcryShieldChance = 0.35;
+        skills.warcryShieldValue = 16 + Math.floor(level * 0.45);
       }
       if (race === "curse") {
         skills.blindChance = 0.45;
         skills.blindTurns = 2;
         skills.trueDamageChance = 0.15;
+        skills.stunChance = 0.18;
+        skills.confuseChance = 0.35;
       }
       if (race === "berserk") {
         skills.multiAttackChance = 0.45;
         skills.multiAttackHits = 2;
+        skills.stunChance = 0.20;
       }
       if (race === "rebirth") {
         skills.rebirth = true;
         skills.trueDamageChance = 0.2;
         skills.blindChance = 0.25;
         skills.blindTurns = 1;
+        skills.warcryShieldChance = 0.18;
+        skills.warcryShieldValue = 14 + Math.floor(level * 0.5);
       }
       if (race === "fireboss") {
         skills.multiAttackChance = 0.25;
         skills.multiAttackHits = 2;
         skills.tenacityChance = 0.45;
+        skills.stunChance = 0.18;
+        skills.warcryShieldChance = 0.22;
+        skills.warcryShieldValue = 18 + Math.floor(level * 0.5);
       }
       if (race === "finalboss") {
         skills.rebirth = true;
@@ -1046,6 +1208,10 @@
         skills.poisonDamage = 4 + Math.floor(level / 10);
         skills.poisonTurns = 3;
         skills.tenacityChance = 0.5;
+        skills.stunChance = 0.22;
+        skills.confuseChance = 0.28;
+        skills.warcryShieldChance = 0.28;
+        skills.warcryShieldValue = 20 + Math.floor(level * 0.65);
       }
 
       if (type === "普通关") {
@@ -1053,22 +1219,29 @@
         skills.multiAttackChance *= 0.8;
         skills.blindChance *= 0.8;
         skills.tenacityChance *= 0.8;
+        skills.stunChance *= 0.9;
       }
 
       return skills;
     }
 
-    function createMonster(level) {
-      const type = getStageType(level);
+    function createMonster(level, opts = {}) {
+      const type = opts.type || getStageType(level);
       let pool = normalMonsters;
       if (type === "小BOSS") pool = miniBossMonsters;
       if (type === "大BOSS") pool = bossMonsters;
+      if (opts.pool) pool = opts.pool;
 
-      const data = pool[randomInt(0, pool.length - 1)];
+      const data = opts.data || pool[randomInt(0, pool.length - 1)];
+      const isAlly = !!opts.isAlly;
 
       let hp = 0;
       let atk = 0;
-      if (type === "普通关") {
+
+      if (isAlly) {
+        hp = 24 + Math.floor(level * 4.5) + randomInt(0, 8);
+        atk = 4 + Math.floor(level * 0.55);
+      } else if (type === "普通关") {
         hp = 42 + level * 11 + randomInt(0, 14);
         atk = 5 + Math.floor(level * 1.1) + Math.floor(state.player.maxHp * 0.015);
       } else if (type === "小BOSS") {
@@ -1080,15 +1253,19 @@
       }
 
       return {
-        type,
+        id: `enemy_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+        type: isAlly ? "增援" : type,
         race: data.race,
-        name: data.name,
+        name: isAlly ? `${data.name}·援军` : data.name,
         emoji: data.emoji,
-        note: data.note,
+        note: isAlly ? "被号角召来的较弱敌人。" : data.note,
         hp,
         maxHp: hp,
         atk,
-        skills: buildMonsterSkills(data.race, type, level)
+        shield: 0,
+        skills: buildMonsterSkills(data.race, isAlly ? "普通关" : type, level),
+        status: createEnemyStatus(),
+        isAlly
       };
     }
 
@@ -1110,9 +1287,11 @@
         pendingShop: false,
         justClearedLevel: 0,
         deckSizePerTurn: 4,
+        baseDeckSizePerTurn: 4,
         hand: [],
         turnLabel: "玩家回合",
         shopItemsBoughtThisVisit: 0,
+        selectedEnemyId: null,
         player: {
           hp: 100,
           maxHp: 100,
@@ -1127,7 +1306,10 @@
           poisonTurns: 0,
           specialShield: 0,
           specialShieldTurns: 0,
-          specialShieldBomb: 0
+          specialShieldBomb: 0,
+          stunTurns: 0,
+          confuseTurns: 0,
+          handSizePenalty: 0
         },
         upgrades: {
           atkBonus: 0,
@@ -1138,7 +1320,7 @@
           doubleStrike: 0
         },
         ownedSpecialCardKeys: [],
-        currentMonster: null
+        enemies: []
       };
       logEntries = [];
     }
@@ -1169,7 +1351,7 @@
       startLevel(true);
       log(`欢迎你，${state.playerName}。冒险开始，进入第 1 关。`, "system");
       initAudio();
-      playBgm();
+      startMusicEngine();
     }
 
     function applyPlayerIdentity() {
@@ -1206,14 +1388,41 @@
       return [...getBaseCardPool(), ...getOwnedSpecialCards()];
     }
 
-    function drawNewHand() {
-      const pool = getFullCardPool();
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function drawRandomFromPool(pool, count) {
       const hand = [];
-      for (let i = 0; i < state.deckSizePerTurn; i++) {
+      for (let i = 0; i < count; i++) {
         const picked = pool[randomInt(0, pool.length - 1)];
         hand.push({ ...picked, uid: `${Date.now()}_${i}_${Math.random()}` });
       }
-      state.hand = hand;
+      return hand;
+    }
+
+    function drawNewHand() {
+      const baseCards = getBaseCardPool();
+      const specialCards = getOwnedSpecialCards();
+
+      const maxCards = Math.max(1, state.baseDeckSizePerTurn - state.player.handSizePenalty);
+      const maxSpecial = Math.min(2, maxCards, specialCards.length);
+
+      const specialCount = maxSpecial > 0 ? randomInt(0, maxSpecial) : 0;
+      const baseCount = maxCards - specialCount;
+
+      const hand = [
+        ...drawRandomFromPool(baseCards, baseCount),
+        ...drawRandomFromPool(specialCards, specialCount)
+      ];
+
+      state.hand = shuffle(hand);
+      state.player.handSizePenalty = 0;
     }
 
     function getCardClass(card) {
@@ -1221,6 +1430,26 @@
       if (card.type === "defense") return "defense";
       if (card.type === "heal") return "heal";
       return "special";
+    }
+
+    function getLivingEnemies() {
+      return state.enemies.filter(e => e.hp > 0);
+    }
+
+    function getSelectedEnemy() {
+      const living = getLivingEnemies();
+      if (living.length === 0) return null;
+      const found = living.find(e => e.id === state.selectedEnemyId);
+      if (found) return found;
+      state.selectedEnemyId = living[0].id;
+      return living[0];
+    }
+
+    function selectEnemy(id) {
+      const enemy = state.enemies.find(e => e.id === id && e.hp > 0);
+      if (!enemy) return;
+      state.selectedEnemyId = id;
+      updateUI();
     }
 
     function renderCards() {
@@ -1239,7 +1468,7 @@
       state.hand.forEach(card => {
         const div = document.createElement("div");
         div.className = `card ${getCardClass(card)}`;
-        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost;
+        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost && getLivingEnemies().length > 0;
 
         div.innerHTML = `
           <div class="card-top">
@@ -1258,34 +1487,165 @@
       document.getElementById("handCountText").textContent = String(state.hand.length);
     }
 
-    function applyDamageToMonster(dmg, message) {
-      const monster = state.currentMonster;
+    function animatePanel(selector, cls) {
+      const el = typeof selector === "string" ? document.querySelector(selector) : selector;
+      if (!el) return;
+      el.classList.remove(cls);
+      void el.offsetWidth;
+      el.classList.add(cls);
+      setTimeout(() => el.classList.remove(cls), 450);
+    }
 
-      if (monster.hp - dmg <= 0 &&
-          monster.skills.tenacityChance > 0 &&
-          !monster.skills.tenacityUsed &&
-          chance(monster.skills.tenacityChance)) {
-        monster.hp = 1;
-        monster.skills.tenacityUsed = true;
-        log(message, "attack");
-        logAppend("怪物触发【坚韧】，本次没有被击倒，生命锁定在 1。", "system");
+    function addBloodEffectToEnemy() {
+      animatePanel(".monster-main", "fx-hit");
+      document.body.classList.remove("screen-shake");
+      void document.body.offsetWidth;
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 320);
+    }
+
+    function addPoisonEffectToEnemy() {
+      animatePanel(".monster-main", "fx-poison");
+    }
+
+    function addStunEffectToEnemy() {
+      animatePanel(".monster-main", "fx-stun");
+    }
+
+    function addBlinkEffectToEnemy() {
+      animatePanel(".monster-main", "fx-blink");
+    }
+
+    function addHealEffectToPlayer() {
+      animatePanel(document.getElementById("playerAvatarText"), "fx-heal");
+    }
+
+    function addHitEffectToPlayer() {
+      animatePanel(document.getElementById("playerAvatarText"), "fx-hit");
+      document.body.classList.remove("screen-shake");
+      void document.body.offsetWidth;
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 320);
+    }
+
+    function addStatus(target, key, payload) {
+      if (target === "player") {
+        Object.assign(state.player, payload);
+      } else {
+        Object.assign(target.status, payload);
+      }
+    }
+
+    function applyShieldToEnemy(enemy, value, message = null) {
+      enemy.shield += value;
+      if (message) logAppend(message, "shield");
+    }
+
+    function consumeEnemyShield(enemy, damage) {
+      let remain = damage;
+      if (enemy.shield > 0) {
+        const blocked = Math.min(enemy.shield, remain);
+        enemy.shield -= blocked;
+        remain -= blocked;
+      }
+      return remain;
+    }
+
+    function afterEnemyDamaged(enemy, baseDamage, cardType) {
+      if (!enemy || enemy.hp <= 0) return baseDamage;
+      let bonus = 0;
+
+      if (enemy.status.vulnerableStunBonusHits > 0) {
+        const extra = Math.floor(baseDamage * 0.5);
+        bonus += extra;
+        enemy.status.vulnerableStunBonusHits--;
+        logAppend(`连锁效果【晕眩破防】发动，追加 ${extra} 点伤害。`, "attack");
+      }
+
+      if (cardType === "cannon" && enemy.status.poisonTurns > 0) {
+        const extra = 9 + Math.floor(state.level * 0.25);
+        bonus += extra;
+        logAppend(`连锁效果【毒爆加农】发动，追加 ${extra} 点伤害。`, "attack");
+      }
+
+      if (cardType === "holy_hammer" && enemy.status.confuseTurns > 0) {
+        const extraHeal = 6 + Math.floor(state.level * 0.2);
+        const before = state.player.hp;
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + extraHeal);
+        logAppend(`连锁效果【魅惑追击】发动，额外恢复 ${state.player.hp - before} 点生命。`, "heal");
+      }
+
+      if (cardType === "flame_slash" && enemy.status.blindTurns > 0) {
+        const extraBurn = 2 + Math.floor(state.level * 0.15);
+        enemy.status.burnDamage += extraBurn;
+        enemy.status.burnTurns = Math.max(enemy.status.burnTurns, 2);
+        logAppend(`连锁效果【盲火追烧】发动，燃烧伤害额外提高 ${extraBurn}。`, "attack");
+      }
+
+      if (bonus > 0) {
+        let actual = consumeEnemyShield(enemy, bonus);
+        if (actual > 0) {
+          enemy.hp -= actual;
+          if (enemy.hp < 0) enemy.hp = 0;
+          addBloodEffectToEnemy();
+        }
+      }
+      return baseDamage + bonus;
+    }
+
+    function applyDamageToEnemy(enemy, dmg, message, options = {}) {
+      if (!enemy || enemy.hp <= 0) return false;
+
+      let damage = dmg;
+      if (options.ignoreShield !== true) {
+        damage = consumeEnemyShield(enemy, damage);
+      }
+
+      if (damage <= 0) {
+        log(message || `攻击命中【${enemy.name}】，但被护盾完全挡下。`, "shield");
         return false;
       }
 
-      monster.hp -= dmg;
-      if (monster.hp < 0) monster.hp = 0;
+      const wouldDie = enemy.hp - damage <= 0;
+      if (wouldDie &&
+          enemy.skills.tenacityChance > 0 &&
+          !enemy.skills.tenacityUsed &&
+          chance(enemy.skills.tenacityChance)) {
+        enemy.hp = 1;
+        enemy.skills.tenacityUsed = true;
+        log(message, "attack");
+        logAppend(`【${enemy.name}】触发【坚韧】，本次没有被击倒，生命锁定在 1。`, "system");
+        addStunEffectToEnemy();
+        return false;
+      }
+
+      enemy.hp -= damage;
+      if (enemy.hp < 0) enemy.hp = 0;
       log(message, "attack");
-      return monster.hp <= 0;
+      addBloodEffectToEnemy();
+      afterEnemyDamaged(enemy, damage, options.cardType || "");
+      return enemy.hp <= 0;
     }
 
-    function handleMonsterDefeat() {
-      const monster = state.currentMonster;
-      if (monster.hp > 0) return false;
+    function getPrimaryEnemy() {
+      return getSelectedEnemy() || getLivingEnemies()[0] || null;
+    }
 
-      if (monster.skills.rebirth && !monster.skills.rebirthUsed) {
-        monster.skills.rebirthUsed = true;
-        monster.hp = Math.floor(monster.maxHp * 0.8);
-        logAppend("怪物触发【重生】，恢复了 80% 生命，战斗继续！", "system");
+    function handleEnemyDeath(enemy) {
+      if (!enemy || enemy.hp > 0) return false;
+
+      if (enemy.skills.rebirth && !enemy.skills.rebirthUsed) {
+        enemy.skills.rebirthUsed = true;
+        enemy.hp = Math.floor(enemy.maxHp * 0.8);
+        logAppend(`【${enemy.name}】触发【重生】，恢复了 80% 生命，战斗继续！`, "system");
+        updateUI();
+        return false;
+      }
+
+      logAppend(`【${enemy.name}】倒下了。`, "system");
+      const living = getLivingEnemies();
+      if (living.length > 0) {
+        state.selectedEnemyId = living[0].id;
         updateUI();
         return false;
       }
@@ -1294,29 +1654,56 @@
       return true;
     }
 
+    function checkAllEnemiesDead() {
+      return getLivingEnemies().length === 0;
+    }
+
+    function removeCardFromHand(uid) {
+      const index = state.hand.findIndex(c => c.uid === uid);
+      if (index >= 0) state.hand.splice(index, 1);
+    }
+
+    function applyPlayerHeal(amount, msg) {
+      const before = state.player.hp;
+      state.player.hp = Math.min(state.player.maxHp, state.player.hp + amount);
+      const actual = state.player.hp - before;
+      if (msg) logAppend(msg.replace("{heal}", actual), "heal");
+      addHealEffectToPlayer();
+      playSfx("heal");
+    }
+
     function playCard(uid) {
       if (state.inShop || state.gameOver) return;
 
-      const index = state.hand.findIndex(c => c.uid === uid);
-      if (index === -1) return;
+      const card = state.hand.find(c => c.uid === uid);
+      if (!card) return;
 
-      const card = state.hand[index];
+      const target = getSelectedEnemy();
+      if (!target) {
+        log("没有可攻击的敌人。", "system");
+        return;
+      }
+
+      if (state.player.stunTurns > 0) {
+        log("你处于晕眩状态，本回合无法出牌。", "system");
+        return;
+      }
+
       if (state.player.energy < card.cost) {
         log("能量不足。", "system");
         return;
       }
 
-      state.player.energy -= card.cost;
+      const offensiveTypes = ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon", "war_hammer", "phantom_charm"];
+      const playerBlindMiss = offensiveTypes.includes(card.type) && state.player.blindTurns > 0 && chance(0.45);
 
-      const playerBlindMiss =
-        ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon"].includes(card.type) &&
-        state.player.blindTurns > 0 &&
-        Math.random() < 0.45;
+      state.player.energy -= card.cost;
 
       if (playerBlindMiss) {
         log(`你因为致盲效果，使用【${card.name}】时攻击落空。`, "system");
         state.player.blindTurns--;
-        state.hand.splice(index, 1);
+        removeCardFromHand(uid);
+        addBlinkEffectToEnemy();
         updateUI();
         return;
       }
@@ -1328,12 +1715,12 @@
           dmg = Math.floor(dmg * 1.6);
           critText = "（暴击）";
         }
-        applyDamageToMonster(dmg, `你使用【${card.name}】${critText}，造成 ${dmg} 点伤害。`);
+        applyDamageToEnemy(target, dmg, `你使用【${card.name}】${critText}，对【${target.name}】造成 ${dmg} 点伤害。`, { cardType: "attack" });
         playSfx("attack");
 
-        if (state.upgrades.doubleStrike > 0 && state.currentMonster.hp > 0 && chance(state.upgrades.doubleStrike)) {
+        if (state.upgrades.doubleStrike > 0 && target.hp > 0 && chance(state.upgrades.doubleStrike)) {
           const extra = Math.floor(card.value * 0.7);
-          applyDamageToMonster(extra, `连击触发，再造成 ${extra} 点伤害。`);
+          applyDamageToEnemy(target, extra, `连击触发，对【${target.name}】再造成 ${extra} 点伤害。`, { cardType: "attack" });
           playSfx("attack");
         }
       }
@@ -1348,14 +1735,16 @@
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.value);
         log(`你使用【${card.name}】，恢复 ${state.player.hp - before} 点生命。`, "heal");
+        addHealEffectToPlayer();
         playSfx("heal");
       }
 
       if (card.type === "holy_hammer") {
-        applyDamageToMonster(card.damageValue, `你使用【神圣锤】，造成 ${card.damageValue} 点伤害。`);
+        applyDamageToEnemy(target, card.damageValue, `你使用【神圣锤】，对【${target.name}】造成 ${card.damageValue} 点伤害。`, { cardType: "holy_hammer" });
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
         logAppend(`神圣之力恢复了 ${state.player.hp - before} 点生命。`, "heal");
+        addHealEffectToPlayer();
         playSfx("attack");
         playSfx("heal");
       }
@@ -1369,11 +1758,12 @@
       }
 
       if (card.type === "flame_slash") {
-        applyDamageToMonster(card.damageValue, `你使用【烈焰斩】，造成 ${card.damageValue} 点伤害。`);
-        if (chance(card.burnChance) && state.currentMonster.hp > 0) {
-          state.currentMonster.skills.burnDamage = card.burnDamage;
-          state.currentMonster.skills.burnTurns = card.burnTurns;
-          logAppend(`怪物进入燃烧状态，接下来 ${card.burnTurns} 回合每回合受到 ${card.burnDamage} 点伤害。`, "attack");
+        applyDamageToEnemy(target, card.damageValue, `你使用【烈焰斩】，对【${target.name}】造成 ${card.damageValue} 点伤害。`, { cardType: "flame_slash" });
+        if (chance(card.burnChance) && target.hp > 0) {
+          target.status.burnDamage = Math.max(target.status.burnDamage, card.burnDamage);
+          target.status.burnTurns = Math.max(target.status.burnTurns, card.burnTurns);
+          logAppend(`【${target.name}】进入燃烧状态，接下来 ${card.burnTurns} 回合每回合受到 ${card.burnDamage} 点伤害。`, "attack");
+          addPoisonEffectToEnemy();
         }
         playSfx("attack");
       }
@@ -1389,32 +1779,73 @@
         state.player.regenHot = card.hotValue;
         state.player.regenHotTurns = card.hotTurns;
         log(`你使用【我佛慈悲水】，恢复 ${state.player.hp - before} 点生命，并获得 ${card.hotTurns} 回合持续治疗。`, "heal");
+        addHealEffectToPlayer();
         playSfx("heal");
       }
 
       if (card.type === "mercy_palm") {
-        applyDamageToMonster(card.damageValue, `你使用【大慈大悲掌】，造成 ${card.damageValue} 点伤害。`);
-        state.currentMonster.skills.monsterBlindTurns = card.blindTurns;
-        logAppend(`怪物被致盲，接下来 ${card.blindTurns} 回合攻击有几率失误。`, "system");
+        applyDamageToEnemy(target, card.damageValue, `你使用【大慈大悲掌】，对【${target.name}】造成 ${card.damageValue} 点伤害。`, { cardType: "mercy_palm" });
+        target.status.blindTurns = Math.max(target.status.blindTurns, card.blindTurns);
+        logAppend(`【${target.name}】被致盲，接下来 ${card.blindTurns} 回合攻击有几率失误。`, "system");
+        addBlinkEffectToEnemy();
         playSfx("attack");
       }
 
       if (card.type === "cannon") {
-        applyDamageToMonster(card.damageValue, `你使用【加农炮】，造成 ${card.damageValue} 点大量伤害。`);
+        applyDamageToEnemy(target, card.damageValue, `你使用【加农炮】，对【${target.name}】造成 ${card.damageValue} 点大量伤害。`, { cardType: "cannon" });
         if (chance(card.selfDamageChance)) {
           state.player.hp = Math.max(1, state.player.hp - card.selfDamage);
           logAppend(`后座力反噬，你受到 ${card.selfDamage} 点伤害。`, "monster");
+          addHitEffectToPlayer();
         }
         playSfx("attack");
       }
 
-      state.hand.splice(index, 1);
+      if (card.type === "war_hammer") {
+        const hadShield = target.shield > 0;
+        applyDamageToEnemy(target, card.damageValue, `你使用【战锤一击】，对【${target.name}】造成 ${card.damageValue} 点伤害。`, { cardType: "war_hammer" });
+        if (chance(card.stunChance) && target.hp > 0) {
+          target.status.stunTurns = Math.max(target.status.stunTurns, card.stunTurns);
+          target.status.vulnerableStunBonusHits = Math.max(target.status.vulnerableStunBonusHits, 1);
+          logAppend(`【${target.name}】被晕眩了 1 回合。`, "system");
+          addStunEffectToEnemy();
+        }
+        if (hadShield && target.hp > 0) {
+          const smash = 8 + Math.floor(state.level * 0.2);
+          const actual = consumeEnemyShield(target, target.shield > 0 ? Math.min(target.shield, smash) : 0);
+          if (target.shield > 0 || actual > 0) {
+            target.shield = Math.max(0, target.shield - smash);
+          }
+          const follow = 6 + Math.floor(state.level * 0.18);
+          if (target.hp > 0) {
+            target.hp = Math.max(0, target.hp - follow);
+            logAppend(`连锁效果【破盾猛击】发动，对【${target.name}】追加 ${follow} 点伤害。`, "attack");
+          }
+        }
+        playSfx("attack");
+      }
 
-      if (state.player.blindTurns > 0 && !playerBlindMiss) {
+      if (card.type === "phantom_charm") {
+        applyDamageToEnemy(target, card.damageValue, `你使用【幽冥魅惑】，对【${target.name}】造成 ${card.damageValue} 点伤害。`, { cardType: "phantom_charm" });
+        if (target.hp > 0) {
+          target.status.confuseTurns = Math.max(target.status.confuseTurns, card.confuseTurns);
+          target.status.confuseSelfHitChance = Math.max(target.status.confuseSelfHitChance, card.selfHitChance);
+          target.status.atkDownRate = Math.max(target.status.atkDownRate, card.atkDownRate);
+          logAppend(`【${target.name}】陷入混乱，攻击降低且有几率攻击自己。`, "system");
+          addBlinkEffectToEnemy();
+        }
+        playSfx("attack");
+      }
+
+      removeCardFromHand(uid);
+
+      if (state.player.blindTurns > 0 && !playerBlindMiss && offensiveTypes.includes(card.type)) {
         state.player.blindTurns--;
       }
 
-      if (handleMonsterDefeat()) return;
+      if (target.hp <= 0 && handleEnemyDeath(target)) return;
+      if (checkAllEnemiesDead()) return;
+
       updateUI();
     }
 
@@ -1423,97 +1854,216 @@
       monsterTurn();
     }
 
-    function monsterTurn() {
-      if (state.currentMonster.hp <= 0) return;
+    function applyEnemyDot(enemy) {
+      if (!enemy || enemy.hp <= 0) return false;
 
-      state.turnLabel = "怪物回合";
-      const monster = state.currentMonster;
-      const skills = monster.skills;
-
-      if (skills.burnTurns > 0) {
-        monster.hp -= skills.burnDamage;
-        if (monster.hp < 0) monster.hp = 0;
-        skills.burnTurns--;
-        log(`燃烧效果发动，怪物受到 ${skills.burnDamage} 点持续伤害。`, "attack");
-        if (handleMonsterDefeat()) return;
+      if (enemy.status.burnTurns > 0) {
+        enemy.hp -= enemy.status.burnDamage;
+        if (enemy.hp < 0) enemy.hp = 0;
+        enemy.status.burnTurns--;
+        logAppend(`燃烧效果发动，【${enemy.name}】受到 ${enemy.status.burnDamage} 点持续伤害。`, "attack");
+        addPoisonEffectToEnemy();
+        if (enemy.hp <= 0 && handleEnemyDeath(enemy)) return true;
       }
 
-      if (skills.healChance > 0 && chance(skills.healChance) && monster.hp > 0) {
-        const healValue = Math.floor(monster.maxHp * skills.healPercent);
-        monster.hp = Math.min(monster.maxHp, monster.hp + healValue);
-        logAppend(`怪物发动治疗，恢复 ${healValue} 点生命。`, "heal");
+      if (enemy.status.poisonTurns > 0) {
+        enemy.hp -= enemy.status.poisonDamage;
+        if (enemy.hp < 0) enemy.hp = 0;
+        enemy.status.poisonTurns--;
+        logAppend(`中毒效果发动，【${enemy.name}】受到 ${enemy.status.poisonDamage} 点持续伤害。`, "attack");
+        addPoisonEffectToEnemy();
+        if (enemy.hp <= 0 && handleEnemyDeath(enemy)) return true;
+      }
+
+      return false;
+    }
+
+    function canEnemySummon() {
+      return getLivingEnemies().length < 3;
+    }
+
+    function summonReinforcement() {
+      if (!canEnemySummon()) return false;
+      const allyBase = normalMonsters[randomInt(0, normalMonsters.length - 1)];
+      const reinforcement = createMonster(Math.max(1, state.level - 1), { data: allyBase, isAlly: true });
+      state.enemies.push(reinforcement);
+      if (!state.selectedEnemyId) state.selectedEnemyId = reinforcement.id;
+      logAppend(`敌方发动【增援号角】，召唤了【${reinforcement.name}】加入战斗！`, "monster");
+      playSfx("monster");
+      return true;
+    }
+
+    function applyDamageToPlayer(amount, options = {}) {
+      let incoming = amount;
+      const isTrueDamage = options.trueDamage === true;
+
+      if (!isTrueDamage) {
+        if (state.player.specialShield > 0) {
+          const takeSpecial = Math.min(state.player.specialShield, incoming);
+          state.player.specialShield -= takeSpecial;
+          incoming -= takeSpecial;
+        }
+
+        if (incoming > 0 && state.player.shield > 0) {
+          const takeShield = Math.min(state.player.shield, incoming);
+          state.player.shield -= takeShield;
+          incoming -= takeShield;
+        }
+      }
+
+      if (incoming > 0) {
+        state.player.hp -= incoming;
+        if (state.player.hp < 0) state.player.hp = 0;
+        addHitEffectToPlayer();
+      }
+
+      return incoming;
+    }
+
+    function enemyChooseSkill(enemy) {
+      const choices = [];
+      const s = enemy.skills;
+      if (s.healChance > 0 && chance(s.healChance) && enemy.hp < enemy.maxHp) choices.push("heal");
+      if (s.warcryShieldChance > 0 && chance(s.warcryShieldChance)) choices.push("shield");
+      if (s.canSummon && s.summonChance > 0 && chance(s.summonChance) && canEnemySummon()) choices.push("summon");
+      if (s.confuseChance > 0 && chance(s.confuseChance)) choices.push("confuse");
+      if (s.stunChance > 0 && chance(s.stunChance)) choices.push("stun");
+      if (s.blindChance > 0 && chance(s.blindChance)) choices.push("blind");
+      if (s.poisonChance > 0 && chance(s.poisonChance)) choices.push("poison");
+
+      if (choices.length === 0) return null;
+      return choices[randomInt(0, choices.length - 1)];
+    }
+
+    function processEnemyAction(enemy) {
+      if (!enemy || enemy.hp <= 0) return false;
+
+      if (enemy.status.stunTurns > 0) {
+        enemy.status.stunTurns--;
+        logAppend(`【${enemy.name}】处于晕眩状态，无法行动。`, "system");
+        addStunEffectToEnemy();
+        return false;
+      }
+
+      if (enemy.status.blindTurns > 0 && chance(0.45)) {
+        enemy.status.blindTurns--;
+        logAppend(`【${enemy.name}】因为致盲，行动失误。`, "system");
+        addBlinkEffectToEnemy();
+        return false;
+      }
+
+      if (enemy.status.confuseTurns > 0 && chance(enemy.status.confuseSelfHitChance || 0.3)) {
+        const selfDamage = Math.max(1, Math.floor(enemy.atk * 0.85));
+        enemy.hp -= selfDamage;
+        if (enemy.hp < 0) enemy.hp = 0;
+        enemy.status.confuseTurns--;
+        logAppend(`【${enemy.name}】陷入混乱，攻击了自己，受到 ${selfDamage} 点伤害。`, "monster");
+        addBloodEffectToEnemy();
+        if (enemy.hp <= 0 && handleEnemyDeath(enemy)) return true;
+        return false;
+      }
+
+      const chosenSkill = enemyChooseSkill(enemy);
+
+      if (chosenSkill === "heal") {
+        const healValue = Math.floor(enemy.maxHp * enemy.skills.healPercent);
+        enemy.hp = Math.min(enemy.maxHp, enemy.hp + healValue);
+        logAppend(`【${enemy.name}】发动治疗，恢复 ${healValue} 点生命。`, "heal");
+        return false;
+      }
+
+      if (chosenSkill === "shield") {
+        applyShieldToEnemy(enemy, enemy.skills.warcryShieldValue, `【${enemy.name}】发动【战吼之盾】，获得 ${enemy.skills.warcryShieldValue} 点护盾。`);
+        return false;
+      }
+
+      if (chosenSkill === "summon") {
+        summonReinforcement();
+        return false;
+      }
+
+      if (chosenSkill === "confuse") {
+        state.player.confuseTurns = Math.max(state.player.confuseTurns, enemy.skills.confuseTurns);
+        state.player.handSizePenalty = Math.max(state.player.handSizePenalty, 1);
+        logAppend(`【${enemy.name}】施放【混乱】，你下个玩家回合可出的手牌会少 1 张。`, "monster");
+        return false;
+      }
+
+      if (chosenSkill === "stun") {
+        const dmg = Math.max(3, Math.floor(enemy.atk * 0.45));
+        const actual = applyDamageToPlayer(dmg);
+        state.player.stunTurns = Math.max(state.player.stunTurns, enemy.skills.stunTurns);
+        logAppend(`【${enemy.name}】施放【晕眩打击】，造成 ${dmg} 点伤害，你有 1 回合无法行动。`, "monster");
+        playSfx("monster");
+        return state.player.hp <= 0;
+      }
+
+      if (chosenSkill === "blind") {
+        state.player.blindTurns = Math.max(state.player.blindTurns, enemy.skills.blindTurns);
+        logAppend(`【${enemy.name}】施放【致盲】，你接下来 ${enemy.skills.blindTurns} 回合攻击有几率失误。`, "monster");
+        return false;
+      }
+
+      if (chosenSkill === "poison") {
+        state.player.poisonDamage = enemy.skills.poisonDamage;
+        state.player.poisonTurns = enemy.skills.poisonTurns;
+        logAppend(`【${enemy.name}】施放【中毒】，你接下来 ${enemy.skills.poisonTurns} 回合每回合受到 ${enemy.skills.poisonDamage} 点伤害。`, "monster");
+        return false;
       }
 
       let hitCount = 1;
-      if (skills.multiAttackChance > 0 && chance(skills.multiAttackChance)) {
-        hitCount = skills.multiAttackHits;
-        logAppend(`怪物发动连续攻击，将攻击 ${hitCount} 次。`, "monster");
+      if (enemy.skills.multiAttackChance > 0 && chance(enemy.skills.multiAttackChance)) {
+        hitCount = enemy.skills.multiAttackHits;
+        logAppend(`【${enemy.name}】发动连续攻击，将攻击 ${hitCount} 次。`, "monster");
       }
 
       for (let i = 0; i < hitCount; i++) {
         if (state.player.hp <= 0) break;
-
-        if (skills.monsterBlindTurns > 0 && chance(0.45)) {
-          logAppend("怪物因为致盲，攻击失误。", "system");
-          continue;
-        }
 
         if (state.player.dodgeChance > 0 && chance(state.player.dodgeChance)) {
           logAppend("你成功闪避了怪物的攻击。", "system");
           continue;
         }
 
-        let incoming = monster.atk;
-        const isTrueDamage = skills.trueDamageChance > 0 && chance(skills.trueDamageChance);
+        let incoming = enemy.atk;
+        if (enemy.status.confuseTurns > 0 && enemy.status.atkDownRate > 0) {
+          incoming = Math.max(1, Math.floor(incoming * (1 - enemy.status.atkDownRate)));
+        }
+        const isTrueDamage = enemy.skills.trueDamageChance > 0 && chance(enemy.skills.trueDamageChance);
+        const actual = applyDamageToPlayer(incoming, { trueDamage: isTrueDamage });
 
         if (isTrueDamage) {
-          state.player.hp -= incoming;
-          if (state.player.hp < 0) state.player.hp = 0;
-          logAppend(`怪物发动真实伤害，无视护盾，造成 ${incoming} 点伤害。`, "monster");
+          logAppend(`【${enemy.name}】发动真实伤害，无视护盾，造成 ${incoming} 点伤害。`, "monster");
         } else {
-          let remain = incoming;
-
-          if (state.player.specialShield > 0) {
-            const takeSpecial = Math.min(state.player.specialShield, remain);
-            state.player.specialShield -= takeSpecial;
-            remain -= takeSpecial;
-          }
-
-          if (remain > 0 && state.player.shield > 0) {
-            const takeShield = Math.min(state.player.shield, remain);
-            state.player.shield -= takeShield;
-            remain -= takeShield;
-          }
-
-          if (remain > 0) {
-            state.player.hp -= remain;
-            if (state.player.hp < 0) state.player.hp = 0;
-          }
-
-          logAppend(`怪物攻击你，造成 ${incoming} 点伤害。`, "monster");
+          logAppend(`【${enemy.name}】攻击你，造成 ${incoming} 点伤害。`, "monster");
         }
 
-        if (skills.blindChance > 0 && chance(skills.blindChance)) {
-          state.player.blindTurns = Math.max(state.player.blindTurns, skills.blindTurns);
-          logAppend(`你被致盲了，接下来 ${skills.blindTurns} 回合攻击有几率失误。`, "system");
-        }
-
-        if (skills.poisonChance > 0 && chance(skills.poisonChance)) {
-          state.player.poisonDamage = skills.poisonDamage;
-          state.player.poisonTurns = skills.poisonTurns;
-          logAppend(`你中毒了，接下来 ${skills.poisonTurns} 回合每回合受到 ${skills.poisonDamage} 点伤害。`, "monster");
-        }
+        playSfx("monster");
       }
 
-      if (skills.monsterBlindTurns > 0) {
-        skills.monsterBlindTurns--;
-      }
+      if (enemy.status.confuseTurns > 0) enemy.status.confuseTurns--;
+      if (enemy.status.blindTurns > 0) enemy.status.blindTurns--;
 
-      if (state.player.hp <= 0) {
-        state.gameOver = true;
-        showGameOver(false);
-        updateUI();
-        return;
+      return state.player.hp <= 0;
+    }
+
+    function monsterTurn() {
+      if (getLivingEnemies().length === 0) return;
+
+      state.turnLabel = "怪物回合";
+
+      const actingEnemies = [...getLivingEnemies()];
+      for (const enemy of actingEnemies) {
+        if (enemy.hp <= 0) continue;
+        if (applyEnemyDot(enemy)) return;
+
+        const playerDied = processEnemyAction(enemy);
+        if (playerDied) {
+          state.gameOver = true;
+          showGameOver(false);
+          updateUI();
+          return;
+        }
       }
 
       if (state.player.poisonTurns > 0) {
@@ -1521,6 +2071,7 @@
         if (state.player.hp < 0) state.player.hp = 0;
         state.player.poisonTurns--;
         logAppend(`中毒效果发动，你受到 ${state.player.poisonDamage} 点伤害。`, "monster");
+        addHitEffectToPlayer();
       }
 
       if (state.player.hp <= 0) {
@@ -1535,16 +2086,19 @@
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + state.player.regenHot);
         state.player.regenHotTurns--;
         logAppend(`持续治疗发动，恢复 ${state.player.hp - before} 点生命。`, "heal");
+        addHealEffectToPlayer();
       }
 
       if (state.player.specialShieldTurns > 0) {
         state.player.specialShieldTurns--;
-        if (state.player.specialShieldTurns === 0 && state.player.specialShield > 0 && monster.hp > 0) {
-          monster.hp -= state.player.specialShieldBomb;
-          if (monster.hp < 0) monster.hp = 0;
-          logAppend(`爆裂神盾引爆，对怪物造成 ${state.player.specialShieldBomb} 点伤害。`, "attack");
+        const target = getSelectedEnemy();
+        if (state.player.specialShieldTurns === 0 && state.player.specialShield > 0 && target && target.hp > 0) {
+          const damage = state.player.specialShieldBomb;
+          target.hp = Math.max(0, target.hp - damage);
+          logAppend(`爆裂神盾引爆，对【${target.name}】造成 ${damage} 点伤害。`, "attack");
           state.player.specialShield = 0;
-          if (handleMonsterDefeat()) return;
+          addBloodEffectToEnemy();
+          if (target.hp <= 0 && handleEnemyDeath(target)) return;
         }
       }
 
@@ -1552,13 +2106,24 @@
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + state.upgrades.regen);
         logAppend(`持续治疗发动，恢复 ${state.player.hp - before} 点生命。`, "heal");
+        addHealEffectToPlayer();
       }
 
-      state.player.energy = state.player.maxEnergy;
+      state.player.energy += state.player.maxEnergy;
       state.turnLabel = "玩家回合";
       drawNewHand();
-      logAppend("新的回合开始，你获得了新的随机手牌，能量已补满。", "system");
 
+      if (state.player.confuseTurns > 0) {
+        state.player.confuseTurns--;
+        if (state.player.confuseTurns === 0) {
+          logAppend("混乱效果结束，手牌数量恢复正常。", "system");
+        }
+      }
+      if (state.player.stunTurns > 0) {
+        state.player.stunTurns--;
+      }
+
+      logAppend(`新的回合开始，你获得了新的随机手牌，能量变为 ${state.player.energy}/${state.player.maxEnergy}。`, "system");
       updateUI();
     }
 
@@ -1574,7 +2139,7 @@
       state.justClearedLevel = clearedLevel;
       state.pendingShop = clearedLevel % 3 === 0;
 
-      log(`你击败了【${state.currentMonster.name}】！获得 ${reward} 金币。`, "system");
+      log(`你击败了全部敌人！获得 ${reward} 金币。`, "system");
 
       if (clearedLevel >= 50) {
         state.gameOver = true;
@@ -1586,7 +2151,6 @@
       document.getElementById("levelClearTitle").textContent = `第 ${clearedLevel} 关通关`;
       document.getElementById("levelClearDesc").textContent = `恭喜 ${state.playerName} 成功通过第 ${clearedLevel} 关！获得 ${reward} 金币。`;
       document.getElementById("levelClearModal").classList.add("show");
-
       updateUI();
     }
 
@@ -1606,7 +2170,10 @@
     function startLevel(isFirst = false) {
       state.inShop = false;
       closeShopOverlayOnly();
-      state.currentMonster = createMonster(state.level);
+      const mainEnemy = createMonster(state.level);
+      state.enemies = [mainEnemy];
+      state.selectedEnemyId = mainEnemy.id;
+
       state.player.energy = state.player.maxEnergy;
       state.player.shield = 0;
       state.player.specialShield = 0;
@@ -1616,12 +2183,15 @@
       state.player.blindTurns = 0;
       state.player.poisonTurns = 0;
       state.player.poisonDamage = 0;
+      state.player.stunTurns = 0;
+      state.player.confuseTurns = 0;
+      state.player.handSizePenalty = 0;
       state.turnLabel = "玩家回合";
       state.shopItemsBoughtThisVisit = 0;
       drawNewHand();
 
       if (!isFirst) {
-        log(`进入第 ${state.level} 关：${state.currentMonster.name}`, "system");
+        log(`进入第 ${state.level} 关：${mainEnemy.name}`, "system");
       }
 
       updateUI();
@@ -1756,7 +2326,6 @@
             log(`购买成功：恢复 ${state.player.hp - before} 点生命。`, "heal");
           }
         },
-
         {
           title: "效果牌：神圣锤",
           desc: "加入角色永久卡池，直到重新开始前都会保留。",
@@ -1825,6 +2394,26 @@
           apply() {
             addSpecialCardToPool("cannon");
             log("购买成功：加农炮加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "效果牌：战锤一击",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 36),
+          key: "war_hammer",
+          apply() {
+            addSpecialCardToPool("war_hammer");
+            log("购买成功：战锤一击加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "效果牌：幽冥魅惑",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 36),
+          key: "phantom_charm",
+          apply() {
+            addSpecialCardToPool("phantom_charm");
+            log("购买成功：幽冥魅惑加入角色卡池。", "system");
           }
         }
       ];
@@ -1913,10 +2502,11 @@
       updateUI();
     }
 
-    function updateMonsterSkillsUI() {
+    function updateMonsterSkillsUI(enemy) {
       const box = document.getElementById("monsterSkillsBox");
       box.innerHTML = "";
-      const s = state.currentMonster.skills;
+      if (!enemy) return;
+      const s = enemy.skills;
       const tags = [];
 
       if (s.trueDamageChance > 0) tags.push("真实伤害");
@@ -1926,6 +2516,10 @@
       if (s.tenacityChance > 0) tags.push("坚韧");
       if (s.rebirth) tags.push("重生");
       if (s.poisonChance > 0) tags.push("中毒");
+      if (s.stunChance > 0) tags.push("晕眩");
+      if (s.confuseChance > 0) tags.push("混乱");
+      if (s.warcryShieldChance > 0) tags.push("战吼之盾");
+      if (s.canSummon) tags.push("增援号角");
 
       tags.forEach(t => {
         const span = document.createElement("span");
@@ -1935,39 +2529,113 @@
       });
     }
 
+    function renderEnemyTeam() {
+      const box = document.getElementById("enemyTeamBox");
+      box.innerHTML = "";
+
+      state.enemies.forEach(enemy => {
+        const div = document.createElement("div");
+        const selected = enemy.id === state.selectedEnemyId;
+        div.className = `enemy-card ${selected ? "selected" : ""} ${enemy.hp <= 0 ? "dead" : ""}`;
+        div.onclick = () => enemy.hp > 0 && selectEnemy(enemy.id);
+
+        const hpPercent = enemy.maxHp > 0 ? Math.max(0, (enemy.hp / enemy.maxHp) * 100) : 0;
+        const statusMini = [];
+        if (enemy.status.poisonTurns > 0) statusMini.push(`<span class="mini-tag">毒 ${enemy.status.poisonTurns}</span>`);
+        if (enemy.status.blindTurns > 0) statusMini.push(`<span class="mini-tag">盲 ${enemy.status.blindTurns}</span>`);
+        if (enemy.status.stunTurns > 0) statusMini.push(`<span class="mini-tag">晕 ${enemy.status.stunTurns}</span>`);
+        if (enemy.status.confuseTurns > 0) statusMini.push(`<span class="mini-tag">乱 ${enemy.status.confuseTurns}</span>`);
+
+        div.innerHTML = `
+          <div class="enemy-head">
+            <div class="enemy-icon">${enemy.emoji}</div>
+            <div>
+              <div class="enemy-name">${enemy.name}</div>
+              <div class="enemy-mini">${enemy.type}</div>
+            </div>
+          </div>
+          <div class="enemy-mini">HP ${enemy.hp}/${enemy.maxHp}｜ATK ${enemy.atk}${enemy.shield > 0 ? `｜盾 ${enemy.shield}` : ""}</div>
+          <div class="bar-bg" style="height:10px; margin-top:8px;"><div class="hp-bar" style="width:${hpPercent}%"></div></div>
+          <div class="enemy-status-mini">${statusMini.join("")}</div>
+        `;
+
+        box.appendChild(div);
+      });
+    }
+
+    function appendStatusTag(container, text, cls) {
+      const span = document.createElement("span");
+      span.className = `status-tag ${cls || ""}`.trim();
+      span.textContent = text;
+      container.appendChild(span);
+    }
+
+    function updateStatusBoxes(enemy) {
+      const playerBox = document.getElementById("playerStatusBox");
+      const monsterBox = document.getElementById("monsterStatusBox");
+      playerBox.innerHTML = "";
+      monsterBox.innerHTML = "";
+
+      if (state.player.poisonTurns > 0) appendStatusTag(playerBox, `中毒 ${state.player.poisonTurns} 回合`, "tag-poison");
+      if (state.player.blindTurns > 0) appendStatusTag(playerBox, `致盲 ${state.player.blindTurns} 回合`, "tag-blind");
+      if (state.player.stunTurns > 0) appendStatusTag(playerBox, `晕眩 ${state.player.stunTurns} 回合`, "tag-stun");
+      if (state.player.confuseTurns > 0) appendStatusTag(playerBox, `混乱 ${state.player.confuseTurns} 回合`, "tag-confuse");
+      if (state.player.regenHotTurns > 0) appendStatusTag(playerBox, `持续治疗 ${state.player.regenHotTurns} 回合`, "tag-chain");
+      if (state.player.dodgeChance > 0) appendStatusTag(playerBox, `闪避 +${Math.round(state.player.dodgeChance * 100)}%`, "tag-chain");
+
+      if (playerBox.innerHTML === "") appendStatusTag(playerBox, "暂无异常状态", "");
+
+      if (enemy) {
+        if (enemy.status.poisonTurns > 0) appendStatusTag(monsterBox, `中毒 ${enemy.status.poisonTurns} 回合`, "tag-poison");
+        if (enemy.status.blindTurns > 0) appendStatusTag(monsterBox, `致盲 ${enemy.status.blindTurns} 回合`, "tag-blind");
+        if (enemy.status.stunTurns > 0) appendStatusTag(monsterBox, `晕眩 ${enemy.status.stunTurns} 回合`, "tag-stun");
+        if (enemy.status.confuseTurns > 0) appendStatusTag(monsterBox, `混乱 ${enemy.status.confuseTurns} 回合`, "tag-confuse");
+        if (enemy.status.burnTurns > 0) appendStatusTag(monsterBox, `燃烧 ${enemy.status.burnTurns} 回合`, "tag-burn");
+        if (enemy.status.vulnerableStunBonusHits > 0) appendStatusTag(monsterBox, `晕眩破防待触发`, "tag-vuln");
+        if (enemy.shield > 0) appendStatusTag(monsterBox, `护盾 ${enemy.shield}`, "tag-chain");
+      }
+      if (monsterBox.innerHTML === "") appendStatusTag(monsterBox, "暂无异常状态", "");
+    }
+
     function updateUI() {
       applyPlayerIdentity();
+
+      const enemy = getSelectedEnemy();
 
       document.getElementById("levelText").textContent = `${state.level}/50`;
       document.getElementById("goldText").textContent = state.gold;
       document.getElementById("handCountText").textContent = String(state.hand.length);
       document.getElementById("battleTurnText").textContent = state.turnLabel;
       document.getElementById("shopHintText").textContent = state.pendingShop ? "通关后开启" : "未开启";
+      document.getElementById("targetText").textContent = enemy ? enemy.name : "无";
 
-      document.getElementById("playerHpText").textContent = state.player.hp;
+      document.getElementById("playerHpText").textContent = Math.max(0, state.player.hp);
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
       document.getElementById("playerShieldText").textContent = state.player.shield + state.player.specialShield;
       document.getElementById("energyText").textContent = state.player.energy;
       document.getElementById("energyMaxText").textContent = state.player.maxEnergy;
 
-      document.getElementById("playerHpBar").style.width = `${(state.player.hp / state.player.maxHp) * 100}%`;
-      document.getElementById("energyBar").style.width = `${(state.player.energy / state.player.maxEnergy) * 100}%`;
+      document.getElementById("playerHpBar").style.width = `${Math.max(0, (state.player.hp / state.player.maxHp) * 100)}%`;
+      document.getElementById("energyBar").style.width = `${Math.min(100, Math.max(0, (state.player.energy / state.player.maxEnergy) * 100))}%`;
 
-      if (state.currentMonster) {
-        document.getElementById("monsterNameText").textContent = state.currentMonster.name;
-        document.getElementById("monsterTypeText").textContent = state.currentMonster.type;
-        document.getElementById("monsterEmojiText").textContent = state.currentMonster.emoji;
-        document.getElementById("monsterHpText").textContent = state.currentMonster.hp;
-        document.getElementById("monsterMaxHpText").textContent = state.currentMonster.maxHp;
-        document.getElementById("monsterAtkText").textContent = state.currentMonster.atk;
-        document.getElementById("monsterHpBar").style.width = `${(state.currentMonster.hp / state.currentMonster.maxHp) * 100}%`;
-        document.getElementById("monsterInfoText").textContent = `${state.currentMonster.note} 当前攻击力为 ${state.currentMonster.atk}。`;
-        updateMonsterSkillsUI();
+      if (enemy) {
+        document.getElementById("monsterNameText").textContent = enemy.name;
+        document.getElementById("monsterTypeText").textContent = enemy.type;
+        document.getElementById("monsterEmojiText").textContent = enemy.emoji;
+        document.getElementById("monsterHpText").textContent = enemy.hp;
+        document.getElementById("monsterMaxHpText").textContent = enemy.maxHp;
+        document.getElementById("monsterShieldText").textContent = enemy.shield;
+        document.getElementById("monsterAtkText").textContent = enemy.atk;
+        document.getElementById("monsterHpBar").style.width = `${Math.max(0, (enemy.hp / enemy.maxHp) * 100)}%`;
+        document.getElementById("monsterInfoText").textContent = `${enemy.note} 当前攻击力为 ${enemy.atk}。`;
+        updateMonsterSkillsUI(enemy);
       }
 
       document.getElementById("heroInfoText").textContent =
-        `已拥有效果牌 ${state.ownedSpecialCardKeys.length} 张，闪避率 ${(state.player.dodgeChance * 100).toFixed(0)}%，中毒剩余 ${state.player.poisonTurns} 回合。`;
+        `已拥有效果牌 ${state.ownedSpecialCardKeys.length} 张，本关能量可累积，当前已累积到 ${state.player.energy}/${state.player.maxEnergy}。`;
 
+      renderEnemyTeam();
+      updateStatusBoxes(enemy);
       document.getElementById("endTurnBtn").disabled = state.inShop || state.gameOver;
       renderCards();
       renderLogs();
@@ -2008,8 +2676,8 @@
 
     function logAppend(text, type = null) {
       logEntries.push({ text, type: classifyLog(text, type) });
-      if (logEntries.length > 10) {
-        logEntries = logEntries.slice(logEntries.length - 10);
+      if (logEntries.length > 16) {
+        logEntries = logEntries.slice(logEntries.length - 16);
       }
       renderLogs();
     }
@@ -2020,30 +2688,33 @@
         audioCtx = new AudioContextClass();
       }
 
-      const bgm = document.getElementById("bgmPlayer");
-      bgm.volume = musicVolume;
-
       document.getElementById("musicVolumeSlider").oninput = (e) => {
         musicVolume = Number(e.target.value) / 100;
-        bgm.volume = musicVolume;
       };
 
       document.getElementById("sfxVolumeSlider").oninput = (e) => {
         sfxVolume = Number(e.target.value) / 100;
       };
+
+      document.getElementById("musicToggleBtn").onclick = () => {
+        musicEnabled = !musicEnabled;
+        document.getElementById("musicToggleBtn").textContent = `背景音乐：${musicEnabled ? "开" : "关"}`;
+        if (musicEnabled) {
+          startMusicEngine();
+        } else {
+          stopMusicEngine();
+        }
+      };
     }
 
-    function playBgm() {
-      const bgm = document.getElementById("bgmPlayer");
-      bgm.volume = musicVolume;
-      bgm.play().catch(() => {});
+    function ensureAudioContext() {
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") audioCtx.resume();
     }
 
     function playTone(freq, duration, type = "sine", volume = 0.08, when = 0) {
       if (!audioCtx) return;
-      if (audioCtx.state === "suspended") {
-        audioCtx.resume();
-      }
+      ensureAudioContext();
 
       const now = audioCtx.currentTime + when;
       const osc = audioCtx.createOscillator();
@@ -2061,6 +2732,60 @@
 
       osc.start(now);
       osc.stop(now + duration + 0.03);
+    }
+
+    function playMusicTone(freq, duration, type = "triangle", volume = 0.04, when = 0) {
+      if (!audioCtx || !musicEnabled) return;
+      ensureAudioContext();
+
+      const now = audioCtx.currentTime + when;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(1200, now);
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, volume * musicVolume), now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.04);
+    }
+
+    function musicStep() {
+      if (!musicEnabled || !audioCtx) return;
+      const melody = [261.63, 329.63, 392.0, 329.63, 293.66, 349.23, 440.0, 349.23];
+      const bass = [130.81, 146.83, 164.81, 146.83];
+      const m = melody[bgmStep % melody.length];
+      const b = bass[bgmStep % bass.length];
+      playMusicTone(m, 0.32, "triangle", 0.03, 0);
+      playMusicTone(b, 0.42, "sine", 0.025, 0.02);
+      bgmStep++;
+    }
+
+    function startMusicEngine() {
+      if (!audioCtx) return;
+      ensureAudioContext();
+      if (bgmLoopHandle) clearInterval(bgmLoopHandle);
+      if (!musicEnabled) return;
+      musicStep();
+      bgmLoopHandle = setInterval(musicStep, 420);
+    }
+
+    function stopMusicEngine() {
+      if (bgmLoopHandle) {
+        clearInterval(bgmLoopHandle);
+        bgmLoopHandle = null;
+      }
     }
 
     function playSfx(kind) {
