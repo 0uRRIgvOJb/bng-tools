@@ -4,122 +4,167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>首页</title>
+
 <style>
-  body{
-    margin:0;
-    background:#0f1720;
-    color:#fff;
-    font-family:Arial,"Microsoft JhengHei",sans-serif;
-    text-align:center;
-  }
 
-  h1{
-    margin-top:50px;
-    font-size:42px;
-  }
+body{
+  margin:0;
+  background:#0f1720;
+  color:#fff;
+  font-family:Arial,"Microsoft JhengHei",sans-serif;
+  text-align:center;
+}
 
-  #time{
-    margin-top:10px;
-    font-size:20px;
-    color:#9fb3c8;
-  }
+h1{
+  margin-top:40px;
+  font-size:42px;
+}
 
-  #status{
-    margin:20px auto 10px;
-    color:#8fa6bb;
-    font-size:16px;
-  }
+#time{
+  margin-top:10px;
+  font-size:18px;
+  color:#9fb3c8;
+}
 
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    max-width:900px;
-    margin:40px auto;
-    padding:0 20px 40px;
-  }
+#status{
+  margin:15px auto;
+  color:#8fa6bb;
+}
 
-  .card{
-    background:#1b2532;
-    padding:25px;
-    border-radius:12px;
-    transition:.2s;
-  }
+/* 左右布局 */
 
-  .card:hover{
-    background:#243244;
-    transform:translateY(-5px);
-  }
+.container{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 20px;
+}
 
-  a{
-    color:white;
-    text-decoration:none;
-    font-size:20px;
-    font-weight:bold;
-  }
+.section{
+  flex:1;
+}
 
-  .error{
-    color:#ff9b9b;
-    white-space:pre-wrap;
-    line-height:1.8;
-    padding:0 20px;
-  }
+.section h2{
+  margin-bottom:20px;
+  border-bottom:1px solid #2a3b4f;
+  padding-bottom:10px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:15px;
+}
+
+.card{
+  background:#1b2532;
+  padding:20px;
+  border-radius:10px;
+  transition:.2s;
+}
+
+.card:hover{
+  background:#243244;
+  transform:translateY(-3px);
+}
+
+a{
+  color:white;
+  text-decoration:none;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.error{
+  color:#ff9b9b;
+}
+
 </style>
 </head>
+
 <body>
 
 <h1>首页</h1>
 <div id="time"></div>
 <div id="status">正在读取网页列表...</div>
-<div id="apps" class="grid"></div>
+
+<div class="container">
+
+  <div class="section">
+    <h2>工具</h2>
+    <div id="tools" class="grid"></div>
+  </div>
+
+  <div class="section">
+    <h2>其他</h2>
+    <div id="others" class="grid"></div>
+  </div>
+
+</div>
 
 <script>
-  function updateTime(){
-    const now = new Date();
-    const text =
-      now.getFullYear() + "-" +
-      String(now.getMonth() + 1).padStart(2, "0") + "-" +
-      String(now.getDate()).padStart(2, "0") + " " +
-      String(now.getHours()).padStart(2, "0") + ":" +
-      String(now.getMinutes()).padStart(2, "0") + ":" +
-      String(now.getSeconds()).padStart(2, "0");
-    document.getElementById("time").textContent = text;
-  }
 
-  setInterval(updateTime, 1000);
-  updateTime();
+function updateTime(){
+  const now = new Date();
+  const text =
+    now.getFullYear()+"-"+
+    String(now.getMonth()+1).padStart(2,"0")+"-"+
+    String(now.getDate()).padStart(2,"0")+" "+
+    String(now.getHours()).padStart(2,"0")+":"+
+    String(now.getMinutes()).padStart(2,"0")+":"+
+    String(now.getSeconds()).padStart(2,"0");
 
-  async function loadPages(){
-    const status = document.getElementById("status");
-    const apps = document.getElementById("apps");
+  document.getElementById("time").textContent=text;
+}
 
-    try{
-      const res = await fetch("./pages.json?v=" + Date.now(), { cache: "no-store" });
+setInterval(updateTime,1000);
+updateTime();
 
-      if(!res.ok){
-        throw new Error("pages.json 读取失败，状态码：" + res.status);
-      }
 
-      const data = await res.json();
+async function loadPages(){
 
-      if(!Array.isArray(data) || data.length === 0){
-        status.textContent = "目前没有可显示的网页";
-        return;
-      }
+  const status=document.getElementById("status");
+  const tools=document.getElementById("tools");
+  const others=document.getElementById("others");
 
-      status.textContent = "";
+  try{
 
-      apps.innerHTML = data.map(item => `
-        <div class="card">
-          <a href="./${item.file}">${item.name}</a>
-        </div>
-      `).join("");
-    }catch(err){
-      status.innerHTML = `<div class="error">读取失败：${err.message}</div>`;
+    const res=await fetch("./pages.json?v="+Date.now(),{cache:"no-store"});
+
+    if(!res.ok){
+      throw new Error("pages.json读取失败");
     }
+
+    const data=await res.json();
+
+    status.textContent="";
+
+    data.forEach(item=>{
+
+      const html=`
+      <div class="card">
+        <a href="./${item.file}">${item.name}</a>
+      </div>
+      `;
+
+      if(item.type==="tool"){
+        tools.innerHTML+=html;
+      }else{
+        others.innerHTML+=html;
+      }
+
+    });
+
+  }catch(err){
+    status.innerHTML=`<div class="error">${err.message}</div>`;
   }
 
-  loadPages();
+}
+
+loadPages();
+
 </script>
 
 </body>
