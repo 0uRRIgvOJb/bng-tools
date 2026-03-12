@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +53,8 @@ h1{
   padding-bottom:10px;
 }
 
+/* 卡片 */
+
 .grid{
   display:grid;
   grid-template-columns:1fr;
@@ -79,15 +82,19 @@ a{
 
 .error{
   color:#ff9b9b;
+  padding:10px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <h1>首页</h1>
+
 <div id="time"></div>
+
 <div id="status">正在读取网页列表...</div>
 
 <div class="container">
@@ -104,61 +111,74 @@ a{
 
 </div>
 
+
 <script>
 
+/* 时间 */
+
 function updateTime(){
+
   const now = new Date();
+
   const text =
-    now.getFullYear()+"-"+
-    String(now.getMonth()+1).padStart(2,"0")+"-"+
-    String(now.getDate()).padStart(2,"0")+" "+
-    String(now.getHours()).padStart(2,"0")+":"+
-    String(now.getMinutes()).padStart(2,"0")+":"+
+    now.getFullYear() + "-" +
+    String(now.getMonth()+1).padStart(2,"0") + "-" +
+    String(now.getDate()).padStart(2,"0") + " " +
+    String(now.getHours()).padStart(2,"0") + ":" +
+    String(now.getMinutes()).padStart(2,"0") + ":" +
     String(now.getSeconds()).padStart(2,"0");
 
-  document.getElementById("time").textContent=text;
+  document.getElementById("time").textContent = text;
+
 }
 
 setInterval(updateTime,1000);
 updateTime();
 
 
+
+/* 读取 pages.json */
+
 async function loadPages(){
 
-  const status=document.getElementById("status");
-  const tools=document.getElementById("tools");
-  const others=document.getElementById("others");
+  const status = document.getElementById("status");
+  const tools = document.getElementById("tools");
+  const others = document.getElementById("others");
 
   try{
 
-    const res=await fetch("./pages.json?v="+Date.now(),{cache:"no-store"});
+    const res = await fetch("./pages.json?v=" + Date.now(),{
+      cache:"no-store"
+    });
 
     if(!res.ok){
-      throw new Error("pages.json读取失败");
+      throw new Error("pages.json 读取失败");
     }
 
-    const data=await res.json();
+    const data = await res.json();
 
-    status.textContent="";
+    status.textContent = "";
 
     data.forEach(item=>{
 
-      const html=`
+      const html = `
       <div class="card">
         <a href="./${item.file}">${item.name}</a>
       </div>
       `;
 
-      if(item.type==="工具"){
-        tools.innerHTML+=html;
+      if(item.type === "工具"){
+        tools.innerHTML += html;
       }else{
-        others.innerHTML+=html;
+        others.innerHTML += html;
       }
 
     });
 
   }catch(err){
-    status.innerHTML=`<div class="error">${err.message}</div>`;
+
+    status.innerHTML = `<div class="error">读取失败：${err.message}</div>`;
+
   }
 
 }
@@ -168,4 +188,5 @@ loadPages();
 </script>
 
 </body>
+
 </html>
