@@ -908,8 +908,10 @@
     }
 
     @media (max-width: 1280px) {
+      .container { padding-bottom: 340px; }
       .battle-board { grid-template-columns: 1fr; }
-      .log-box { min-height: 260px; max-height: 360px; }
+      .panel, .log-panel { max-height: none; }
+      .log-box { min-height: 260px; max-height: 360px; height: auto; }
     }
 
     @media (max-width: 980px) {
@@ -918,7 +920,10 @@
     }
 
     @media (max-width: 600px) {
+      .container { padding-bottom: 360px; }
       .cards { grid-template-columns: 1fr; }
+      .cards-panel { left: 10px; right: 10px; max-height: 290px; }
+      .cards-panel .section-title { font-size: 30px; }
       .modal-title { font-size: 28px; }
       .volume-wrap input[type="range"] { width: 120px; }
     }
@@ -933,18 +938,19 @@
     }
     .container {
       max-width: 1800px;
-      padding: 16px 18px 170px;
+      padding: 18px 20px 310px;
     }
     .title {
-      font-size: 56px;
+      font-size: 60px;
       letter-spacing: 4px;
       margin: 6px 0 14px;
       text-shadow: 0 0 18px rgba(255,179,71,0.22);
     }
     .battle-board {
-      grid-template-columns: 360px minmax(540px, 1fr) 360px;
-      gap: 16px;
-      align-items: stretch;
+      grid-template-columns: 370px minmax(560px, 1fr) 370px;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 12px;
     }
     .panel, .cards-panel, .log-panel {
       border-radius: 22px;
@@ -953,26 +959,37 @@
         linear-gradient(180deg, rgba(33,38,47,0.96) 0%, rgba(23,27,34,0.98) 100%);
       box-shadow: 0 10px 40px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.03);
     }
-    .character-title h2 { font-size: 34px; }
+    .panel, .log-panel {
+      max-height: calc(100vh - 320px);
+      overflow: auto;
+    }
+    .character-title h2 { font-size: 38px; }
     .character-sub, .stat-top, .note-box, .skill-tag, .status-tag, .enemy-mini, .log-line, .shop-tip, .shop-desc {
-      font-size: 19px;
-      line-height: 1.65;
+      font-size: 21px;
+      line-height: 1.7;
     }
-    .side-label { font-size: 18px; }
-    .side-value { font-size: 31px; }
-    .section-title { font-size: 30px; }
-    .note-box { min-height: 148px; }
+    .side-label { font-size: 20px; }
+    .side-value { font-size: 30px; line-height: 1.35; }
+    .section-title { font-size: 34px; }
+    .note-box {
+      min-height: 120px;
+      max-height: 170px;
+      padding: 14px 16px;
+      line-height: 1.8;
+      word-break: break-word;
+    }
     .log-box {
-      height: calc(100vh - 360px);
-      min-height: 340px;
-      font-size: 17px;
+      height: calc(100vh - 380px);
+      min-height: 300px;
+      max-height: calc(100vh - 380px);
+      font-size: 18px;
     }
-    .player-grid { grid-template-columns: 1fr 200px; }
-    .monster-layout { grid-template-columns: 1fr 190px; }
+    .player-grid { grid-template-columns: 1fr 210px; }
+    .monster-layout { grid-template-columns: 1fr 210px; }
     .avatar, .monster-avatar {
-      width: 112px;
-      height: 112px;
-      font-size: 60px;
+      width: 118px;
+      height: 118px;
+      font-size: 64px;
       border-radius: 22px;
     }
     .cards-panel {
@@ -983,22 +1000,25 @@
       z-index: 30;
       max-width: 1800px;
       margin: 0 auto;
-      padding: 14px 18px 16px;
+      padding: 12px 18px 14px;
+      max-height: 260px;
+      overflow: hidden;
       backdrop-filter: blur(10px);
       background:
-        linear-gradient(180deg, rgba(24,28,36,0.97) 0%, rgba(17,20,26,0.985) 100%);
+        linear-gradient(180deg, rgba(24,28,36,0.975) 0%, rgba(17,20,26,0.99) 100%);
     }
     .cards-panel .section-title {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: 40px;
     }
     .cards-panel .section-title::after {
       content: "Slay 风格底部手牌列";
-      font-size: 15px;
+      font-size: 16px;
       color: #c9d0dc;
-      font-weight: 500;
+      font-weight: 600;
     }
     .cards {
       display: flex;
@@ -1007,18 +1027,24 @@
       overflow-x: auto;
       overflow-y: hidden;
       padding: 6px 2px 10px;
+      min-height: 180px;
     }
     .card {
       min-width: 250px;
       width: 250px;
-      min-height: 230px;
+      min-height: 188px;
       padding: 16px;
       border-radius: 18px;
     }
-    .card-name { font-size: 24px; }
-    .card-type, .card-desc, .card-cost { font-size: 16px; }
+    .card-name { font-size: 28px; }
+    .card-type, .card-desc, .card-cost { font-size: 18px; }
     .card button, .action-btn, .modal-btn, .home-btn, .music-btn {
-      font-size: 17px;
+      font-size: 18px;
+    }
+    #playerStatusSummary, #monsterInfoText, #heroInfoText {
+      font-size: 20px;
+      line-height: 1.75;
+      word-break: break-word;
     }
     .enemy-card {
       padding: 12px 13px;
@@ -1428,21 +1454,7 @@
           };
         }
       },
-      shadow_step: {
-        key: "shadow_step",
-        name: "暗影步",
-        create(level) {
-          return {
-            id: "shadow_step",
-            name: "暗影步",
-            type: "shadow_step",
-            cardType: "效果牌",
-            dodgeGain: 0.22,
-            cost: 1,
-            desc: "提升本关卡内的闪避几率。"
-          };
-        }
-      },
+
       mercy_water: {
         key: "mercy_water",
         name: "我佛慈悲水",
@@ -2516,11 +2528,6 @@
         playSfx("attack");
       }
 
-      if (card.type === "shadow_step") {
-        state.player.dodgeChance = Math.min(0.65, state.player.dodgeChance + card.dodgeGain);
-        log(`你使用【暗影步】，本关卡闪避几率提升 ${(card.dodgeGain * 100).toFixed(0)}%。`, "system");
-      }
-
       if (card.type === "mercy_water") {
         const before = state.player.hp;
         state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
@@ -2992,6 +2999,7 @@
     function startLevel(isFirst = false) {
       state.inShop = false;
       closeShopOverlayOnly();
+      logEntries = [];
       const mainEnemy = createMonster(state.level);
       state.enemies = [mainEnemy];
       state.selectedEnemyId = mainEnemy.id;
@@ -3265,16 +3273,7 @@
             log("购买成功：烈焰斩加入角色卡池。", "system");
           }
         },
-        {
-          title: "效果牌：暗影步",
-          desc: "加入角色永久卡池，直到重新开始前都会保留。",
-          cost: getShopPrice(18, 28),
-          key: "shadow_step",
-          apply() {
-            addSpecialCardToPool("shadow_step");
-            log("购买成功：暗影步加入角色卡池。", "system");
-          }
-        },
+
         {
           title: "效果牌：我佛慈悲水",
           desc: "加入角色永久卡池，直到重新开始前都会保留。",
@@ -3633,7 +3632,10 @@
       document.getElementById("playerStatusSummary").textContent = playerStatusList.length ? playerStatusList.join('｜') : '暂无异常状态';
 
       document.getElementById("heroInfoText").innerHTML =
-        `Lv.${state.playerLevel}<br>已拥有效果牌 ${getOwnedSpecialCards().length} 张<br>本关能量可累积：当前 ${state.player.energy}/${state.player.maxEnergy}<br>每 5 等敌人会微幅成长。`;
+        `等级 Lv.${state.playerLevel}
+        <br>已拥有效果牌：${getOwnedSpecialCards().length} 张
+        <br>本关累积能量：${state.player.energy}/${state.player.maxEnergy}
+        <br>敌人会随你每 5 等微幅成长`;
 
       renderEnemyTeam();
       updateStatusBoxes(enemy);
@@ -3671,7 +3673,10 @@
     }
 
     function log(text, type = null) {
-      logEntries = [{ text, type: classifyLog(text, type) }];
+      logEntries.push({ text, type: classifyLog(text, type) });
+      if (logEntries.length > 36) {
+        logEntries = logEntries.slice(logEntries.length - 36);
+      }
       renderLogs();
     }
 
