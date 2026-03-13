@@ -1524,7 +1524,7 @@
 
             <div class="xp-wrap">
               <div class="stat-top">
-                <div>等级：<span id="playerLevelText">1</span> / 30</div>
+                <div>等级：<span id="playerLevelText">1</span> / <span id="maxPlayerLevelText">80</span></div>
                 <div>经验：<span id="xpText">0</span> / <span id="xpNeedText">20</span></div>
               </div>
               <div class="bar-bg">
@@ -1543,7 +1543,7 @@
           <div class="player-side">
             <div class="side-info">
               <div class="side-label">目前关卡</div>
-              <div class="side-value" id="levelText">1/50</div>
+              <div class="side-value" id="levelText">1/100</div>
             </div>
             <div class="side-info">
               <div class="side-label">金币</div>
@@ -1716,25 +1716,40 @@
   <script>
     const HOME_URL = "https://0urrigvojb.github.io/bng-tools/";
     const avatarChoices = ["🧙","🛡️","⚔️","🧝","🧛","🧞","👸","🤴"];
+    const MAX_STAGE = 100;
+    const MAX_PLAYER_LEVEL = 80;
 
     const normalMonsters = [
       { name: "史莱姆", emoji: "🟢", race: "slime", note: "黏糊糊的基础怪物。" },
       { name: "骷髅兵", emoji: "💀", race: "undead", note: "常见亡灵，攻击直来直往。" },
       { name: "毒蜘蛛", emoji: "🕷️", race: "poison", note: "会用毒折磨对手。" },
       { name: "狼人", emoji: "🐺", race: "beast", note: "近战力量较强。" },
-      { name: "暗影盗贼", emoji: "🗡️", race: "shadow", note: "擅长迅速突袭。" }
+      { name: "暗影盗贼", emoji: "🗡️", race: "shadow", note: "擅长迅速突袭。" },
+      { name: "酸液史莱姆", emoji: "🟩", race: "slime", note: "会边治疗边累积护盾。" },
+      { name: "墓穴弓手", emoji: "🏹", race: "undead", note: "阴冷的亡灵射手。" },
+      { name: "腐毒蜥蜴", emoji: "🦎", race: "poison", note: "会不断叠加毒素。" },
+      { name: "狂牙豺狼", emoji: "🐕", race: "beast", note: "会趁乱连续扑击。" },
+      { name: "夜幕刺客", emoji: "🌑", race: "shadow", note: "擅长致盲与混乱。" },
+      { name: "洞窟蝙蝠", emoji: "🦇", race: "beast", note: "速度很快，突袭能力强。" },
+      { name: "诅咒乌鸦", emoji: "🐦‍⬛", race: "shadow", note: "会扰乱你的节奏。" }
     ];
 
     const miniBossMonsters = [
       { name: "地牢守卫", emoji: "🛡️", race: "tank", note: "小BOSS，极为坚韧。" },
       { name: "幽冥法师", emoji: "🔮", race: "curse", note: "擅长诅咒与干扰。" },
-      { name: "双刃兽人", emoji: "🪓", race: "berserk", note: "连续攻击威胁很高。" }
+      { name: "双刃兽人", emoji: "🪓", race: "berserk", note: "连续攻击威胁很高。" },
+      { name: "腐疫祭司", emoji: "☣️", race: "curse", note: "会施加多种负面效果。" },
+      { name: "铁壁巨魔", emoji: "🗿", race: "tank", note: "血厚盾多，很难击穿。" },
+      { name: "狂暴狮鹫", emoji: "🦅", race: "berserk", note: "高频突袭，压制力很强。" }
     ];
 
     const bossMonsters = [
       { name: "深渊魔王", emoji: "😈", race: "rebirth", note: "拥有恐怖的重生之力。" },
       { name: "黑炎骑士", emoji: "🔥", race: "fireboss", note: "高血量，擅长持续压制。" },
-      { name: "终焉领主", emoji: "👹", race: "finalboss", note: "拥有多种危险技能。" }
+      { name: "终焉领主", emoji: "👹", race: "finalboss", note: "拥有多种危险技能。" },
+      { name: "冥界战车", emoji: "🏴‍☠️", race: "fireboss", note: "擅长连击与战吼护盾。" },
+      { name: "不朽骨王", emoji: "☠️", race: "rebirth", note: "顽强不死，会再次站起来。" },
+      { name: "混沌支配者", emoji: "👁️", race: "finalboss", note: "会施加混乱与多重压制。" }
     ];
 
     const specialCardCatalog = {
@@ -1964,14 +1979,14 @@
     }
 
     function getXpNeed(level) {
-      return 20 + Math.floor((level - 1) * 2);
+      return 12 + Math.floor((level - 1) * 0.5);
     }
 
     function getXpReward(level) {
       const type = getStageType(level);
-      if (type === "大BOSS") return randomInt(50, 100);
-      if (type === "小BOSS") return randomInt(24, 36);
-      return randomInt(18, 30);
+      if (type === "大BOSS") return randomInt(80, 120);
+      if (type === "小BOSS") return randomInt(42, 60);
+      return randomInt(26, 40);
     }
 
     function getLevelTier() {
@@ -2071,10 +2086,10 @@
     }
 
     function grantXp(amount) {
-      if (state.playerLevel >= 30) return;
+      if (state.playerLevel >= MAX_PLAYER_LEVEL) return;
       state.xp += amount;
       let leveled = false;
-      while (state.playerLevel < 30) {
+      while (state.playerLevel < MAX_PLAYER_LEVEL) {
         const need = getXpNeed(state.playerLevel);
         if (state.xp < need) break;
         state.xp -= need;
@@ -2085,7 +2100,7 @@
         leveled = true;
         logAppend(`你升级了！当前等级 Lv.${state.playerLevel}，并自动获得少量生命上限。`, "system");
       }
-      if (state.playerLevel >= 30) {
+      if (state.playerLevel >= MAX_PLAYER_LEVEL) {
         state.xp = 0;
       }
       if (leveled) {
@@ -2100,7 +2115,7 @@
       const data = state.pendingRewardData;
       state.pendingRewardData = null;
 
-      if (data.clearedLevel >= 50) {
+      if (data.clearedLevel >= MAX_STAGE) {
         state.gameOver = true;
         showGameOver(true);
         updateUI();
@@ -2148,7 +2163,7 @@
     }
 
     function getStageType(level) {
-      if (level % 10 === 0) return "大BOSS";
+      if (level % 20 === 0 || level === MAX_STAGE) return "大BOSS";
       if (level % 5 === 0) return "小BOSS";
       return "普通关";
     }
@@ -2336,9 +2351,9 @@
     }
 
     function getReward(level) {
-      if (level % 10 === 0) return randomInt(18, 36);
-      if (level % 5 === 0) return randomInt(10, 24);
-      return randomInt(4, 12);
+      if (level % 20 === 0 || level === MAX_STAGE) return randomInt(28, 48);
+      if (level % 5 === 0) return randomInt(14, 28);
+      return randomInt(6, 14);
     }
 
     function initGame() {
@@ -3319,7 +3334,7 @@
 
       log(`你击败了全部敌人！获得 ${reward} 金币与 ${xpReward} 经验。`, "system");
 
-      if (state.playerLevel >= 30) {
+      if (state.playerLevel >= MAX_PLAYER_LEVEL) {
         finalizePendingRewardFlow();
       } else {
         grantXp(xpReward);
@@ -3930,13 +3945,14 @@
 
       const enemy = getSelectedEnemy();
 
-      document.getElementById("levelText").textContent = `${state.level}/50`;
+      document.getElementById("levelText").textContent = `${state.level}/${MAX_STAGE}`;
       document.getElementById("goldText").textContent = state.gold;
       document.getElementById("handCountText").textContent = String(state.hand.length);
       document.getElementById("battleTurnText").textContent = state.turnLabel;
       document.getElementById("shopHintText").textContent = state.pendingShop ? "通关后开启" : "未开启";
       document.getElementById("targetText").textContent = enemy ? enemy.name : "无";
       document.getElementById("playerLevelText").textContent = state.playerLevel;
+      const maxLevelEl = document.getElementById("maxPlayerLevelText"); if (maxLevelEl) maxLevelEl.textContent = MAX_PLAYER_LEVEL;
       document.getElementById("sidePlayerLevelText").textContent = `Lv.${state.playerLevel}`;
 
       document.getElementById("playerHpText").textContent = Math.max(0, state.player.hp);
@@ -3944,16 +3960,16 @@
       document.getElementById("playerShieldText").textContent = state.player.shield + state.player.specialShield;
       document.getElementById("energyText").textContent = state.player.energy;
       document.getElementById("energyMaxText").textContent = state.player.maxEnergy;
-      const xpNeed = state.playerLevel >= 30 ? 1 : getXpNeed(state.playerLevel);
-      document.getElementById("xpText").textContent = state.playerLevel >= 30 ? "MAX" : state.xp;
-      document.getElementById("xpNeedText").textContent = state.playerLevel >= 30 ? "MAX" : xpNeed;
-      document.getElementById("xpTipText").textContent = state.playerLevel >= 30
+      const xpNeed = state.playerLevel >= MAX_PLAYER_LEVEL ? 1 : getXpNeed(state.playerLevel);
+      document.getElementById("xpText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL ? "MAX" : state.xp;
+      document.getElementById("xpNeedText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL ? "MAX" : xpNeed;
+      document.getElementById("xpTipText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL
         ? "你已经达到满级 30 等"
         : `离下次升级还需要 ${Math.max(0, xpNeed - state.xp)} 经验`;
 
       document.getElementById("playerHpBar").style.width = `${Math.max(0, (state.player.hp / state.player.maxHp) * 100)}%`;
       document.getElementById("energyBar").style.width = `${Math.min(100, Math.max(0, (state.player.energy / state.player.maxEnergy) * 100))}%`;
-      document.getElementById("xpBar").style.width = `${state.playerLevel >= 30 ? 100 : Math.min(100, Math.max(0, (state.xp / xpNeed) * 100))}%`;
+      document.getElementById("xpBar").style.width = `${state.playerLevel >= MAX_PLAYER_LEVEL ? 100 : Math.min(100, Math.max(0, (state.xp / xpNeed) * 100))}%`;
 
       if (enemy) {
         document.getElementById("monsterNameText").textContent = enemy.name;
