@@ -1468,7 +1468,246 @@
       }
     }
 
-  </style>
+  
+  /* === 终极桌面100%适配 + STS扇形手牌重构 === */
+  html, body { font-size: 16px !important; }
+  body {
+    min-width: 0 !important;
+    overflow-x: hidden;
+  }
+  .container{
+    max-width: 1720px !important;
+    padding: 10px 14px 210px !important;
+  }
+  .title{
+    font-size: 42px !important;
+    margin: 6px 0 12px !important;
+    letter-spacing: 3px !important;
+  }
+  .topbar{
+    padding: 8px 12px !important;
+    gap: 10px !important;
+  }
+  .volume-wrap{
+    padding: 6px 10px !important;
+  }
+  .volume-wrap span,.home-btn,.music-btn,.action-btn{
+    font-size: 14px !important;
+  }
+  .battle-board{
+    grid-template-columns: 300px minmax(520px,1fr) 360px !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+  .panel,.log-panel{
+    padding: 14px !important;
+    max-height: calc(100vh - 250px) !important;
+    min-height: calc(100vh - 250px) !important;
+    overflow: auto !important;
+  }
+  .log-box{
+    height: calc(100vh - 330px) !important;
+    min-height: calc(100vh - 330px) !important;
+    max-height: calc(100vh - 330px) !important;
+    font-size: 15px !important;
+  }
+  .section-title{ font-size: 24px !important; }
+  .character-title h2{ font-size: 26px !important; margin: 0 0 4px !important; }
+  .character-sub,.stat-top,.note-box,.skill-tag,.status-tag,.enemy-mini,.shop-tip,.shop-desc{
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+  .player-grid{ grid-template-columns: 1fr 148px !important; gap: 10px !important; }
+  .monster-layout{ grid-template-columns: 1fr 120px !important; gap: 10px !important; }
+  .avatar, .monster-avatar{
+    width: 84px !important;
+    height: 84px !important;
+    font-size: 44px !important;
+    border-radius: 18px !important;
+  }
+  .side-label{ font-size: 13px !important; }
+  .side-value{ font-size: 18px !important; line-height: 1.35 !important; }
+  .side-info{
+    padding: 10px 10px !important;
+    border-radius: 14px !important;
+  }
+  .note-box{
+    min-height: 82px !important;
+    max-height: 120px !important;
+    padding: 10px 12px !important;
+  }
+  .status-area{
+    min-height: 74px !important;
+  }
+  .status-title{
+    font-size: 14px !important;
+  }
+  .status-tag{
+    font-size: 12px !important;
+    padding: 5px 9px !important;
+  }
+  .xp-text{ font-size: 12px !important; }
+  .cards-panel{
+    position: fixed !important;
+    left: 14px !important;
+    right: 14px !important;
+    bottom: 8px !important;
+    max-width: 1720px !important;
+    height: 170px !important;
+    max-height: 170px !important;
+    min-height: 170px !important;
+    padding: 10px 16px !important;
+    overflow: visible !important;
+    z-index: 40 !important;
+  }
+  .cards-panel .section-title{
+    font-size: 22px !important;
+    margin-bottom: 4px !important;
+  }
+  .cards-panel .section-title::after{
+    content: "拖曳到敌人 / 点击直接出牌" !important;
+    font-size: 12px !important;
+    color: #b8c5db !important;
+  }
+  .cards{
+    position: relative !important;
+    height: 126px !important;
+    min-height: 126px !important;
+    overflow: visible !important;
+    display: block !important;
+    margin-top: 2px !important;
+  }
+  .fan-card{
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    height: 118px !important;
+    padding: 10px 12px !important;
+    left: 50% !important;
+    bottom: -2px !important;
+    transform:
+      translateX(calc(-50% + var(--fan-x, 0%)))
+      translateY(var(--fan-y, 0px))
+      rotate(var(--fan-r, 0deg)) !important;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.42) !important;
+    cursor: pointer !important;
+    user-select: none !important;
+  }
+  .fan-card:hover{
+    transform:
+      translateX(calc(-50% + var(--fan-x, 0%)))
+      translateY(calc(var(--fan-y, 0px) - 28px))
+      rotate(var(--fan-r, 0deg)) scale(1.07) !important;
+  }
+  .fan-card.dragging{
+    opacity: .55 !important;
+    filter: brightness(1.12);
+  }
+  .fan-card.unusable{
+    filter: grayscale(.25) brightness(.72) !important;
+    opacity: .82 !important;
+    cursor: not-allowed !important;
+  }
+  .card-top{ gap: 2px !important; }
+  .card-type{ font-size: 10px !important; }
+  .card-name{ font-size: 14px !important; line-height: 1.2 !important; margin-bottom: 2px !important; }
+  .card-desc,.card-cost{ font-size: 11px !important; line-height: 1.35 !important; }
+  .card button{ display:none !important; }
+  .actions{
+    position: absolute !important;
+    right: 14px !important;
+    top: -52px !important;
+  }
+  .action-btn{
+    min-width: 96px !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    border-radius: 12px !important;
+  }
+  .enemy-team{
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+    gap: 10px !important;
+    margin-top: 12px !important;
+  }
+  .enemy-card{
+    min-height: 132px !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease !important;
+  }
+  .enemy-card .enemy-icon{
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 26px !important;
+  }
+  .enemy-card .enemy-name{
+    font-size: 18px !important;
+  }
+  .enemy-card .enemy-mini{
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+  .enemy-card.selected{
+    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow: 0 0 0 1px rgba(255,194,71,.8), 0 10px 24px rgba(0,0,0,.35) !important;
+  }
+  .enemy-card.drop-target,
+  .monster-main.drop-target{
+    box-shadow: 0 0 0 2px #75c7ff, 0 10px 26px rgba(117,199,255,.18) !important;
+    border-color: #75c7ff !important;
+  }
+  .intent-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:6px;
+    padding:4px 8px;
+    border-radius:999px;
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    font-size: 11px;
+    color:#eaf2ff;
+    white-space: nowrap;
+  }
+  .intent-badge.attack{ background: rgba(160,49,49,.18); border-color: rgba(255,123,123,.35); }
+  .intent-badge.skill{ background: rgba(70,96,170,.18); border-color: rgba(114,155,255,.35); }
+  .intent-badge.buff{ background: rgba(98,142,64,.18); border-color: rgba(155,232,95,.35); }
+  .intent-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+    margin-bottom:2px;
+  }
+  .floating-number{
+    position: fixed;
+    z-index: 9999;
+    font-weight: 900;
+    font-size: 28px;
+    pointer-events: none;
+    text-shadow: 0 4px 12px rgba(0,0,0,.45);
+    animation: floatDamage .82s ease forwards;
+  }
+  .floating-number.heal{ color:#81ffad; }
+  .floating-number.damage{ color:#ff8a8a; }
+  .floating-number.shield{ color:#84c5ff; }
+  @keyframes floatDamage{
+    0%{ opacity:0; transform: translate(-50%,0) scale(.8); }
+    12%{ opacity:1; }
+    100%{ opacity:0; transform: translate(-50%,-58px) scale(1.08); }
+  }
+  .drag-guide{
+    font-size: 12px;
+    color:#aeb9cd;
+    margin-top: 4px;
+  }
+  @media (max-width: 1450px){
+    .battle-board{ grid-template-columns: 280px minmax(460px,1fr) 330px !important; }
+    .fan-card{ width: 142px !important; min-width:142px !important; max-width:142px !important; }
+  }
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -1602,6 +1841,7 @@
             </div>
 
             <div class="note-box" id="monsterInfoText">怪物会在你结束回合后攻击。</div>
+            <div class="intent-row" id="enemyIntentRow"></div>
             <div class="skills-wrap" id="monsterSkillsBox"></div>
 
             <div class="status-area">
@@ -1633,6 +1873,7 @@
 
     <div class="cards-panel">
       <div class="section-title">卡牌</div>
+      <div class="drag-guide">点击手牌可直接对当前目标出牌；也可以把攻击牌拖到任一敌人卡上。</div>
       <div class="cards" id="cardsContainer"></div>
       <div class="actions">
         <button class="action-btn" id="endTurnBtn" onclick="endTurn()">结束回合</button>
@@ -2371,6 +2612,7 @@
         justClearedLevel: 0,
         pendingRewardData: null,
         pendingLevelChoices: 0,
+        draggingCardUid: null,
         deckSizePerTurn: 4,
         baseDeckSizePerTurn: 4,
         hand: [],
@@ -2561,7 +2803,11 @@
       updateUI();
     }
 
-        function renderCards() {
+        function cardNeedsTarget(card) {
+      return ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon", "war_hammer", "phantom_charm", "stone_bombardment", "ice_bomb", "fire_tornado"].includes(card.type);
+    }
+
+    function renderCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
@@ -2575,17 +2821,18 @@
       }
 
       const count = state.hand.length;
-      const maxSpread = Math.min(90, 20 + count * 10);
       const mid = (count - 1) / 2;
+      const spread = count <= 4 ? 72 : count <= 6 ? 84 : 92;
 
       state.hand.forEach((card, idx) => {
         const div = document.createElement("div");
-        div.className = `card ${getCardClass(card)} fan-card`;
-        const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost && getLivingEnemies().length > 0;
+        const targetExists = getLivingEnemies().length > 0;
+        const canUse = !state.inShop && !state.gameOver && state.player.stunTurns <= 0 && state.player.energy >= card.cost && (cardNeedsTarget(card) ? targetExists : true);
+        div.className = `card ${getCardClass(card)} fan-card ${canUse ? "" : "unusable"}`.trim();
 
-        const offset = count === 1 ? 0 : ((idx - mid) * (count >= 7 ? 100 / Math.max(1, count - 1) : 88 / Math.max(1, count - 1)));
-        const rotate = count === 1 ? 0 : (idx - mid) * (count >= 7 ? 4 : 5.5);
-        const lift = Math.abs(idx - mid) * 7;
+        const offset = count === 1 ? 0 : ((idx - mid) * (spread / Math.max(1, count - 1)));
+        const rotate = count === 1 ? 0 : (idx - mid) * (count >= 7 ? 4.2 : 5.5);
+        const lift = Math.abs(idx - mid) * 6;
         div.style.setProperty("--fan-x", `${offset}%`);
         div.style.setProperty("--fan-r", `${rotate}deg`);
         div.style.setProperty("--fan-y", `${lift}px`);
@@ -2596,17 +2843,155 @@
             <div class="card-type">${card.cardType}</div>
             <div class="card-name">${card.name}</div>
             <div class="card-desc">${card.desc}</div>
-            <div class="card-cost">消耗能量：${card.cost}</div>
+            <div class="card-cost">能量 ${card.cost}${canUse ? "" : "｜当前不可用"}</div>
           </div>
           <button ${canUse ? "" : "disabled"}>使用</button>
         `;
 
-        div.querySelector("button").onclick = () => playCard(card.uid);
+        div.onclick = (e) => {
+          if (!canUse) return;
+          if (e.target.tagName === "BUTTON" || e.currentTarget === div) {
+            playCard(card.uid);
+          }
+        };
+
+        div.draggable = canUse;
+        div.addEventListener("dragstart", (e) => {
+          state.draggingCardUid = card.uid;
+          div.classList.add("dragging");
+          if (e.dataTransfer) {
+            e.dataTransfer.setData("text/plain", card.uid);
+            e.dataTransfer.effectAllowed = cardNeedsTarget(card) ? "move" : "copy";
+          }
+        });
+        div.addEventListener("dragend", () => {
+          div.classList.remove("dragging");
+          state.draggingCardUid = null;
+          document.querySelectorAll(".drop-target").forEach(el => el.classList.remove("drop-target"));
+        });
+
         container.appendChild(div);
       });
 
       document.getElementById("handCountText").textContent = String(state.hand.length);
     }
+
+    
+    function getElementCenter(el) {
+      const rect = el.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    function spawnFloatingNumber(targetEl, text, kind = "damage") {
+      if (!targetEl) return;
+      const pos = getElementCenter(targetEl);
+      const div = document.createElement("div");
+      div.className = `floating-number ${kind}`;
+      div.textContent = text;
+      div.style.left = `${pos.x}px`;
+      div.style.top = `${pos.y}px`;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 850);
+    }
+
+    function bindEnemyDropZones() {
+      document.querySelectorAll(".enemy-card[data-enemy-id]").forEach(cardEl => {
+        const enemyId = cardEl.dataset.enemyId;
+        ["dragenter","dragover"].forEach(evt => {
+          cardEl.addEventListener(evt, (e) => {
+            e.preventDefault();
+            cardEl.classList.add("drop-target");
+          });
+        });
+        ["dragleave","dragend","drop"].forEach(evt => {
+          cardEl.addEventListener(evt, () => cardEl.classList.remove("drop-target"));
+        });
+        cardEl.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const uid = (e.dataTransfer && e.dataTransfer.getData("text/plain")) || state.draggingCardUid;
+          if (uid) playCard(uid, enemyId);
+        });
+      });
+
+      const main = document.querySelector(".monster-main");
+      if (main) {
+        ["dragenter","dragover"].forEach(evt => {
+          main.addEventListener(evt, (e) => {
+            e.preventDefault();
+            main.classList.add("drop-target");
+          });
+        });
+        ["dragleave","dragend","drop"].forEach(evt => {
+          main.addEventListener(evt, () => main.classList.remove("drop-target"));
+        });
+        main.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const uid = (e.dataTransfer && e.dataTransfer.getData("text/plain")) || state.draggingCardUid;
+          const enemy = getSelectedEnemy();
+          if (uid && enemy) playCard(uid, enemy.id);
+        });
+      }
+    }
+
+    function getEnemyIntentLabel(intent) {
+      if (!intent) return "准备攻击";
+      return intent.label || "准备攻击";
+    }
+
+    function planEnemyIntent(enemy) {
+      if (!enemy || enemy.hp <= 0) return null;
+
+      if (enemy.status.stunTurns > 0) {
+        return { key: "stunned", label: "晕眩中", cls: "skill" };
+      }
+      if (enemy.status.blindTurns > 0 && chance(0.45)) {
+        return { key: "miss", label: "可能失手", cls: "skill" };
+      }
+      if (enemy.status.confuseTurns > 0 && chance(enemy.status.confuseSelfHitChance || 0.3)) {
+        return { key: "selfhit", label: "混乱自伤", cls: "skill" };
+      }
+
+      const s = enemy.skills;
+      const roll = [];
+      if (s.healChance > 0 && enemy.hp < enemy.maxHp && chance(s.healChance)) roll.push({ key: "heal", label: "治疗", cls: "buff" });
+      if (s.warcryShieldChance > 0 && chance(s.warcryShieldChance)) roll.push({ key: "shield", label: `战吼之盾`, cls: "buff" });
+      if (s.canSummon && s.summonChance > 0 && canEnemySummon() && chance(s.summonChance)) roll.push({ key: "summon", label: "增援号角", cls: "buff" });
+      if (s.confuseChance > 0 && chance(s.confuseChance)) roll.push({ key: "confuse", label: "施加混乱", cls: "skill" });
+      if (s.stunChance > 0 && chance(s.stunChance)) roll.push({ key: "stun", label: "晕眩打击", cls: "skill" });
+      if (s.blindChance > 0 && chance(s.blindChance)) roll.push({ key: "blind", label: "致盲", cls: "skill" });
+      if (s.poisonChance > 0 && chance(s.poisonChance)) roll.push({ key: "poison", label: "中毒", cls: "skill" });
+
+      if (roll.length > 0) return roll[randomInt(0, roll.length - 1)];
+
+      let hitCount = 1;
+      if (s.multiAttackChance > 0 && chance(s.multiAttackChance)) hitCount = s.multiAttackHits;
+      const trueDamage = s.trueDamageChance > 0 && chance(s.trueDamageChance);
+      return {
+        key: "attack",
+        label: hitCount > 1 ? `${hitCount}连击 ${enemy.atk}×${hitCount}` : `${trueDamage ? "真实" : ""}攻击 ${enemy.atk}`,
+        cls: "attack",
+        hitCount,
+        trueDamage
+      };
+    }
+
+    function prepareEnemyIntents() {
+      state.enemies.forEach(enemy => {
+        if (enemy.hp > 0) enemy.intent = planEnemyIntent(enemy);
+      });
+    }
+
+    function renderEnemyIntentRow(enemy) {
+      const row = document.getElementById("enemyIntentRow");
+      if (!row) return;
+      row.innerHTML = "";
+      if (!enemy || !enemy.intent) return;
+      const span = document.createElement("span");
+      span.className = `intent-badge ${enemy.intent.cls || "attack"}`;
+      span.textContent = `下回合意图：${getEnemyIntentLabel(enemy.intent)}`;
+      row.appendChild(span);
+    }
+
 
     function animatePanel(selector, cls) {
       const el = typeof selector === "string" ? document.querySelector(selector) : selector;
@@ -2709,6 +3094,8 @@
           enemy.hp -= actual;
           if (enemy.hp < 0) enemy.hp = 0;
           addBloodEffectToEnemy();
+          const targetEl = document.querySelector(`.enemy-card[data-enemy-id="${enemy.id}"]`) || document.querySelector(".monster-main");
+          spawnFloatingNumber(targetEl, `-${actual}`, "damage");
         }
       }
       return baseDamage + bonus;
@@ -2744,6 +3131,8 @@
       if (enemy.hp < 0) enemy.hp = 0;
       log(message, "attack");
       addBloodEffectToEnemy();
+      const targetEl = document.querySelector(`.enemy-card[data-enemy-id="${enemy.id}"]`) || document.querySelector(".monster-main");
+      spawnFloatingNumber(targetEl, `-${damage}`, "damage");
       afterEnemyDamaged(enemy, damage, options.cardType || "");
       return enemy.hp <= 0;
     }
@@ -2790,17 +3179,18 @@
       const actual = state.player.hp - before;
       if (msg) logAppend(msg.replace("{heal}", actual), "heal");
       addHealEffectToPlayer();
+      spawnFloatingNumber(document.getElementById("playerAvatarText"), `+${actual}`, "heal");
       playSfx("heal");
     }
 
-    function playCard(uid) {
+    function playCard(uid, forcedEnemyId = null) {
       if (state.inShop || state.gameOver) return;
 
       const card = state.hand.find(c => c.uid === uid);
       if (!card) return;
 
-      const target = getSelectedEnemy();
-      if (!target) {
+      const target = forcedEnemyId ? state.enemies.find(e => e.id === forcedEnemyId && e.hp > 0) : getSelectedEnemy();
+      if (cardNeedsTarget(card) && !target) {
         log("没有可攻击的敌人。", "system");
         return;
       }
@@ -3106,6 +3496,7 @@
         state.player.hp -= incoming;
         if (state.player.hp < 0) state.player.hp = 0;
         addHitEffectToPlayer();
+        spawnFloatingNumber(document.getElementById("playerAvatarText"), `-${incoming}`, "damage");
       }
 
       return incoming;
@@ -3129,32 +3520,35 @@
     function processEnemyAction(enemy) {
       if (!enemy || enemy.hp <= 0) return false;
 
-      if (enemy.status.stunTurns > 0) {
-        enemy.status.stunTurns--;
+      const intent = enemy.intent || planEnemyIntent(enemy);
+
+      if (intent && intent.key === "stunned") {
+        enemy.status.stunTurns = Math.max(0, enemy.status.stunTurns - 1);
         logAppend(`【${enemy.name}】处于晕眩状态，无法行动。`, "system");
         addStunEffectToEnemy();
         return false;
       }
 
-      if (enemy.status.blindTurns > 0 && chance(0.45)) {
-        enemy.status.blindTurns--;
+      if (intent && intent.key === "miss") {
+        enemy.status.blindTurns = Math.max(0, enemy.status.blindTurns - 1);
         logAppend(`【${enemy.name}】因为致盲，行动失误。`, "system");
         addBlinkEffectToEnemy();
         return false;
       }
 
-      if (enemy.status.confuseTurns > 0 && chance(enemy.status.confuseSelfHitChance || 0.3)) {
+      if (intent && intent.key === "selfhit") {
         const selfDamage = Math.max(1, Math.floor(enemy.atk * 0.85));
         enemy.hp -= selfDamage;
         if (enemy.hp < 0) enemy.hp = 0;
-        enemy.status.confuseTurns--;
+        enemy.status.confuseTurns = Math.max(0, enemy.status.confuseTurns - 1);
         logAppend(`【${enemy.name}】陷入混乱，攻击了自己，受到 ${selfDamage} 点伤害。`, "monster");
         addBloodEffectToEnemy();
+        spawnFloatingNumber(document.querySelector(`.enemy-card[data-enemy-id="${enemy.id}"]`) || document.querySelector(".monster-main"), `-${selfDamage}`, "damage");
         if (enemy.hp <= 0 && handleEnemyDeath(enemy)) return true;
         return false;
       }
 
-      const chosenSkill = enemyChooseSkill(enemy);
+      const chosenSkill = intent && intent.key !== "attack" ? intent.key : null;
 
       if (chosenSkill === "heal") {
         const healValue = Math.floor(enemy.maxHp * enemy.skills.healPercent);
@@ -3202,9 +3596,8 @@
         return false;
       }
 
-      let hitCount = 1;
-      if (enemy.skills.multiAttackChance > 0 && chance(enemy.skills.multiAttackChance)) {
-        hitCount = enemy.skills.multiAttackHits;
+      let hitCount = intent && intent.key === "attack" && intent.hitCount ? intent.hitCount : 1;
+      if (hitCount > 1) {
         logAppend(`【${enemy.name}】发动连续攻击，将攻击 ${hitCount} 次。`, "monster");
       }
 
@@ -3220,7 +3613,7 @@
         if (enemy.status.confuseTurns > 0 && enemy.status.atkDownRate > 0) {
           incoming = Math.max(1, Math.floor(incoming * (1 - enemy.status.atkDownRate)));
         }
-        const isTrueDamage = enemy.skills.trueDamageChance > 0 && chance(enemy.skills.trueDamageChance);
+        const isTrueDamage = intent && intent.key === "attack" ? !!intent.trueDamage : (enemy.skills.trueDamageChance > 0 && chance(enemy.skills.trueDamageChance));
         const actual = applyDamageToPlayer(incoming, { trueDamage: isTrueDamage });
 
         if (isTrueDamage) {
@@ -3303,6 +3696,7 @@
       state.player.energy += state.player.maxEnergy;
       state.turnLabel = "玩家回合";
       drawNewHand();
+      prepareEnemyIntents();
 
       if (state.player.confuseTurns > 0) {
         state.player.confuseTurns--;
@@ -3362,7 +3756,15 @@
       closeShopOverlayOnly();
       logEntries = [];
       const mainEnemy = createMonster(state.level);
-      state.enemies = [mainEnemy];
+      const team = [mainEnemy];
+      const stageType = getStageType(state.level);
+      const extraCount = stageType === "普通关"
+        ? (state.level >= 18 && chance(0.55) ? 1 : 0) + (state.level >= 42 && chance(0.24) ? 1 : 0)
+        : (stageType === "小BOSS" && state.level >= 25 && chance(0.45) ? 1 : 0);
+      for (let i = 0; i < Math.min(2, extraCount); i++) {
+        team.push(createMonster(Math.max(1, state.level - randomInt(0, 2)), { data: normalMonsters[randomInt(0, normalMonsters.length - 1)], isAlly: true }));
+      }
+      state.enemies = team;
       state.selectedEnemyId = mainEnemy.id;
 
       state.player.energy = state.player.maxEnergy;
@@ -3380,6 +3782,7 @@
       state.turnLabel = "玩家回合";
       state.shopItemsBoughtThisVisit = 0;
       drawNewHand();
+      prepareEnemyIntents();
 
       if (!isFirst) {
         log(`进入第 ${state.level} 关：${mainEnemy.name}`, "system");
@@ -3821,8 +4224,8 @@
 
       if (isWin) {
         title.textContent = "全部通关";
-        desc.textContent = `${state.playerName} 成功通过全部 50 关。`;
-        logAppend("恭喜你通过全部 50 关！", "system");
+        desc.textContent = `${state.playerName} 成功通过全部 ${MAX_STAGE} 关。`;
+        logAppend(`恭喜你通过全部 ${MAX_STAGE} 关！`, "system");
       } else {
         title.textContent = "角色死亡";
         desc.textContent = `${state.playerName} 在第 ${state.level} 关倒下了。`;
@@ -3964,7 +4367,7 @@
       document.getElementById("xpText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL ? "MAX" : state.xp;
       document.getElementById("xpNeedText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL ? "MAX" : xpNeed;
       document.getElementById("xpTipText").textContent = state.playerLevel >= MAX_PLAYER_LEVEL
-        ? "你已经达到满级 30 等"
+        ? `你已经达到满级 ${MAX_PLAYER_LEVEL} 等`
         : `离下次升级还需要 ${Math.max(0, xpNeed - state.xp)} 经验`;
 
       document.getElementById("playerHpBar").style.width = `${Math.max(0, (state.player.hp / state.player.maxHp) * 100)}%`;
@@ -3981,7 +4384,10 @@
         document.getElementById("monsterAtkText").textContent = enemy.atk;
         document.getElementById("monsterHpBar").style.width = `${Math.max(0, (enemy.hp / enemy.maxHp) * 100)}%`;
         document.getElementById("monsterInfoText").textContent = `${enemy.note} 当前攻击力为 ${enemy.atk}。`;
+        renderEnemyIntentRow(enemy);
         updateMonsterSkillsUI(enemy);
+      } else {
+        document.getElementById("enemyIntentRow").innerHTML = "";
       }
 
       const playerStatusList = [];
