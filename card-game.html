@@ -1707,6 +1707,322 @@
     .fan-card{ width: 142px !important; min-width:142px !important; max-width:142px !important; }
   }
 
+
+  /* ===== 100%显示适配 + 中央手牌方块区 + 更像杀戮尖塔 ===== */
+  html,body{
+    height:100%;
+    overflow:hidden !important;
+  }
+  body{
+    font-size:15px !important;
+  }
+  .container{
+    max-width: 1760px !important;
+    height: calc(100vh - 58px) !important;
+    padding: 6px 10px 10px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap: 8px !important;
+  }
+  .title{
+    font-size: 58px !important;
+    line-height: 1 !important;
+    margin: 2px 0 6px !important;
+    flex: 0 0 auto !important;
+  }
+  .battle-board{
+    grid-template-columns: 280px minmax(540px,1fr) 360px !important;
+    grid-template-rows: minmax(0,1fr) 210px !important;
+    grid-auto-rows: 0 !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: calc(100vh - 152px) !important;
+  }
+  .battle-board > .panel:first-child{
+    grid-column:1 !important;
+    grid-row:1 / span 2 !important;
+  }
+  .middle-log-wrap{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    min-height:0 !important;
+  }
+  .battle-board > .panel:last-of-type{
+    grid-column:3 !important;
+    grid-row:1 / span 2 !important;
+  }
+  .cards-panel{
+    grid-column:2 !important;
+    grid-row:2 !important;
+    position: relative !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 10px 12px 12px !important;
+    border-radius: 22px !important;
+    z-index: 5 !important;
+    overflow: hidden !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .panel,.log-panel{
+    padding: 12px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+  .log-panel{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .log-box{
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex:1 1 auto !important;
+    font-size: 14px !important;
+    line-height: 1.42 !important;
+    padding: 12px 14px !important;
+  }
+  .log-line{ margin-bottom: 10px !important; }
+  .section-title{
+    font-size: 18px !important;
+    margin-bottom: 8px !important;
+  }
+  .character-title h2,
+  .monster-main .character-title h2{
+    font-size: 22px !important;
+    line-height: 1.15 !important;
+  }
+  .character-sub,.stat-top,.note-box,.skill-tag,.status-tag,.enemy-mini,.shop-tip,.shop-desc,.side-label,.xp-text,.target-hint{
+    font-size: 13px !important;
+    line-height: 1.42 !important;
+  }
+  .side-value{
+    font-size: 16px !important;
+    line-height: 1.28 !important;
+  }
+  .player-grid{
+    grid-template-columns: 1fr 126px !important;
+    gap: 8px !important;
+  }
+  .monster-layout{
+    display:grid !important;
+    grid-template-columns: 1fr 118px !important;
+    gap: 8px !important;
+    min-height: 100% !important;
+  }
+  .avatar, .monster-avatar{
+    width: 76px !important;
+    height: 76px !important;
+    font-size: 40px !important;
+    border-radius: 18px !important;
+  }
+  .bar-bg{ height: 14px !important; }
+  .shield-badge{
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+  .note-box{
+    min-height: 58px !important;
+    max-height: 86px !important;
+    padding: 9px 10px !important;
+  }
+  .status-area{
+    min-height: 62px !important;
+  }
+  .status-tags{
+    gap: 6px !important;
+  }
+  .status-tag{
+    padding: 4px 8px !important;
+  }
+  .side-info{
+    padding: 9px !important;
+    border-radius: 14px !important;
+  }
+  .intent-row{
+    gap:5px !important;
+    margin-top:6px !important;
+    margin-bottom:6px !important;
+  }
+  .intent-badge{
+    font-size: 10px !important;
+    padding: 4px 7px !important;
+  }
+  .enemy-team{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:flex-end !important;
+    gap: 12px !important;
+    margin-top: 10px !important;
+    padding: 8px 2px 4px !important;
+    overflow: visible !important;
+  }
+  .enemy-card{
+    width: 98px !important;
+    min-width: 98px !important;
+    min-height: 162px !important;
+    padding: 10px 8px !important;
+    border-radius: 18px !important;
+    transform-origin: center bottom !important;
+    position: relative !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+  }
+  .enemy-card:nth-child(1){ transform: translateY(12px) scale(.98) !important; }
+  .enemy-card:nth-child(2){ transform: translateY(0) scale(1.02) !important; }
+  .enemy-card:nth-child(3){ transform: translateY(12px) scale(.98) !important; }
+  .enemy-card.selected{
+    transform: translateY(-6px) scale(1.05) !important;
+  }
+  .enemy-card.drop-target{
+    transform: translateY(-10px) scale(1.06) !important;
+  }
+  .enemy-card .enemy-icon{
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 24px !important;
+    margin-bottom: 8px !important;
+  }
+  .enemy-card .enemy-name{
+    font-size: 15px !important;
+    line-height: 1.1 !important;
+    writing-mode: horizontal-tb !important;
+    margin-bottom: 6px !important;
+  }
+  .enemy-card .enemy-mini{
+    font-size: 11px !important;
+    line-height: 1.28 !important;
+  }
+  .cards-panel .section-title{
+    font-size: 18px !important;
+    margin-bottom: 4px !important;
+  }
+  .cards-panel .section-title::after{
+    content: "点击出牌 / 拖到敌人出牌" !important;
+    display:inline-block !important;
+    margin-left: 10px !important;
+    font-size: 11px !important;
+    color:#b9c6da !important;
+  }
+  .drag-guide{
+    display:none !important;
+  }
+  .actions{
+    position:absolute !important;
+    right: 12px !important;
+    top: 10px !important;
+    z-index: 2 !important;
+  }
+  .action-btn{
+    min-width: 100px !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+  }
+  .cards{
+    position: relative !important;
+    flex:1 1 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display:block !important;
+    overflow: visible !important;
+    margin-top: 4px !important;
+  }
+  .fan-card{
+    width: 126px !important;
+    min-width: 126px !important;
+    max-width: 126px !important;
+    height: 150px !important;
+    left: 50% !important;
+    bottom: -10px !important;
+    padding: 8px 10px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,.46) !important;
+    transform:
+      translateX(calc(-50% + var(--fan-x, 0%)))
+      translateY(var(--fan-y, 0px))
+      rotate(var(--fan-r, 0deg)) !important;
+  }
+  .fan-card:hover{
+    z-index: 50 !important;
+    transform:
+      translateX(calc(-50% + var(--fan-x, 0%)))
+      translateY(calc(var(--fan-y, 0px) - 30px))
+      rotate(var(--fan-r, 0deg)) scale(1.08) !important;
+  }
+  .card-top{ gap: 4px !important; }
+  .card-type{
+    font-size: 10px !important;
+    opacity: .88;
+  }
+  .card-name{
+    font-size: 22px !important;
+    line-height: 1.08 !important;
+    margin-bottom: 2px !important;
+    font-weight: 900 !important;
+  }
+  .card-desc{
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+  }
+  .card-cost{
+    position:absolute !important;
+    left: 10px !important;
+    bottom: 10px !important;
+    font-size: 13px !important;
+  }
+  .empty-hand{
+    font-size: 16px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    height: 100% !important;
+  }
+  .play-fly-card{
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    animation: cardFlyToEnemy .46s ease-in forwards !important;
+    transform-origin: center center !important;
+  }
+  @keyframes cardFlyToEnemy{
+    0%{
+      opacity: .98;
+      transform: translate(0,0) scale(1.02) rotate(0deg);
+      filter: brightness(1);
+    }
+    100%{
+      opacity: 0;
+      transform: translate(var(--fly-x), var(--fly-y)) scale(.35) rotate(11deg);
+      filter: brightness(1.15);
+    }
+  }
+  @media (max-width: 1680px){
+    .battle-board{
+      grid-template-columns: 262px minmax(480px,1fr) 336px !important;
+    }
+    .fan-card{
+      width: 118px !important;
+      min-width:118px !important;
+      max-width:118px !important;
+      height: 142px !important;
+    }
+    .card-name{ font-size: 20px !important; }
+    .card-desc{ font-size: 14px !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -2829,6 +3145,7 @@
         const targetExists = getLivingEnemies().length > 0;
         const canUse = !state.inShop && !state.gameOver && state.player.stunTurns <= 0 && state.player.energy >= card.cost && (cardNeedsTarget(card) ? targetExists : true);
         div.className = `card ${getCardClass(card)} fan-card ${canUse ? "" : "unusable"}`.trim();
+        div.dataset.uid = card.uid;
 
         const offset = count === 1 ? 0 : ((idx - mid) * (spread / Math.max(1, count - 1)));
         const rotate = count === 1 ? 0 : (idx - mid) * (count >= 7 ? 4.2 : 5.5);
@@ -3203,6 +3520,10 @@
       if (state.player.energy < card.cost) {
         log("能量不足。", "system");
         return;
+      }
+
+      if (cardNeedsTarget(card) && target) {
+        triggerPlayAnimation(uid, target.id);
       }
 
       const offensiveTypes = ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon", "war_hammer", "phantom_charm", "stone_bombardment", "ice_bomb", "fire_tornado"];
@@ -4586,6 +4907,43 @@
       }
     }
 
+
+    function layoutBattleUI() {
+      const board = document.querySelector(".battle-board");
+      const cardsPanel = document.querySelector(".cards-panel");
+      if (board && cardsPanel && cardsPanel.parentElement !== board) {
+        board.appendChild(cardsPanel);
+      }
+    }
+
+    function animateCardFlight(cardEl, targetEl) {
+      if (!cardEl || !targetEl) return;
+      const from = cardEl.getBoundingClientRect();
+      const to = targetEl.getBoundingClientRect();
+      const fly = cardEl.cloneNode(true);
+      fly.className = `${fly.className} play-fly-card`;
+      fly.style.left = `${from.left}px`;
+      fly.style.top = `${from.top}px`;
+      fly.style.width = `${from.width}px`;
+      fly.style.height = `${from.height}px`;
+      fly.style.setProperty("--fly-x", `${(to.left + to.width / 2) - (from.left + from.width / 2)}px`);
+      fly.style.setProperty("--fly-y", `${(to.top + to.height / 2) - (from.top + from.height / 2) - 18}px`);
+      document.body.appendChild(fly);
+      setTimeout(() => fly.remove(), 520);
+    }
+
+    function triggerPlayAnimation(uid, enemyId = null) {
+      const cardEl = document.querySelector(`.fan-card[data-uid="${uid}"]`);
+      let targetEl = null;
+      if (enemyId) {
+        targetEl = document.querySelector(`.enemy-card[data-enemy-id="${enemyId}"]`);
+      }
+      if (!targetEl) {
+        targetEl = document.querySelector(".enemy-card.selected") || document.querySelector(".monster-main");
+      }
+      animateCardFlight(cardEl, targetEl);
+    }
+
     const nameInputEl = document.getElementById("playerNameInput");
     if (nameInputEl) {
       nameInputEl.addEventListener("keydown", (e) => {
@@ -4593,6 +4951,7 @@
       });
     }
 
+    layoutBattleUI();
     initGame();
     renderAvatarChoices();
     applyPlayerIdentity();
