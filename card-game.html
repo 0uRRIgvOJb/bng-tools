@@ -864,6 +864,190 @@
       .modal-title { font-size: 28px; }
       .volume-wrap input[type="range"] { width: 120px; }
     }
+  
+    /* === 进阶UI优化：更大字体 + 杀戮尖塔风格 === */
+    html, body { font-size: 18px; }
+    body {
+      background:
+        radial-gradient(circle at 50% 8%, rgba(255,180,80,0.08), transparent 24%),
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.04), transparent 20%),
+        linear-gradient(180deg, #10131a 0%, #0d1117 100%);
+    }
+    .container {
+      max-width: 1800px;
+      padding: 16px 18px 170px;
+    }
+    .title {
+      font-size: 56px;
+      letter-spacing: 4px;
+      margin: 6px 0 14px;
+      text-shadow: 0 0 18px rgba(255,179,71,0.22);
+    }
+    .battle-board {
+      grid-template-columns: 360px minmax(540px, 1fr) 360px;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .panel, .cards-panel, .log-panel {
+      border-radius: 22px;
+      border: 1px solid #3a4351;
+      background:
+        linear-gradient(180deg, rgba(33,38,47,0.96) 0%, rgba(23,27,34,0.98) 100%);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .character-title h2 { font-size: 34px; }
+    .character-sub, .stat-top, .note-box, .skill-tag, .status-tag, .enemy-mini, .log-line, .shop-tip, .shop-desc {
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    .side-label { font-size: 16px; }
+    .side-value { font-size: 26px; }
+    .section-title { font-size: 30px; }
+    .note-box { min-height: 148px; }
+    .log-box {
+      height: calc(100vh - 360px);
+      min-height: 340px;
+      font-size: 17px;
+    }
+    .player-grid { grid-template-columns: 1fr 200px; }
+    .monster-layout { grid-template-columns: 1fr 190px; }
+    .avatar, .monster-avatar {
+      width: 112px;
+      height: 112px;
+      font-size: 60px;
+      border-radius: 22px;
+    }
+    .cards-panel {
+      position: fixed;
+      left: 18px;
+      right: 18px;
+      bottom: 10px;
+      z-index: 30;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 14px 18px 16px;
+      backdrop-filter: blur(10px);
+      background:
+        linear-gradient(180deg, rgba(24,28,36,0.97) 0%, rgba(17,20,26,0.985) 100%);
+    }
+    .cards-panel .section-title {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cards-panel .section-title::after {
+      content: "Slay 风格底部手牌列";
+      font-size: 15px;
+      color: #c9d0dc;
+      font-weight: 500;
+    }
+    .cards {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 6px 2px 10px;
+    }
+    .card {
+      min-width: 250px;
+      width: 250px;
+      min-height: 230px;
+      padding: 16px;
+      border-radius: 18px;
+    }
+    .card-name { font-size: 24px; }
+    .card-type, .card-desc, .card-cost { font-size: 16px; }
+    .card button, .action-btn, .modal-btn, .home-btn, .music-btn {
+      font-size: 17px;
+    }
+    .enemy-card {
+      padding: 12px 13px;
+      border-radius: 16px;
+    }
+    .status-area { min-height: 78px; }
+    .xp-wrap { margin-top: 12px; }
+    .xp-bar {
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #a652ff, #e6a6ff);
+      transition: width 0.25s ease;
+    }
+    .xp-text {
+      color: #e6d7ff;
+      font-size: 16px;
+      margin-top: 6px;
+    }
+    .modal-box.levelup-box {
+      max-width: 860px;
+    }
+    .levelup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .levelup-card {
+      background: linear-gradient(180deg, #25212d 0%, #1b1920 100%);
+      border: 1px solid #504663;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: left;
+    }
+    .levelup-card h3 {
+      margin: 0 0 10px;
+      font-size: 25px;
+    }
+    .levelup-card p {
+      margin: 0 0 14px;
+      color: #d7deea;
+      line-height: 1.65;
+      font-size: 16px;
+      min-height: 78px;
+    }
+    .remove-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .remove-card-item {
+      border: 1px solid #434d5c;
+      border-radius: 16px;
+      padding: 14px;
+      background: #171b22;
+    }
+    .remove-card-item h4 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+    .remove-card-item p {
+      margin: 0 0 10px;
+      color: #ced6e2;
+      line-height: 1.65;
+      min-height: 80px;
+      font-size: 15px;
+    }
+    @media (max-width: 1480px) {
+      .battle-board { grid-template-columns: 320px minmax(420px, 1fr) 320px; }
+      .card { min-width: 230px; width: 230px; }
+      .container { padding-bottom: 165px; }
+    }
+    @media (max-width: 1280px) {
+      .battle-board { grid-template-columns: 1fr; }
+      .log-box { height: 280px; min-height: 280px; }
+      .cards-panel { left: 10px; right: 10px; }
+    }
+    @media (max-width: 760px) {
+      html, body { font-size: 16px; }
+      .title { font-size: 38px; }
+      .player-grid, .monster-layout { grid-template-columns: 1fr; }
+      .cards-panel { padding: 12px; }
+      .card { min-width: 210px; width: 210px; min-height: 210px; }
+      .levelup-grid { grid-template-columns: 1fr; }
+    }
+
   </style>
 </head>
 <body>
@@ -918,6 +1102,17 @@
               </div>
             </div>
 
+            <div class="xp-wrap">
+              <div class="stat-top">
+                <div>等级：<span id="playerLevelText">1</span> / 30</div>
+                <div>经验：<span id="xpText">0</span> / <span id="xpNeedText">20</span></div>
+              </div>
+              <div class="bar-bg">
+                <div class="xp-bar" id="xpBar" style="width:0%"></div>
+              </div>
+              <div class="xp-text" id="xpTipText">离下次升级还需要 20 经验</div>
+            </div>
+
             <div class="note-box" id="heroInfoText">准备开始战斗。</div>
             <div class="status-area">
               <div class="status-title">角色状态栏</div>
@@ -933,6 +1128,10 @@
             <div class="side-info">
               <div class="side-label">金币</div>
               <div class="side-value" id="goldText">0</div>
+            </div>
+            <div class="side-info">
+              <div class="side-label">角色等级</div>
+              <div class="side-value" id="sidePlayerLevelText">Lv.1</div>
             </div>
             <div class="side-info">
               <div class="side-label">当前目标</div>
@@ -1066,6 +1265,26 @@
       <div class="modal-sub" id="gameOverDesc">请重新开始。</div>
       <div class="modal-actions" style="justify-content:center;">
         <button class="modal-btn danger" onclick="restartFromModal()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-overlay" id="levelUpModal">
+    <div class="modal-box levelup-box">
+      <div class="modal-title">等级提升</div>
+      <div class="modal-sub" id="levelUpDesc">你升级了，选择一个强化方向。</div>
+      <div class="levelup-grid" id="levelUpOptions"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="removeCardModal">
+    <div class="modal-box">
+      <div class="modal-title">移除一张效果牌</div>
+      <div class="modal-sub">选择后会从本局卡池中永久移除，而且商店在重新游戏前都不会再卖这张牌。</div>
+      <div class="remove-grid" id="removeCardOptions"></div>
+      <div class="modal-actions">
+        <button class="modal-btn secondary" onclick="closeRemoveCardModal()">取消</button>
       </div>
     </div>
   </div>
@@ -1244,6 +1463,71 @@
             desc: "少量伤害并使敌方混乱：攻击稍降，且有几率攻击自己。"
           };
         }
+      },
+      stone_bombardment: {
+        key: "stone_bombardment",
+        name: "碎石爆弹",
+        create(level) {
+          return {
+            id: "stone_bombardment",
+            name: "碎石爆弹",
+            type: "stone_bombardment",
+            cardType: "效果牌",
+            hitMin: 3,
+            hitMax: 8,
+            hitDamage: 4 + Math.floor(level * 0.25),
+            stunChance: 0.14,
+            cost: 2,
+            desc: "随机连续打击 3~8 次，每次造成少量伤害，并有几率晕眩。"
+          };
+        }
+      },
+      angel_hymn: {
+        key: "angel_hymn",
+        name: "天使歌颂",
+        create(level) {
+          return {
+            id: "angel_hymn",
+            name: "天使歌颂",
+            type: "angel_hymn",
+            cardType: "效果牌",
+            healValue: 22 + Math.floor(level * 0.55),
+            shieldValue: 7 + Math.floor(level * 0.2),
+            cost: 2,
+            desc: "回复中等生命，并移除 1 个负面效果。若成功净化，会追加少量护盾。"
+          };
+        }
+      },
+      frost_spell: {
+        key: "frost_spell",
+        name: "冰晶咒术",
+        create(level) {
+          return {
+            id: "frost_spell",
+            name: "冰晶咒术",
+            type: "frost_spell",
+            cardType: "效果牌",
+            bombDamage: 16 + Math.floor(level * 0.6),
+            cost: 2,
+            desc: "将剩余手牌全部替换成【冰晶爆弹】，每张都可造成中等伤害。"
+          };
+        }
+      },
+      fire_tornado: {
+        key: "fire_tornado",
+        name: "炎龙卷风",
+        create(level) {
+          return {
+            id: "fire_tornado",
+            name: "炎龙卷风",
+            type: "fire_tornado",
+            cardType: "效果牌",
+            damageValue: 15 + Math.floor(level * 0.55),
+            burnDamage: 4 + Math.floor(level * 0.12),
+            cost: 2,
+            desc: "造成两次中等伤害；若目标已燃烧，第二击会更痛。"
+          };
+        }
       }
     };
 
@@ -1267,6 +1551,190 @@
 
     function chance(rate) {
       return Math.random() < rate;
+    }
+
+    function getXpNeed(level) {
+      return 20 + Math.floor((level - 1) * 2);
+    }
+
+    function getXpReward(level) {
+      const type = getStageType(level);
+      if (type === "大BOSS") return randomInt(50, 100);
+      if (type === "小BOSS") return randomInt(24, 36);
+      return randomInt(18, 30);
+    }
+
+    function getLevelTier() {
+      return Math.floor((state.playerLevel - 1) / 5);
+    }
+
+    function createIceBombCard() {
+      const damage = 16 + Math.floor(state.level * 0.6) + Math.floor(state.playerLevel * 0.2);
+      return {
+        id: "ice_bomb",
+        name: "冰晶爆弹",
+        type: "ice_bomb",
+        cardType: "临时法术",
+        damageValue: damage,
+        cost: 1,
+        desc: `造成 ${damage} 点中等伤害；若目标混乱，触发碎晶追击。`
+      };
+    }
+
+    function removeOneNegativeStatus() {
+      const order = [
+        ["stunTurns", "晕眩"],
+        ["poisonTurns", "中毒"],
+        ["blindTurns", "致盲"],
+        ["confuseTurns", "混乱"]
+      ];
+      for (const [key, text] of order) {
+        if (state.player[key] > 0) {
+          state.player[key] = 0;
+          if (key === "poisonTurns") state.player.poisonDamage = 0;
+          logAppend(`负面效果【${text}】被净化了。`, "heal");
+          return text;
+        }
+      }
+      return "";
+    }
+
+    function showLevelUpModal() {
+      if (state.pendingLevelChoices <= 0) {
+        document.getElementById("levelUpModal").classList.remove("show");
+        finalizePendingRewardFlow();
+        return;
+      }
+      const desc = document.getElementById("levelUpDesc");
+      const box = document.getElementById("levelUpOptions");
+      desc.textContent = `你升到了 Lv.${state.playerLevel}。已自动增加少量生命上限，再选择 1 个强化方向。`;
+      box.innerHTML = "";
+
+      const options = [
+        {
+          title: "额外生命",
+          desc: "最大生命 +6，并立即恢复 6 HP。",
+          fn() {
+            state.player.maxHp += 6;
+            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 6);
+            logAppend("升级奖励：额外生命上限提高了。", "heal");
+          }
+        },
+        {
+          title: "额外攻击",
+          desc: "攻击伤害小幅提升，攻击牌与部分效果牌都会更痛。",
+          fn() {
+            state.upgrades.atkBonus += 2;
+            logAppend("升级奖励：攻击能力提升。", "attack");
+          }
+        },
+        {
+          title: "额外防御",
+          desc: "防御牌强度 +2，且受到的普通伤害固定 -1。",
+          fn() {
+            state.upgrades.defBonus += 2;
+            state.upgrades.flatDamageReduce += 1;
+            logAppend("升级奖励：防御能力提升。", "shield");
+          }
+        }
+      ];
+
+      options.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "levelup-card";
+        div.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><button class="modal-btn">选择这个强化</button>`;
+        div.querySelector("button").onclick = () => {
+          item.fn();
+          state.pendingLevelChoices--;
+          if (state.pendingLevelChoices > 0) {
+            showLevelUpModal();
+          } else {
+            document.getElementById("levelUpModal").classList.remove("show");
+            finalizePendingRewardFlow();
+          }
+          updateUI();
+        };
+        box.appendChild(div);
+      });
+
+      document.getElementById("levelUpModal").classList.add("show");
+    }
+
+    function grantXp(amount) {
+      if (state.playerLevel >= 30) return;
+      state.xp += amount;
+      let leveled = false;
+      while (state.playerLevel < 30) {
+        const need = getXpNeed(state.playerLevel);
+        if (state.xp < need) break;
+        state.xp -= need;
+        state.playerLevel++;
+        state.pendingLevelChoices++;
+        state.player.maxHp += 3;
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + 3);
+        leveled = true;
+        logAppend(`你升级了！当前等级 Lv.${state.playerLevel}，并自动获得少量生命上限。`, "system");
+      }
+      if (state.playerLevel >= 30) {
+        state.xp = 0;
+      }
+      if (leveled) {
+        showLevelUpModal();
+      } else {
+        updateUI();
+      }
+    }
+
+    function finalizePendingRewardFlow() {
+      if (!state.pendingRewardData) return;
+      const data = state.pendingRewardData;
+      state.pendingRewardData = null;
+
+      if (data.clearedLevel >= 50) {
+        state.gameOver = true;
+        showGameOver(true);
+        updateUI();
+        return;
+      }
+
+      document.getElementById("levelClearTitle").textContent = `第 ${data.clearedLevel} 关通关`;
+      document.getElementById("levelClearDesc").textContent =
+        `恭喜 ${state.playerName} 成功通过第 ${data.clearedLevel} 关！获得 ${data.goldReward} 金币与 ${data.xpReward} 经验。`;
+      document.getElementById("levelClearModal").classList.add("show");
+      updateUI();
+    }
+
+    function closeRemoveCardModal() {
+      document.getElementById("removeCardModal").classList.remove("show");
+    }
+
+    function openRemoveCardModal() {
+      const keys = state.ownedSpecialCardKeys.filter(key => !state.removedSpecialCardKeys.includes(key));
+      const box = document.getElementById("removeCardOptions");
+      box.innerHTML = "";
+
+      if (keys.length === 0) {
+        box.innerHTML = '<div class="remove-card-item"><h4>没有可移除的效果牌</h4><p>你目前没有可移除的非基础效果牌，或者都已经被移除过了。</p></div>';
+      } else {
+        keys.forEach(key => {
+          const meta = specialCardCatalog[key];
+          const card = meta.create(state.level);
+          const div = document.createElement("div");
+          div.className = "remove-card-item";
+          div.innerHTML = `<h4>${card.name}</h4><p>${card.desc}</p><button class="modal-btn danger">移除这张牌</button>`;
+          div.querySelector("button").onclick = () => {
+            state.ownedSpecialCardKeys = state.ownedSpecialCardKeys.filter(k => k !== key);
+            if (!state.removedSpecialCardKeys.includes(key)) state.removedSpecialCardKeys.push(key);
+            state.hand = state.hand.filter(c => c.type !== key && c.id !== key);
+            logAppend(`你移除了【${card.name}】。这张牌在重新开始前不会再出现在商店。`, "system");
+            closeRemoveCardModal();
+            updateUI();
+          };
+          box.appendChild(div);
+        });
+      }
+
+      document.getElementById("removeCardModal").classList.add("show");
     }
 
     function getStageType(level) {
@@ -1436,6 +1904,10 @@
         atk = 11 + Math.floor(level * 1.55) + Math.floor(state.player.maxHp * 0.025);
       }
 
+      const levelTier = getLevelTier();
+      hp += levelTier * (isAlly ? 8 : 18);
+      atk += levelTier * (isAlly ? 1 : 2);
+
       return {
         id: `enemy_${Date.now()}_${Math.random().toString(16).slice(2)}`,
         type: isAlly ? "增援" : type,
@@ -1466,10 +1938,14 @@
         playerAvatar: selectedAvatar || avatarChoices[0],
         level: 1,
         gold: 0,
+        xp: 0,
+        playerLevel: 1,
         inShop: false,
         gameOver: false,
         pendingShop: false,
         justClearedLevel: 0,
+        pendingRewardData: null,
+        pendingLevelChoices: 0,
         deckSizePerTurn: 4,
         baseDeckSizePerTurn: 4,
         hand: [],
@@ -1501,9 +1977,11 @@
           healBonus: 0,
           critRate: 0,
           regen: 0,
-          doubleStrike: 0
+          doubleStrike: 0,
+          flatDamageReduce: 0
         },
         ownedSpecialCardKeys: [],
+        removedSpecialCardKeys: [],
         enemies: []
       };
       logEntries = [];
@@ -1545,6 +2023,7 @@
 
     function getOwnedSpecialCards() {
       return state.ownedSpecialCardKeys
+        .filter(key => !state.removedSpecialCardKeys.includes(key))
         .map(key => specialCardCatalog[key])
         .filter(Boolean)
         .map(item => item.create(state.level));
@@ -1878,7 +2357,7 @@
         return;
       }
 
-      const offensiveTypes = ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon", "war_hammer", "phantom_charm"];
+      const offensiveTypes = ["attack", "holy_hammer", "flame_slash", "mercy_palm", "cannon", "war_hammer", "phantom_charm", "stone_bombardment", "ice_bomb", "fire_tornado"];
       const playerBlindMiss = offensiveTypes.includes(card.type) && state.player.blindTurns > 0 && chance(0.45);
 
       state.player.energy -= card.cost;
@@ -2021,6 +2500,79 @@
         playSfx("attack");
       }
 
+
+      if (card.type === "stone_bombardment") {
+        const hits = randomInt(card.hitMin, card.hitMax);
+        let total = 0;
+        for (let i = 0; i < hits; i++) {
+          if (target.hp <= 0) break;
+          const hitDmg = card.hitDamage + (target.status.stunTurns > 0 ? 1 : 0);
+          applyDamageToEnemy(target, hitDmg, `【碎石爆弹】第 ${i + 1} 次命中，对【${target.name}】造成 ${hitDmg} 点伤害。`, { cardType: "stone_bombardment" });
+          total += hitDmg;
+          if (chance(card.stunChance) && target.hp > 0) {
+            target.status.stunTurns = Math.max(target.status.stunTurns, 1);
+            target.status.vulnerableStunBonusHits = Math.max(target.status.vulnerableStunBonusHits, 1);
+            logAppend(`【${target.name}】被碎石冲击震晕了。`, "system");
+            addStunEffectToEnemy();
+          }
+        }
+        logAppend(`【碎石爆弹】总共打出 ${hits} 次，累计伤害 ${total}。`, "attack");
+        playSfx("attack");
+      }
+
+      if (card.type === "angel_hymn") {
+        const before = state.player.hp;
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + card.healValue);
+        const cleared = removeOneNegativeStatus();
+        log(`你使用【天使歌颂】，恢复 ${state.player.hp - before} 点生命。`, "heal");
+        if (cleared) {
+          state.player.shield += card.shieldValue;
+          logAppend(`连锁效果【圣歌庇护】发动，额外获得 ${card.shieldValue} 点护盾。`, "shield");
+        }
+        addHealEffectToPlayer();
+        playSfx("heal");
+      }
+
+      if (card.type === "frost_spell") {
+        const replaceCount = Math.max(1, state.hand.length - 1);
+        removeCardFromHand(uid);
+        state.hand = [];
+        for (let i = 0; i < replaceCount; i++) {
+          state.hand.push({ ...createIceBombCard(), uid: `ice_${Date.now()}_${i}_${Math.random()}` });
+        }
+        log(`你使用【冰晶咒术】，剩余手牌全部化为 ${replaceCount} 张【冰晶爆弹】。`, "system");
+        playSfx("shield");
+        updateUI();
+        return;
+      }
+
+      if (card.type === "ice_bomb") {
+        let dmg = card.damageValue;
+        if (target.status.confuseTurns > 0) {
+          dmg += 6 + Math.floor(state.playerLevel * 0.3);
+          logAppend(`连锁效果【碎晶追击】发动，额外提高了冰晶爆弹的伤害。`, "attack");
+        }
+        applyDamageToEnemy(target, dmg, `你投出【冰晶爆弹】，对【${target.name}】造成 ${dmg} 点伤害。`, { cardType: "ice_bomb" });
+        playSfx("attack");
+      }
+
+      if (card.type === "fire_tornado") {
+        let secondHit = card.damageValue;
+        if (target.status.burnTurns > 0) {
+          secondHit += 8 + Math.floor(state.level * 0.15);
+          logAppend(`连锁效果【炎涡增幅】发动，第二击伤害提高。`, "attack");
+        } else {
+          target.status.burnDamage = Math.max(target.status.burnDamage, card.burnDamage);
+          target.status.burnTurns = Math.max(target.status.burnTurns, 2);
+          logAppend(`【${target.name}】被火焰卷入，附加了 2 回合燃烧。`, "attack");
+        }
+        applyDamageToEnemy(target, card.damageValue, `【炎龙卷风】第一击命中【${target.name}】，造成 ${card.damageValue} 点伤害。`, { cardType: "fire_tornado" });
+        if (target.hp > 0) {
+          applyDamageToEnemy(target, secondHit, `【炎龙卷风】第二击命中【${target.name}】，造成 ${secondHit} 点伤害。`, { cardType: "fire_tornado" });
+        }
+        playSfx("attack");
+      }
+
       removeCardFromHand(uid);
 
       if (state.player.blindTurns > 0 && !playerBlindMiss && offensiveTypes.includes(card.type)) {
@@ -2082,6 +2634,8 @@
       const isTrueDamage = options.trueDamage === true;
 
       if (!isTrueDamage) {
+        incoming = Math.max(0, incoming - (state.upgrades.flatDamageReduce || 0));
+
         if (state.player.specialShield > 0) {
           const takeSpecial = Math.min(state.player.specialShield, incoming);
           state.player.specialShield -= takeSpecial;
@@ -2314,6 +2868,7 @@
     function winBattle() {
       const clearedLevel = state.level;
       const reward = getReward(clearedLevel);
+      const xpReward = getXpReward(clearedLevel);
 
       state.gold += reward;
       state.player.shield = 0;
@@ -2322,20 +2877,18 @@
       state.hand = [];
       state.justClearedLevel = clearedLevel;
       state.pendingShop = clearedLevel % 3 === 0;
+      state.pendingRewardData = { clearedLevel, goldReward: reward, xpReward };
 
-      log(`你击败了全部敌人！获得 ${reward} 金币。`, "system");
+      log(`你击败了全部敌人！获得 ${reward} 金币与 ${xpReward} 经验。`, "system");
 
-      if (clearedLevel >= 50) {
-        state.gameOver = true;
-        showGameOver(true);
-        updateUI();
-        return;
+      if (state.playerLevel >= 30) {
+        finalizePendingRewardFlow();
+      } else {
+        grantXp(xpReward);
+        if (state.pendingLevelChoices <= 0) {
+          finalizePendingRewardFlow();
+        }
       }
-
-      document.getElementById("levelClearTitle").textContent = `第 ${clearedLevel} 关通关`;
-      document.getElementById("levelClearDesc").textContent = `恭喜 ${state.playerName} 成功通过第 ${clearedLevel} 关！获得 ${reward} 金币。`;
-      document.getElementById("levelClearModal").classList.add("show");
-      updateUI();
     }
 
     function continueAfterClear() {
@@ -2388,13 +2941,14 @@
     }
 
     function ownsSpecialCard(key) {
-      return state.ownedSpecialCardKeys.includes(key);
+      return state.ownedSpecialCardKeys.includes(key) && !state.removedSpecialCardKeys.includes(key);
     }
 
     function addSpecialCardToPool(key) {
-      if (!ownsSpecialCard(key)) {
+      if (!state.ownedSpecialCardKeys.includes(key)) {
         state.ownedSpecialCardKeys.push(key);
       }
+      state.removedSpecialCardKeys = state.removedSpecialCardKeys.filter(k => k !== key);
     }
 
     function renderShopItems(selected) {
@@ -2599,6 +3153,56 @@
             addSpecialCardToPool("phantom_charm");
             log("购买成功：幽冥魅惑加入角色卡池。", "system");
           }
+        },
+        {
+          title: "效果牌：碎石爆弹",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 36),
+          key: "stone_bombardment",
+          apply() {
+            addSpecialCardToPool("stone_bombardment");
+            log("购买成功：碎石爆弹加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "效果牌：天使歌颂",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(24, 36),
+          key: "angel_hymn",
+          apply() {
+            addSpecialCardToPool("angel_hymn");
+            log("购买成功：天使歌颂加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "效果牌：冰晶咒术",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(26, 38),
+          key: "frost_spell",
+          apply() {
+            addSpecialCardToPool("frost_spell");
+            log("购买成功：冰晶咒术加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "效果牌：炎龙卷风",
+          desc: "加入角色永久卡池，直到重新开始前都会保留。",
+          cost: getShopPrice(26, 38),
+          key: "fire_tornado",
+          apply() {
+            addSpecialCardToPool("fire_tornado");
+            log("购买成功：炎龙卷风加入角色卡池。", "system");
+          }
+        },
+        {
+          title: "移除效果牌",
+          desc: "从本局卡池中移除 1 张非基础效果牌，且这张牌重新开始前不会再出现在商店。",
+          cost: getShopPrice(16, 24),
+          isRemoveService: true,
+          apply() {
+            openRemoveCardModal();
+            log("你购买了卡牌移除服务。", "system");
+          }
         }
       ];
 
@@ -2609,7 +3213,10 @@
       }
 
       selected.forEach(item => {
-        if (item.key && ownsSpecialCard(item.key)) {
+        if (item.key && state.removedSpecialCardKeys.includes(item.key)) {
+          item.disabledByOwnership = true;
+          item.ownedText = "这张效果牌已被移除，本局不会再出现";
+        } else if (item.key && ownsSpecialCard(item.key)) {
           item.disabledByOwnership = true;
           item.ownedText = "你已经拥有这张效果牌";
         } else {
@@ -2638,6 +3245,14 @@
     function buyItem(item, selectedList) {
       if (!state.inShop) return;
       if (item.disabledByOwnership) return;
+
+      if (item.isRemoveService) {
+        const keys = state.ownedSpecialCardKeys.filter(key => !state.removedSpecialCardKeys.includes(key));
+        if (keys.length === 0) {
+          log("目前没有可移除的效果牌。", "system");
+          return;
+        }
+      }
 
       if (state.gold < item.cost) {
         log("金币不足。", "system");
@@ -2792,15 +3407,24 @@
       document.getElementById("battleTurnText").textContent = state.turnLabel;
       document.getElementById("shopHintText").textContent = state.pendingShop ? "通关后开启" : "未开启";
       document.getElementById("targetText").textContent = enemy ? enemy.name : "无";
+      document.getElementById("playerLevelText").textContent = state.playerLevel;
+      document.getElementById("sidePlayerLevelText").textContent = `Lv.${state.playerLevel}`;
 
       document.getElementById("playerHpText").textContent = Math.max(0, state.player.hp);
       document.getElementById("playerMaxHpText").textContent = state.player.maxHp;
       document.getElementById("playerShieldText").textContent = state.player.shield + state.player.specialShield;
       document.getElementById("energyText").textContent = state.player.energy;
       document.getElementById("energyMaxText").textContent = state.player.maxEnergy;
+      const xpNeed = state.playerLevel >= 30 ? 1 : getXpNeed(state.playerLevel);
+      document.getElementById("xpText").textContent = state.playerLevel >= 30 ? "MAX" : state.xp;
+      document.getElementById("xpNeedText").textContent = state.playerLevel >= 30 ? "MAX" : xpNeed;
+      document.getElementById("xpTipText").textContent = state.playerLevel >= 30
+        ? "你已经达到满级 30 等"
+        : `离下次升级还需要 ${Math.max(0, xpNeed - state.xp)} 经验`;
 
       document.getElementById("playerHpBar").style.width = `${Math.max(0, (state.player.hp / state.player.maxHp) * 100)}%`;
       document.getElementById("energyBar").style.width = `${Math.min(100, Math.max(0, (state.player.energy / state.player.maxEnergy) * 100))}%`;
+      document.getElementById("xpBar").style.width = `${state.playerLevel >= 30 ? 100 : Math.min(100, Math.max(0, (state.xp / xpNeed) * 100))}%`;
 
       if (enemy) {
         document.getElementById("monsterNameText").textContent = enemy.name;
@@ -2816,7 +3440,7 @@
       }
 
       document.getElementById("heroInfoText").textContent =
-        `已拥有效果牌 ${state.ownedSpecialCardKeys.length} 张，本关能量可累积，当前已累积到 ${state.player.energy}/${state.player.maxEnergy}。`;
+        `Lv.${state.playerLevel}｜已拥有效果牌 ${getOwnedSpecialCards().length} 张｜本关能量可累积，当前 ${state.player.energy}/${state.player.maxEnergy}｜每 5 等敌人会微幅成长。`;
 
       renderEnemyTeam();
       updateStatusBoxes(enemy);
