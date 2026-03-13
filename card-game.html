@@ -1134,6 +1134,340 @@
       .levelup-grid { grid-template-columns: 1fr; }
     }
 
+  
+    /* === 100% 页面适配 + 更接近杀戮尖塔的扇形手牌 === */
+    html, body {
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-width: 1280px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,183,77,0.07), transparent 20%),
+        radial-gradient(circle at 12% 12%, rgba(84,132,255,0.06), transparent 18%),
+        linear-gradient(180deg, #0d1016 0%, #111722 52%, #0d1016 100%);
+    }
+
+    .topbar {
+      padding: 8px 14px;
+      gap: 10px;
+    }
+    .topbar-left {
+      gap: 10px;
+    }
+    .volume-wrap {
+      padding: 7px 10px;
+      border-radius: 12px;
+    }
+    .volume-wrap span,
+    .music-btn,
+    .home-btn {
+      font-size: 14px !important;
+    }
+    .volume-wrap input[type="range"] {
+      width: 120px;
+    }
+    .home-btn {
+      padding: 9px 14px;
+    }
+
+    .container {
+      max-width: 1600px;
+      padding: 12px 16px 250px;
+    }
+
+    .title {
+      font-size: 34px !important;
+      margin: 2px 0 12px;
+      letter-spacing: 3px;
+    }
+
+    .battle-board {
+      grid-template-columns: 300px minmax(520px, 1fr) 300px !important;
+      gap: 14px;
+      align-items: stretch;
+      margin-bottom: 0;
+    }
+
+    .panel,
+    .log-panel,
+    .cards-panel {
+      border-radius: 18px !important;
+      border: 1px solid #2c3442 !important;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.02) !important;
+      background: linear-gradient(180deg, rgba(27,32,42,0.96) 0%, rgba(19,24,33,0.98) 100%) !important;
+    }
+
+    .panel,
+    .log-panel {
+      max-height: calc(100vh - 350px) !important;
+      min-height: calc(100vh - 350px);
+      overflow: auto;
+      padding: 16px !important;
+    }
+
+    .character-head {
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .avatar,
+    .monster-avatar {
+      width: 78px !important;
+      height: 78px !important;
+      font-size: 42px !important;
+      border-radius: 16px !important;
+    }
+
+    .character-title h2 {
+      font-size: 24px !important;
+      margin-bottom: 2px;
+    }
+
+    .character-sub,
+    .stat-top,
+    .note-box,
+    .skill-tag,
+    .status-tag,
+    .enemy-mini,
+    .log-line,
+    .shop-tip,
+    .shop-desc,
+    #playerStatusSummary,
+    #monsterInfoText,
+    #heroInfoText {
+      font-size: 15px !important;
+      line-height: 1.55 !important;
+    }
+
+    .section-title {
+      font-size: 22px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .side-panel-grid,
+    .player-grid,
+    .monster-layout {
+      gap: 10px !important;
+    }
+
+    .player-grid,
+    .monster-layout {
+      grid-template-columns: 1fr 120px !important;
+    }
+
+    .side-info {
+      padding: 12px 10px !important;
+      border-radius: 14px !important;
+    }
+
+    .side-label {
+      font-size: 14px !important;
+      margin-bottom: 4px;
+    }
+
+    .side-value {
+      font-size: 18px !important;
+      line-height: 1.35 !important;
+      word-break: break-word;
+    }
+
+    .bar-bg {
+      height: 14px !important;
+    }
+
+    .note-box {
+      min-height: 92px !important;
+      max-height: 120px !important;
+      padding: 10px 12px !important;
+    }
+
+    .status-area {
+      min-height: 72px !important;
+    }
+
+    .status-title {
+      font-size: 14px !important;
+    }
+
+    .status-tag {
+      padding: 5px 9px !important;
+      border-radius: 999px;
+      font-size: 12px !important;
+    }
+
+    .xp-text {
+      font-size: 13px !important;
+    }
+
+    .log-box {
+      height: calc(100vh - 450px) !important;
+      min-height: calc(100vh - 450px) !important;
+      max-height: calc(100vh - 450px) !important;
+      padding: 12px !important;
+      font-size: 14px !important;
+      border-radius: 14px !important;
+    }
+
+    .cards-panel {
+      position: fixed !important;
+      left: 16px;
+      right: 16px;
+      bottom: 8px;
+      z-index: 35;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 10px 14px 12px !important;
+      height: 220px !important;
+      max-height: 220px !important;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      background:
+        linear-gradient(180deg, rgba(17,21,30,0.97) 0%, rgba(12,16,24,0.99) 100%) !important;
+    }
+
+    .cards-panel .section-title {
+      margin-bottom: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 24px !important;
+    }
+
+    .cards-panel .section-title::after {
+      content: "扇形手牌";
+      font-size: 13px;
+      color: #b6c2d5;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .cards {
+      position: relative;
+      height: 150px;
+      min-height: 150px;
+      overflow: visible !important;
+      padding: 2px 8px 0;
+      display: block !important;
+    }
+
+    .fan-card {
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      width: 168px !important;
+      min-width: 168px !important;
+      max-width: 168px !important;
+      min-height: 0 !important;
+      height: 132px !important;
+      padding: 10px 12px !important;
+      border-radius: 16px !important;
+      transform:
+        translateX(calc(-50% + var(--fan-x, 0%)))
+        translateY(var(--fan-y, 0px))
+        rotate(var(--fan-r, 0deg));
+      transform-origin: center bottom;
+      z-index: var(--fan-z, 1);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+
+    .fan-card:hover {
+      transform:
+        translateX(calc(-50% + var(--fan-x, 0%)))
+        translateY(calc(var(--fan-y, 0px) - 34px))
+        rotate(var(--fan-r, 0deg)) scale(1.06);
+      z-index: 99 !important;
+      box-shadow: 0 18px 30px rgba(0,0,0,0.45);
+      filter: brightness(1.08);
+    }
+
+    .card-top {
+      gap: 4px !important;
+    }
+
+    .card-type {
+      font-size: 11px !important;
+      opacity: 0.9;
+    }
+
+    .card-name {
+      font-size: 16px !important;
+      line-height: 1.2 !important;
+      margin-bottom: 2px;
+    }
+
+    .card-desc,
+    .card-cost {
+      font-size: 12px !important;
+      line-height: 1.35 !important;
+    }
+
+    .card button {
+      margin-top: 6px !important;
+      min-height: 32px !important;
+      border-radius: 10px !important;
+      font-size: 13px !important;
+      padding: 0 10px !important;
+    }
+
+    .actions {
+      position: absolute;
+      right: 14px;
+      top: 12px;
+      margin: 0 !important;
+    }
+
+    .action-btn {
+      min-width: 110px;
+      min-height: 36px;
+      border-radius: 12px !important;
+      font-size: 14px !important;
+      padding: 0 14px !important;
+    }
+
+    .empty-hand {
+      height: 126px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      font-size: 15px;
+    }
+
+    .modal-box.levelup-box {
+      max-width: 860px;
+    }
+    .levelup-grid {
+      gap: 12px;
+    }
+    .levelup-card h3 {
+      font-size: 20px !important;
+    }
+    .levelup-card p {
+      font-size: 14px !important;
+      min-height: 66px !important;
+    }
+
+    @media (max-width: 1450px) {
+      body { min-width: 1180px; }
+      .battle-board {
+        grid-template-columns: 280px minmax(460px, 1fr) 280px !important;
+      }
+      .cards-panel {
+        height: 210px !important;
+        max-height: 210px !important;
+      }
+      .fan-card {
+        width: 156px !important;
+        min-width: 156px !important;
+        max-width: 156px !important;
+        height: 128px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2212,7 +2546,7 @@
       updateUI();
     }
 
-    function renderCards() {
+        function renderCards() {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
@@ -2225,10 +2559,22 @@
         return;
       }
 
-      state.hand.forEach(card => {
+      const count = state.hand.length;
+      const maxSpread = Math.min(90, 20 + count * 10);
+      const mid = (count - 1) / 2;
+
+      state.hand.forEach((card, idx) => {
         const div = document.createElement("div");
-        div.className = `card ${getCardClass(card)}`;
+        div.className = `card ${getCardClass(card)} fan-card`;
         const canUse = !state.inShop && !state.gameOver && state.player.energy >= card.cost && getLivingEnemies().length > 0;
+
+        const offset = count === 1 ? 0 : ((idx - mid) * (count >= 7 ? 100 / Math.max(1, count - 1) : 88 / Math.max(1, count - 1)));
+        const rotate = count === 1 ? 0 : (idx - mid) * (count >= 7 ? 4 : 5.5);
+        const lift = Math.abs(idx - mid) * 7;
+        div.style.setProperty("--fan-x", `${offset}%`);
+        div.style.setProperty("--fan-r", `${rotate}deg`);
+        div.style.setProperty("--fan-y", `${lift}px`);
+        div.style.setProperty("--fan-z", `${idx + 1}`);
 
         div.innerHTML = `
           <div class="card-top">
@@ -2237,7 +2583,7 @@
             <div class="card-desc">${card.desc}</div>
             <div class="card-cost">消耗能量：${card.cost}</div>
           </div>
-          <button ${canUse ? "" : "disabled"}>使用这张牌</button>
+          <button ${canUse ? "" : "disabled"}>使用</button>
         `;
 
         div.querySelector("button").onclick = () => playCard(card.uid);
