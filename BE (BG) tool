@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BE(BG)对帐工具</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+      background: linear-gradient(135deg, #eef7ff 0%, #f8fcff 50%, #f2fff7 100%);
+      color: #2c3e50;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .home-btn {
+      text-decoration: none;
+      background: #ffffffcc;
+      color: #2d5b8a;
+      border: 1px solid #cfe4f7;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(91, 144, 190, 0.12);
+      transition: 0.2s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .home-btn:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+      box-shadow: 0 10px 22px rgba(91, 144, 190, 0.18);
+    }
+
+    .title-card {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(206, 228, 244, 0.9);
+      border-radius: 22px;
+      padding: 24px 28px;
+      box-shadow: 0 10px 30px rgba(109, 155, 196, 0.12);
+      margin-bottom: 22px;
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #234b72;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      text-align: center;
+      color: #6b879f;
+      font-size: 15px;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 180px 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(206, 228, 244, 0.95);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 10px 28px rgba(109, 155, 196, 0.12);
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      color: #2a537d;
+    }
+
+    textarea {
+      width: 100%;
+      flex: 1;
+      resize: none;
+      border: 1px solid #dbeaf5;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      background: #fdfefe;
+      color: #2b3a47;
+      outline: none;
+      box-shadow: inset 0 2px 8px rgba(140, 180, 210, 0.08);
+    }
+
+    textarea:focus {
+      border-color: #9fc8ea;
+      box-shadow: 0 0 0 4px rgba(159, 200, 234, 0.18), inset 0 2px 8px rgba(140, 180, 210, 0.08);
+    }
+
+    .button-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      align-items: center;
+    }
+
+    button {
+      width: 140px;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 10px 20px rgba(103, 155, 197, 0.16);
+    }
+
+    .show-btn {
+      background: linear-gradient(135deg, #75c5ff, #60d7bc);
+      color: white;
+    }
+
+    .show-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 26px rgba(86, 191, 181, 0.28);
+    }
+
+    .clear-btn {
+      background: linear-gradient(135deg, #ffd6de, #ffeabf);
+      color: #8a4a5c;
+    }
+
+    .clear-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 26px rgba(227, 171, 171, 0.28);
+    }
+
+    .result-box {
+      flex: 1;
+      border: 1px solid #dbeaf5;
+      border-radius: 16px;
+      padding: 18px;
+      background: #fcffff;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 15px;
+      line-height: 1.8;
+      box-shadow: inset 0 2px 8px rgba(140, 180, 210, 0.08);
+    }
+
+    .placeholder {
+      color: #88a0b4;
+    }
+
+    @media (max-width: 1100px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .button-area {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .panel {
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a class="home-btn" href="https://0urrigvojb.github.io/bng-tools/" target="_blank">回首页</a>
+    </div>
+
+    <div class="title-card">
+      <h1 class="title">BE(BG)对帐工具</h1>
+      <p class="subtitle">贴上原始资料后，一键整理相同代理帐号的代理损益金额总和</p>
+    </div>
+
+    <div class="main">
+      <div class="panel">
+        <h2>原始资料</h2>
+        <textarea id="inputData" placeholder="请把资料贴在这里..."></textarea>
+      </div>
+
+      <div class="button-area">
+        <button class="show-btn" onclick="processData()">显示结果</button>
+        <button class="clear-btn" onclick="clearAll()">清除</button>
+      </div>
+
+      <div class="panel">
+        <h2>整理结果</h2>
+        <div id="resultBox" class="result-box placeholder">整理后的内容会显示在这里...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function clearAll() {
+      document.getElementById("inputData").value = "";
+      const resultBox = document.getElementById("resultBox");
+      resultBox.classList.add("placeholder");
+      resultBox.textContent = "整理后的内容会显示在这里...";
+    }
+
+    function processData() {
+      const input = document.getElementById("inputData").value.trim();
+      const resultBox = document.getElementById("resultBox");
+
+      if (!input) {
+        resultBox.classList.remove("placeholder");
+        resultBox.textContent = "请输入资料。";
+        return;
+      }
+
+      const lines = input.split(/\r?\n/).map(line => line.trim()).filter(line => line);
+      const dataMap = {};
+      const dateSet = new Set();
+
+      for (const line of lines) {
+        if (!/^\d{4}-\d{2}-\d{2}/.test(line)) continue;
+
+        const parts = line.split(/\s+/);
+        if (parts.length < 9) continue;
+
+        const date = parts[0];
+        const agent = parts[1];
+        const profitRaw = parts[8];
+
+        const profit = parseFloat(profitRaw.replace(/,/g, ""));
+        if (isNaN(profit)) continue;
+
+        dateSet.add(date);
+
+        if (!dataMap[agent]) {
+          dataMap[agent] = 0;
+        }
+        dataMap[agent] += profit;
+      }
+
+      const dates = Array.from(dateSet).sort();
+      const agents = Object.keys(dataMap).sort();
+
+      if (dates.length === 0 || agents.length === 0) {
+        resultBox.classList.remove("placeholder");
+        resultBox.textContent = "未抓取到有效资料，请确认贴上的格式是否正确。";
+        return;
+      }
+
+      const startDate = dates[0];
+      const endDate = dates[dates.length - 1];
+      const agentWidth = 20;
+
+      let output = "";
+      output += `日期 ${startDate}~${endDate}\n\n`;
+      output += `${padRight("代理帐号", agentWidth)}代理损益金额\n`;
+      output += `${"-".repeat(agentWidth + 18)}\n`;
+
+      for (const agent of agents) {
+        output += `${padRight(agent, agentWidth)}${formatNumber(dataMap[agent])}\n`;
+      }
+
+      resultBox.classList.remove("placeholder");
+      resultBox.textContent = output;
+    }
+
+    function padRight(str, length) {
+      const s = String(str);
+      return s + " ".repeat(Math.max(length - s.length, 0));
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString("en-US", {
+        minimumFractionDigits: 4,
+        maximumFractionDigits: 4
+      });
+    }
+  </script>
+</body>
+</html>
