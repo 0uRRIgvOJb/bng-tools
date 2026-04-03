@@ -9,18 +9,34 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bg1: #eef7ff;
+      --bg2: #f8fcff;
+      --bg3: #f3fff8;
+      --card: rgba(255, 255, 255, 0.84);
+      --border: #d8e9f7;
+      --text: #2d3f50;
+      --title: #234f7d;
+      --sub: #7590a9;
+      --blue1: #6fc6ff;
+      --blue2: #5fd5bf;
+      --pink1: #ffd9df;
+      --pink2: #ffeac8;
+      --shadow: 0 10px 30px rgba(98, 145, 186, 0.12);
+    }
+
     body {
       margin: 0;
-      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
-      background: linear-gradient(135deg, #eef7ff 0%, #f8fcff 50%, #f2fff7 100%);
-      color: #2c3e50;
       min-height: 100vh;
+      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
     }
 
     .page {
-      max-width: 1500px;
+      max-width: 1480px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 18px;
     }
 
     .topbar {
@@ -30,65 +46,68 @@
     }
 
     .home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
-      background: #ffffffcc;
-      color: #2d5b8a;
-      border: 1px solid #cfe4f7;
       padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.9);
+      color: var(--title);
       font-weight: 700;
-      box-shadow: 0 6px 18px rgba(91, 144, 190, 0.12);
+      font-size: 14px;
+      box-shadow: var(--shadow);
       transition: 0.2s ease;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
     }
 
     .home-btn:hover {
       transform: translateY(-1px);
       background: #ffffff;
-      box-shadow: 0 10px 22px rgba(91, 144, 190, 0.18);
     }
 
-    .title-card {
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(206, 228, 244, 0.9);
-      border-radius: 22px;
-      padding: 24px 28px;
-      box-shadow: 0 10px 30px rgba(109, 155, 196, 0.12);
-      margin-bottom: 22px;
+    .header-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 24px 20px;
+      margin-bottom: 18px;
       backdrop-filter: blur(8px);
     }
 
     .title {
       margin: 0;
+      text-align: center;
       font-size: 34px;
+      line-height: 1.2;
+      color: var(--title);
       font-weight: 800;
       letter-spacing: 1px;
-      color: #234b72;
-      text-align: center;
     }
 
-    .subtitle {
+    .desc {
       margin: 10px 0 0;
       text-align: center;
-      color: #6b879f;
+      color: var(--sub);
       font-size: 15px;
     }
 
     .main {
       display: grid;
-      grid-template-columns: 1fr 180px 1fr;
-      gap: 22px;
+      grid-template-columns: minmax(320px, 1fr) 160px minmax(320px, 1fr);
+      gap: 18px;
       align-items: stretch;
     }
 
     .panel {
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid rgba(206, 228, 244, 0.95);
-      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
       padding: 18px;
-      box-shadow: 0 10px 28px rgba(109, 155, 196, 0.12);
-      min-height: 620px;
+      min-height: 640px;
       display: flex;
       flex-direction: column;
       backdrop-filter: blur(8px);
@@ -97,84 +116,174 @@
     .panel h2 {
       margin: 0 0 14px;
       font-size: 20px;
-      color: #2a537d;
+      color: var(--title);
+      font-weight: 800;
     }
 
     textarea {
       width: 100%;
-      flex: 1;
+      height: 100%;
+      min-height: 540px;
       resize: none;
-      border: 1px solid #dbeaf5;
-      border-radius: 16px;
-      padding: 16px;
-      font-size: 14px;
-      line-height: 1.7;
-      background: #fdfefe;
-      color: #2b3a47;
+      border: 1px solid #d7e7f4;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+      background: #fcfeff;
       outline: none;
-      box-shadow: inset 0 2px 8px rgba(140, 180, 210, 0.08);
+      box-shadow: inset 0 2px 8px rgba(126, 170, 206, 0.08);
     }
 
     textarea:focus {
-      border-color: #9fc8ea;
-      box-shadow: 0 0 0 4px rgba(159, 200, 234, 0.18), inset 0 2px 8px rgba(140, 180, 210, 0.08);
+      border-color: #a9d0ee;
+      box-shadow: 0 0 0 4px rgba(150, 205, 241, 0.18), inset 0 2px 8px rgba(126, 170, 206, 0.08);
     }
 
     .button-area {
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
       gap: 18px;
-      align-items: center;
     }
 
     button {
       width: 140px;
-      padding: 14px 16px;
       border: none;
-      border-radius: 16px;
+      border-radius: 18px;
+      padding: 16px 14px;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
-      transition: 0.2s ease;
-      box-shadow: 0 10px 20px rgba(103, 155, 197, 0.16);
+      transition: 0.22s ease;
+      box-shadow: 0 12px 24px rgba(108, 158, 199, 0.18);
+    }
+
+    button:hover {
+      transform: translateY(-2px) scale(1.02);
     }
 
     .show-btn {
-      background: linear-gradient(135deg, #75c5ff, #60d7bc);
-      color: white;
-    }
-
-    .show-btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 14px 26px rgba(86, 191, 181, 0.28);
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue1), var(--blue2));
     }
 
     .clear-btn {
-      background: linear-gradient(135deg, #ffd6de, #ffeabf);
-      color: #8a4a5c;
+      color: #8b5260;
+      background: linear-gradient(135deg, var(--pink1), var(--pink2));
     }
 
-    .clear-btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 14px 26px rgba(227, 171, 171, 0.28);
-    }
-
-    .result-box {
+    .result-wrap {
       flex: 1;
-      border: 1px solid #dbeaf5;
-      border-radius: 16px;
-      padding: 18px;
-      background: #fcffff;
+      min-height: 540px;
+      border: 1px solid #d7e7f4;
+      border-radius: 18px;
+      background: #fcfeff;
+      padding: 16px;
       overflow: auto;
-      white-space: pre-wrap;
-      font-size: 15px;
-      line-height: 1.8;
-      box-shadow: inset 0 2px 8px rgba(140, 180, 210, 0.08);
+      box-shadow: inset 0 2px 8px rgba(126, 170, 206, 0.08);
     }
 
     .placeholder {
-      color: #88a0b4;
+      height: 100%;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #93a8ba;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .result-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .date-range {
+      font-size: 15px;
+      color: #486988;
+      font-weight: 700;
+      background: #eef7ff;
+      border: 1px solid #d8eaf8;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    .summary-badge {
+      font-size: 14px;
+      color: #5d7b97;
+      background: #f5fbff;
+      border: 1px solid #e0eef9;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 420px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    thead th {
+      background: linear-gradient(135deg, #edf7ff, #f3fffb);
+      color: #355b7d;
+      font-size: 15px;
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid #dcecf7;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf3f8;
+      font-size: 15px;
+      color: #314355;
+    }
+
+    tbody tr:hover {
+      background: #f8fcff;
+    }
+
+    .text-right {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .empty-state {
+      padding: 28px 12px;
+      text-align: center;
+      color: #90a5b6;
+      font-size: 15px;
+    }
+
+    .negative {
+      color: #c2556f;
+      font-weight: 700;
+    }
+
+    .positive {
+      color: #2d8a68;
+      font-weight: 700;
     }
 
     @media (max-width: 1100px) {
@@ -185,10 +294,74 @@
       .button-area {
         flex-direction: row;
         justify-content: center;
+        padding: 6px 0 2px;
       }
 
       .panel {
-        min-height: 360px;
+        min-height: auto;
+      }
+
+      textarea {
+        min-height: 300px;
+      }
+
+      .result-wrap {
+        min-height: 320px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 12px;
+      }
+
+      .header-card,
+      .panel {
+        border-radius: 18px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .desc {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .panel h2 {
+        font-size: 18px;
+      }
+
+      button {
+        width: 128px;
+        padding: 14px 12px;
+        font-size: 15px;
+        border-radius: 16px;
+      }
+
+      textarea {
+        font-size: 14px;
+        padding: 14px;
+      }
+
+      .result-wrap {
+        padding: 12px;
+      }
+
+      thead th,
+      tbody td {
+        padding: 12px 12px;
+        font-size: 14px;
+      }
+
+      .date-range,
+      .summary-badge {
+        width: 100%;
+      }
+
+      .result-header {
+        align-items: stretch;
       }
     }
   </style>
@@ -199,15 +372,15 @@
       <a class="home-btn" href="https://0urrigvojb.github.io/bng-tools/" target="_blank">回首页</a>
     </div>
 
-    <div class="title-card">
+    <div class="header-card">
       <h1 class="title">BE(BG)对帐工具</h1>
-      <p class="subtitle">贴上原始资料后，一键整理相同代理帐号的代理损益金额总和</p>
+      <p class="desc">贴上原始资料后，自动抓取「日期 / 代理帐号 / 代理损益金额」，并汇总代理帐号金额</p>
     </div>
 
     <div class="main">
       <div class="panel">
         <h2>原始资料</h2>
-        <textarea id="inputData" placeholder="请把资料贴在这里..."></textarea>
+        <textarea id="inputData" placeholder="请把原始资料贴在这里..."></textarea>
       </div>
 
       <div class="button-area">
@@ -217,7 +390,9 @@
 
       <div class="panel">
         <h2>整理结果</h2>
-        <div id="resultBox" class="result-box placeholder">整理后的内容会显示在这里...</div>
+        <div id="resultBox" class="result-wrap">
+          <div class="placeholder">整理后的表格结果会显示在这里</div>
+        </div>
       </div>
     </div>
   </div>
@@ -225,9 +400,9 @@
   <script>
     function clearAll() {
       document.getElementById("inputData").value = "";
-      const resultBox = document.getElementById("resultBox");
-      resultBox.classList.add("placeholder");
-      resultBox.textContent = "整理后的内容会显示在这里...";
+      document.getElementById("resultBox").innerHTML = `
+        <div class="placeholder">整理后的表格结果会显示在这里</div>
+      `;
     }
 
     function processData() {
@@ -235,72 +410,94 @@
       const resultBox = document.getElementById("resultBox");
 
       if (!input) {
-        resultBox.classList.remove("placeholder");
-        resultBox.textContent = "请输入资料。";
+        resultBox.innerHTML = `<div class="empty-state">请输入资料。</div>`;
         return;
       }
 
-      const lines = input.split(/\r?\n/).map(line => line.trim()).filter(line => line);
+      const tokens = input.split(/\s+/).filter(Boolean);
+
       const dataMap = {};
       const dateSet = new Set();
 
-      for (const line of lines) {
-        if (!/^\d{4}-\d{2}-\d{2}/.test(line)) continue;
+      for (let i = 0; i < tokens.length; i++) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(tokens[i])) {
+          const row = tokens.slice(i, i + 12);
+          if (row.length < 12) continue;
 
-        const parts = line.split(/\s+/);
-        if (parts.length < 9) continue;
+          const date = row[0];
+          const agent = row[1];
+          const profitRaw = row[7]; // 正确栏位：代理损益金额
+          const profit = parseFloat(profitRaw.replace(/,/g, ""));
 
-        const date = parts[0];
-        const agent = parts[1];
-        const profitRaw = parts[8];
+          if (!date || !agent || isNaN(profit)) continue;
 
-        const profit = parseFloat(profitRaw.replace(/,/g, ""));
-        if (isNaN(profit)) continue;
+          dateSet.add(date);
 
-        dateSet.add(date);
-
-        if (!dataMap[agent]) {
-          dataMap[agent] = 0;
+          if (!dataMap[agent]) {
+            dataMap[agent] = 0;
+          }
+          dataMap[agent] += profit;
         }
-        dataMap[agent] += profit;
       }
 
       const dates = Array.from(dateSet).sort();
       const agents = Object.keys(dataMap).sort();
 
       if (dates.length === 0 || agents.length === 0) {
-        resultBox.classList.remove("placeholder");
-        resultBox.textContent = "未抓取到有效资料，请确认贴上的格式是否正确。";
+        resultBox.innerHTML = `<div class="empty-state">未抓取到有效资料，请确认贴上的内容格式是否正确。</div>`;
         return;
       }
 
       const startDate = dates[0];
       const endDate = dates[dates.length - 1];
-      const agentWidth = 20;
 
-      let output = "";
-      output += `日期 ${startDate}~${endDate}\n\n`;
-      output += `${padRight("代理帐号", agentWidth)}代理损益金额\n`;
-      output += `${"-".repeat(agentWidth + 18)}\n`;
+      const rowsHtml = agents.map(agent => {
+        const value = dataMap[agent];
+        const cls = value < 0 ? "negative" : "positive";
+        return `
+          <tr>
+            <td>${escapeHtml(agent)}</td>
+            <td class="text-right ${cls}">${formatNumber(value)}</td>
+          </tr>
+        `;
+      }).join("");
 
-      for (const agent of agents) {
-        output += `${padRight(agent, agentWidth)}${formatNumber(dataMap[agent])}\n`;
-      }
+      resultBox.innerHTML = `
+        <div class="result-header">
+          <div class="date-range">日期 ${startDate} ~ ${endDate}</div>
+          <div class="summary-badge">共 ${agents.length} 个代理帐号</div>
+        </div>
 
-      resultBox.classList.remove("placeholder");
-      resultBox.textContent = output;
-    }
-
-    function padRight(str, length) {
-      const s = String(str);
-      return s + " ".repeat(Math.max(length - s.length, 0));
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>代理帐号</th>
+                <th class="text-right">代理损益金额</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
     function formatNumber(num) {
-      return num.toLocaleString("en-US", {
+      return Number(num).toLocaleString("en-US", {
         minimumFractionDigits: 4,
         maximumFractionDigits: 4
       });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
   </script>
 </body>
