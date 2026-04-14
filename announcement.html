@@ -249,7 +249,7 @@
                     { name: "originalEndTime", label: "原定結束時間", type: "text", required: true },
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true },
                     { name: "newStartTime", label: "更改後開始時間", type: "text", required: true },
-                    { name: "newEndTime", label: "更改後結束時間", type: "datetime-local", required: true }
+                    { name: "newEndTime", label: "更改後結束時間", type: "text", required: true }
                 ],
                 generateContent: (data) => {
                     const originalStartTimeFormatted = data.originalStartTime;
