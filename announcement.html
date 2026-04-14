@@ -236,7 +236,7 @@
                 generateContent: (data) => {
                     const startTimeFormatted = data.startTime;
                     const endTimeFormatted = data.endTime;
-                    return `【${data.platform}-例行維護通知】
+                    return `【${data.platform}例行維護通知】
 維護開始時間：${startTimeFormatted}(${data.timezone})
 維護結束時間：${endTimeFormatted}(${data.timezone})
 若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
@@ -277,7 +277,7 @@
                 generateContent: (data) => {
                     const startTimeFormatted = data.startTime;
                     const endTimeFormatted = data.endTime;
-                    return `【${data.platform}-臨時維護通知】
+                    return `【${data.platform}臨時維護通知】
 維護開始時間：${startTimeFormatted}(${data.timezone})
 維護結束時間：${endTimeFormatted}(${data.timezone})
 若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
@@ -289,7 +289,7 @@
                     { name: "platform", label: "平台", type: "text", required: true }
                 ],
                 generateContent: (data) => {
-                    return `【${data.platform}-維護完成通知】
+                    return `【${data.platform}維護完成通知】
 敬愛的客戶您好，本次維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
@@ -300,7 +300,7 @@
                     { name: "announcementContent", label: "遊戲商公告內容", type: "textarea", required: true }
                 ],
                 generateContent: (data) => {
-                    return `【${data.platform}-例行維護取消通知】
+                    return `【${data.platform}例行維護取消通知】
 ${data.announcementContent}
 若有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
                 }
@@ -312,7 +312,7 @@ ${data.announcementContent}
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
                 ],
                 generateContent: (data) => {
-                    return `【${data.platform}-臨時維護通知】
+                    return `【${data.platform}臨時維護通知】
 維護開始時間：即刻(${data.timezone})
 維護結束時間：待定(${data.timezone})
 若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
@@ -322,6 +322,7 @@ ${data.announcementContent}
                 title: "部分/單一遊戲維護公告模板",
                 fields: [
                     { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "maintenanceType", label: "維護類型", type: "select", options: ["部分", "單一"], required: true },
                     { name: "affectedRange", label: "影響範圍", type: "text", required: true },
                     { name: "startTime", label: "開始時間", type: "text", required: true },
                     { name: "endTime", label: "結束時間", type: "text", required: true },
@@ -330,7 +331,7 @@ ${data.announcementContent}
                 generateContent: (data) => {
                     const startTimeFormatted = data.startTime;
                     const endTimeFormatted = data.endTime;
-                    return `【${data.platform}-部分遊戲維護通知】
+                    return `【${data.platform}${data.maintenanceType}遊戲維護通知】
 影響範圍：${data.affectedRange}
 維護開始時間：${startTimeFormatted}(${data.timezone})
 維護結束時間：${endTimeFormatted}(${data.timezone})
@@ -344,7 +345,7 @@ ${data.announcementContent}
                     { name: "maintenanceGame", label: "維護遊戲", type: "text", required: true }
                 ],
                 generateContent: (data) => {
-                    return `【${data.platform}-${data.maintenanceGame}維護完成通知】
+                    return `【${data.platform}${data.maintenanceGame}維護完成通知】
 敬愛的客戶您好，${data.maintenanceGame}本次維護作業已完成，貴司已可正常開放該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
@@ -356,7 +357,7 @@ ${data.announcementContent}
                     { name: "action", label: "上/下架", type: "select", options: ["上架", "下架"], required: true }
                 ],
                 generateContent: (data) => {
-                    return `【${data.platform}-${data.game}${data.action}通知】
+                    return `【${data.platform}${data.game}${data.action}通知】
 敬愛的客戶您好，${data.game}已完成${data.action}作業，貴司已可${data.action === '上架' ? '開放' : '移除'}該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             }
