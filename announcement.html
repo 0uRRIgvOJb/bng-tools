@@ -173,7 +173,7 @@
                             <i class="fa fa-clock-o mr-2"></i>臨時維護無確定時間公告模板
                         </button>
                         <button id="template7" class="w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom">
-                            <i class="fa fa-gamepad mr-2"></i>部分遊戲維護公告模板
+                            <i class="fa fa-gamepad mr-2"></i>部分/單一遊戲維護公告模板
                         </button>
                         <button id="template8" class="w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom">
                             <i class="fa fa-check-square-o mr-2"></i>單一遊戲-臨時維修完成公告模板
@@ -229,13 +229,13 @@
                 title: "維修公告模板",
                 fields: [
                     { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
-                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "startTime", label: "開始時間", type: "text", required: true },
+                    { name: "endTime", label: "結束時間", type: "text", required: true },
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
                 ],
                 generateContent: (data) => {
-                    const startTimeFormatted = formatDateTime(data.startTime);
-                    const endTimeFormatted = formatDateTime(data.endTime);
+                    const startTimeFormatted = data.startTime;
+                    const endTimeFormatted = data.endTime;
                     return `【${data.platform}-例行維護通知】
 維護開始時間：${startTimeFormatted}(${data.timezone})
 維護結束時間：${endTimeFormatted}(${data.timezone})
@@ -245,17 +245,17 @@
             template2: {
                 title: "維修時間異動公告模板",
                 fields: [
-                    { name: "originalStartTime", label: "原定開始時間", type: "datetime-local", required: true },
-                    { name: "originalEndTime", label: "原定結束時間", type: "datetime-local", required: true },
+                    { name: "originalStartTime", label: "原定開始時間", type: "text", required: true },
+                    { name: "originalEndTime", label: "原定結束時間", type: "text", required: true },
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true },
-                    { name: "newStartTime", label: "更改後開始時間", type: "datetime-local", required: true },
+                    { name: "newStartTime", label: "更改後開始時間", type: "text", required: true },
                     { name: "newEndTime", label: "更改後結束時間", type: "datetime-local", required: true }
                 ],
                 generateContent: (data) => {
-                    const originalStartTimeFormatted = formatDateTime(data.originalStartTime);
-                    const originalEndTimeFormatted = formatDateTime(data.originalEndTime);
-                    const newStartTimeFormatted = formatDateTime(data.newStartTime);
-                    const newEndTimeFormatted = formatDateTime(data.newEndTime);
+                    const originalStartTimeFormatted = data.originalStartTime;
+                    const originalEndTimeFormatted = data.originalEndTime;
+                    const newStartTimeFormatted = data.newStartTime;
+                    const newEndTimeFormatted = data.newEndTime;
                     return `【維修時間異動通知】
 原定維護時間：
 維護開始時間：${originalStartTimeFormatted}(${data.timezone})
@@ -270,13 +270,13 @@
                 title: "臨時維修公告模板",
                 fields: [
                     { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
-                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "startTime", label: "開始時間", type: "text", required: true },
+                    { name: "endTime", label: "結束時間", type: "text", required: true },
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
                 ],
                 generateContent: (data) => {
-                    const startTimeFormatted = formatDateTime(data.startTime);
-                    const endTimeFormatted = formatDateTime(data.endTime);
+                    const startTimeFormatted = data.startTime;
+                    const endTimeFormatted = data.endTime;
                     return `【${data.platform}-臨時維護通知】
 維護開始時間：${startTimeFormatted}(${data.timezone})
 維護結束時間：${endTimeFormatted}(${data.timezone})
@@ -319,17 +319,17 @@ ${data.announcementContent}
                 }
             },
             template7: {
-                title: "部分遊戲維護公告模板",
+                title: "部分/單一遊戲維護公告模板",
                 fields: [
                     { name: "platform", label: "平台", type: "text", required: true },
                     { name: "affectedRange", label: "影響範圍", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
-                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "startTime", label: "開始時間", type: "text", required: true },
+                    { name: "endTime", label: "結束時間", type: "text", required: true },
                     { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
                 ],
                 generateContent: (data) => {
-                    const startTimeFormatted = formatDateTime(data.startTime);
-                    const endTimeFormatted = formatDateTime(data.endTime);
+                    const startTimeFormatted = data.startTime;
+                    const endTimeFormatted = data.endTime;
                     return `【${data.platform}-部分遊戲維護通知】
 影響範圍：${data.affectedRange}
 維護開始時間：${startTimeFormatted}(${data.timezone})
@@ -499,22 +499,7 @@ ${data.announcementContent}
                 });
         }
 
-        // 格式化日期时间
-        function formatDateTime(dateTimeString) {
-            const date = new Date(dateTimeString);
-            
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            
-            // 获取星期几（中文）
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            const weekday = weekdays[date.getDay()];
-            
-            return `${year}年${month}月${day}日(週${weekday}) ${hours}:${minutes}`;
-        }
+        
     </script>
 </body>
 </html>
