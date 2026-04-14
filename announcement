@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告模板生成器</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#64748b',
+                        success: '#22c55e',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#0ea5e9',
+                        light: '#f8fafc',
+                        dark: '#1e293b',
+                        'dark-blue': '#1e40af',
+                        'light-blue': '#93c5fd',
+                        'dark-green': '#15803d',
+                        'light-green': '#86efac',
+                        'dark-red': '#b91c1c',
+                        'light-red': '#fca5a5',
+                        'dark-yellow': '#b45309',
+                        'light-yellow': '#fde68a',
+                        'dark-purple': '#7e22ce',
+                        'light-purple': '#d8b4fe',
+                        'dark-pink': '#be185d',
+                        'light-pink': '#f9a8d4',
+                        'dark-orange': '#c2410c',
+                        'light-orange': '#fdba74',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'custom': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'custom-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .transition-custom {
+                transition: all 0.3s ease;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            }
+            .bg-gradient-green {
+                background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+            }
+            .bg-gradient-red {
+                background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%);
+            }
+            .bg-gradient-yellow {
+                background: linear-gradient(135deg, #92400e 0%, #f59e0b 100%);
+            }
+            .bg-gradient-purple {
+                background: linear-gradient(135deg, #581c87 0%, #8b5cf6 100%);
+            }
+            .bg-gradient-pink {
+                background: linear-gradient(135deg, #831843 0%, #ec4899 100%);
+            }
+            .bg-gradient-orange {
+                background: linear-gradient(135deg, #9a3412 0%, #f97316 100%);
+            }
+            .bg-gradient-indigo {
+                background: linear-gradient(135deg, #3730a3 0%, #6366f1 100%);
+            }
+            .bg-gradient-teal {
+                background: linear-gradient(135deg, #0f5132 0%, #14b8a6 100%);
+            }
+            .template-card {
+                @apply relative overflow-hidden rounded-lg shadow-custom transition-custom hover:shadow-custom-hover;
+            }
+            .template-card:hover .template-overlay {
+                opacity: 1;
+            }
+            .template-overlay {
+                @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-custom;
+            }
+            .form-input {
+                @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom;
+            }
+            .form-label {
+                @apply block text-sm font-medium text-gray-700 mb-1;
+            }
+            .btn {
+                @apply px-4 py-2 rounded-md font-medium transition-custom focus:outline-none focus:ring-2 focus:ring-offset-2;
+            }
+            .btn-primary {
+                @apply bg-primary text-white hover:bg-blue-700 focus:ring-blue-500;
+            }
+            .btn-success {
+                @apply bg-success text-white hover:bg-green-700 focus:ring-green-500;
+            }
+            .btn-danger {
+                @apply bg-danger text-white hover:bg-red-700 focus:ring-red-500;
+            }
+            .btn-warning {
+                @apply bg-warning text-white hover:bg-yellow-700 focus:ring-yellow-500;
+            }
+            .btn-info {
+                @apply bg-info text-white hover:bg-blue-600 focus:ring-blue-500;
+            }
+            .btn-outline {
+                @apply border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500;
+            }
+            .btn-icon {
+                @apply inline-flex items-center justify-center;
+            }
+            .btn-icon svg {
+                @apply mr-2 h-5 w-5;
+            }
+            .tab {
+                @apply px-4 py-2 font-medium border-b-2 border-transparent cursor-pointer transition-custom;
+            }
+            .tab-active {
+                @apply border-primary text-primary;
+            }
+            .tab-inactive {
+                @apply text-gray-500 hover:text-gray-700 hover:border-gray-300;
+            }
+            .copy-success {
+                @apply bg-success text-white;
+            }
+            .copy-error {
+                @apply bg-danger text-white;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 标题区域 -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">公告模板生成器</h1>
+            <p class="text-gray-600">選擇模板類型，填寫相關資訊，一鍵生成公告內容</p>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- 左侧模板选择区域 -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">選擇模板類型</h2>
+                    <div class="space-y-3">
+                        <button id="template1" class="w-full text-left p-3 rounded-md bg-gradient-blue text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-wrench mr-2"></i>維修公告模板
+                        </button>
+                        <button id="template2" class="w-full text-left p-3 rounded-md bg-gradient-purple text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-calendar-times-o mr-2"></i>維修時間異動公告模板
+                        </button>
+                        <button id="template3" class="w-full text-left p-3 rounded-md bg-gradient-red text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-exclamation-triangle mr-2"></i>臨時維修公告模板
+                        </button>
+                        <button id="template4" class="w-full text-left p-3 rounded-md bg-gradient-green text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-check-circle mr-2"></i>維修完成公告模板
+                        </button>
+                        <button id="template5" class="w-full text-left p-3 rounded-md bg-gradient-yellow text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-ban mr-2"></i>例行維護取消公告模板
+                        </button>
+                        <button id="template6" class="w-full text-left p-3 rounded-md bg-gradient-orange text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-clock-o mr-2"></i>臨時維護無確定時間公告模板
+                        </button>
+                        <button id="template7" class="w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-gamepad mr-2"></i>部分遊戲維護公告模板
+                        </button>
+                        <button id="template8" class="w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-check-square-o mr-2"></i>單一遊戲-臨時維修完成公告模板
+                        </button>
+                        <button id="template9" class="w-full text-left p-3 rounded-md bg-gradient-pink text-white shadow-sm hover:shadow-md transition-custom">
+                            <i class="fa fa-arrow-up mr-2"></i>遊戲下架公告-臨時維修完成公告模板
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧表单和结果区域 -->
+            <div class="lg:w-2/3">
+                <!-- 表单区域 -->
+                <div id="formContainer" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 id="formTitle" class="text-xl font-semibold text-gray-800 mb-4">請填寫公告資訊</h2>
+                    <form id="announcementForm" class="space-y-4">
+                        <!-- 表单内容将根据选择的模板动态生成 -->
+                        <div class="text-center text-gray-500 py-8">
+                            <i class="fa fa-arrow-left text-4xl mb-3"></i>
+                            <p>請從左側選擇一個公告模板</p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 结果预览区域 -->
+                <div id="resultContainer" class="bg-white rounded-lg shadow-md p-6 hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">公告預覽</h2>
+                        <button id="copyButton" class="btn btn-primary btn-icon">
+                            <i class="fa fa-copy"></i>
+                            複製公告
+                        </button>
+                    </div>
+                    <div id="resultContent" class="border border-gray-200 rounded-md p-4 min-h-[200px] bg-gray-50 font-sans text-gray-800 whitespace-pre-wrap">
+                        <!-- 生成的公告内容将显示在这里 -->
+                    </div>
+                    <div id="copyStatus" class="mt-3 text-center py-2 rounded-md hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>公告模板生成器 © 2026 | 支援繁體中文顯示</p>
+        </footer>
+    </div>
+
+    <script>
+        // 模板配置
+        const templates = {
+            template1: {
+                title: "維修公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
+                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                ],
+                generateContent: (data) => {
+                    const startTimeFormatted = formatDateTime(data.startTime);
+                    const endTimeFormatted = formatDateTime(data.endTime);
+                    return `【${data.platform}-例行維護通知】
+維護開始時間：${startTimeFormatted}(${data.timezone})
+維護結束時間：${endTimeFormatted}(${data.timezone})
+若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template2: {
+                title: "維修時間異動公告模板",
+                fields: [
+                    { name: "originalStartTime", label: "原定開始時間", type: "datetime-local", required: true },
+                    { name: "originalEndTime", label: "原定結束時間", type: "datetime-local", required: true },
+                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true },
+                    { name: "newStartTime", label: "更改後開始時間", type: "datetime-local", required: true },
+                    { name: "newEndTime", label: "更改後結束時間", type: "datetime-local", required: true }
+                ],
+                generateContent: (data) => {
+                    const originalStartTimeFormatted = formatDateTime(data.originalStartTime);
+                    const originalEndTimeFormatted = formatDateTime(data.originalEndTime);
+                    const newStartTimeFormatted = formatDateTime(data.newStartTime);
+                    const newEndTimeFormatted = formatDateTime(data.newEndTime);
+                    return `【維修時間異動通知】
+原定維護時間：
+維護開始時間：${originalStartTimeFormatted}(${data.timezone})
+維護結束時間：${originalEndTimeFormatted}(${data.timezone})
+更改為：
+維護開始時間：${newStartTimeFormatted}(${data.timezone})
+維護結束時間：${newEndTimeFormatted}(${data.timezone})
+若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template3: {
+                title: "臨時維修公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
+                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                ],
+                generateContent: (data) => {
+                    const startTimeFormatted = formatDateTime(data.startTime);
+                    const endTimeFormatted = formatDateTime(data.endTime);
+                    return `【${data.platform}-臨時維護通知】
+維護開始時間：${startTimeFormatted}(${data.timezone})
+維護結束時間：${endTimeFormatted}(${data.timezone})
+若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template4: {
+                title: "維修完成公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}-維護完成通知】
+敬愛的客戶您好，本次維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
+                }
+            },
+            template5: {
+                title: "例行維護取消公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "announcementContent", label: "遊戲商公告內容", type: "textarea", required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}-例行維護取消通知】
+${data.announcementContent}
+若有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template6: {
+                title: "臨時維護無確定時間公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}-臨時維護通知】
+維護開始時間：即刻(${data.timezone})
+維護結束時間：待定(${data.timezone})
+若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template7: {
+                title: "部分遊戲維護公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "affectedRange", label: "影響範圍", type: "text", required: true },
+                    { name: "startTime", label: "開始時間", type: "datetime-local", required: true },
+                    { name: "endTime", label: "結束時間", type: "datetime-local", required: true },
+                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                ],
+                generateContent: (data) => {
+                    const startTimeFormatted = formatDateTime(data.startTime);
+                    const endTimeFormatted = formatDateTime(data.endTime);
+                    return `【${data.platform}-部分遊戲維護通知】
+影響範圍：${data.affectedRange}
+維護開始時間：${startTimeFormatted}(${data.timezone})
+維護結束時間：${endTimeFormatted}(${data.timezone})
+若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                }
+            },
+            template8: {
+                title: "單一遊戲-臨時維修完成公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "maintenanceGame", label: "維護遊戲", type: "text", required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}-${data.maintenanceGame}維護完成通知】
+敬愛的客戶您好，${data.maintenanceGame}本次維護作業已完成，貴司已可正常開放該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
+                }
+            },
+            template9: {
+                title: "遊戲下架公告-臨時維修完成公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true },
+                    { name: "game", label: "上/下架遊戲", type: "text", required: true },
+                    { name: "action", label: "上/下架", type: "select", options: ["上架", "下架"], required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}-${data.game}${data.action}通知】
+敬愛的客戶您好，${data.game}已完成${data.action}作業，貴司已可${data.action === '上架' ? '開放' : '移除'}該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
+                }
+            }
+        };
+
+        // 当前选择的模板
+        let currentTemplate = null;
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            // 绑定模板选择按钮事件
+            Object.keys(templates).forEach(templateId => {
+                document.getElementById(templateId).addEventListener('click', () => {
+                    selectTemplate(templateId);
+                });
+            });
+
+            // 绑定表单提交事件
+            document.getElementById('announcementForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                generateAnnouncement();
+            });
+
+            // 绑定复制按钮事件
+            document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+        });
+
+        // 选择模板
+        function selectTemplate(templateId) {
+            currentTemplate = templateId;
+            
+            // 更新表单标题
+            document.getElementById('formTitle').textContent = templates[templateId].title;
+            
+            // 生成表单字段
+            const form = document.getElementById('announcementForm');
+            form.innerHTML = '';
+            
+            templates[templateId].fields.forEach(field => {
+                const fieldContainer = document.createElement('div');
+                
+                const label = document.createElement('label');
+                label.setAttribute('for', field.name);
+                label.className = 'form-label';
+                label.textContent = field.label + (field.required ? ' *' : '');
+                fieldContainer.appendChild(label);
+                
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.rows = 4;
+                } else if (field.type === 'select') {
+                    input = document.createElement('select');
+                    field.options.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        input.appendChild(optionElement);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                }
+                
+                input.id = field.name;
+                input.name = field.name;
+                input.className = 'form-input';
+                input.required = field.required;
+                
+                if (field.value) {
+                    input.value = field.value;
+                }
+                
+                fieldContainer.appendChild(input);
+                form.appendChild(fieldContainer);
+            });
+            
+            // 添加提交按钮
+            const submitButtonContainer = document.createElement('div');
+            submitButtonContainer.className = 'pt-4';
+            
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.className = 'btn btn-primary w-full';
+            submitButton.textContent = '生成公告';
+            
+            submitButtonContainer.appendChild(submitButton);
+            form.appendChild(submitButtonContainer);
+            
+            // 隐藏结果区域
+            document.getElementById('resultContainer').classList.add('hidden');
+        }
+
+        // 生成公告
+        function generateAnnouncement() {
+            if (!currentTemplate) return;
+            
+            // 收集表单数据
+            const formData = new FormData(document.getElementById('announcementForm'));
+            const data = {};
+            
+            templates[currentTemplate].fields.forEach(field => {
+                data[field.name] = formData.get(field.name);
+            });
+            
+            // 生成公告内容
+            const content = templates[currentTemplate].generateContent(data);
+            
+            // 显示结果
+            document.getElementById('resultContent').textContent = content;
+            document.getElementById('resultContainer').classList.remove('hidden');
+            
+            // 滚动到结果区域
+            document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 复制到剪贴板
+        function copyToClipboard() {
+            const content = document.getElementById('resultContent').textContent;
+            const copyStatus = document.getElementById('copyStatus');
+            
+            navigator.clipboard.writeText(content)
+                .then(() => {
+                    copyStatus.textContent = '公告內容已複製到剪貼簿！';
+                    copyStatus.className = 'mt-3 text-center py-2 rounded-md copy-success';
+                    copyStatus.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        copyStatus.classList.add('hidden');
+                    }, 3000);
+                })
+                .catch(err => {
+                    copyStatus.textContent = '複製失敗，請手動複製。';
+                    copyStatus.className = 'mt-3 text-center py-2 rounded-md copy-error';
+                    copyStatus.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        copyStatus.classList.add('hidden');
+                    }, 3000);
+                });
+        }
+
+        // 格式化日期时间
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            // 获取星期几（中文）
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const weekday = weekdays[date.getDay()];
+            
+            return `${year}年${month}月${day}日(週${weekday}) ${hours}:${minutes}`;
+        }
+    </script>
+</body>
+</html>
