@@ -120,34 +120,6 @@
                     <i class="fa fa-moon-o dark:hidden text-xl"></i>
                     <i class="fa fa-sun-o hidden dark:block text-yellow-300 text-xl"></i>
                 </button>
-                
-                <!-- 用户菜单 -->
-                <div class="relative group">
-                    <button class="flex items-center space-x-1 p-2 rounded-full hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors">
-                        <i class="fa fa-user-circle-o text-xl"></i>
-                        <span class="hidden md:inline">用户</span>
-                        <i class="fa fa-angle-down text-xs"></i>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-48 bg-dark-200 dark:bg-dark-300 rounded-lg shadow-lg border border-dark-100 dark:border-dark-400 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100">
-                        <ul class="py-2">
-                            <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors">
-                                    <i class="fa fa-user-o mr-2"></i>个人中心
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors">
-                                    <i class="fa fa-cog mr-2"></i>设置
-                                </a>
-                            </li>
-                            <li class="border-t border-dark-100 dark:border-dark-400 mt-1 pt-1">
-                                <a href="#" class="block px-4 py-2 hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors">
-                                    <i class="fa fa-sign-out mr-2"></i>退出
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -157,9 +129,7 @@
         <!-- 欢迎区域 -->
         <section class="text-center mb-12 animate-fade-in">
             <h2 class="text-4xl md:text-5xl font-bold mb-4 text-shadow">欢迎使用工具中心</h2>
-            <p class="text-xl text-light-300 max-w-3xl mx-auto">
-                提供多种实用工具，满足您的日常需求
-            </p>
+            <!-- 描述文本已移除 -->
             
             <!-- 时间显示 -->
             <div id="time" class="mt-6 text-lg text-light-300 font-mono"></div>
@@ -235,53 +205,16 @@
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-dark-200 dark:bg-dark-300 border-t border-dark-100 dark:border-dark-400 py-8 mt-16">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-r from-primary to-blue-400 flex items-center justify-center">
-                            <i class="fa fa-wrench text-white text-sm"></i>
-                        </div>
-                        <span class="text-lg font-bold text-white">工具中心</span>
-                    </div>
-                    <p class="text-light-300 mt-2">提供多种实用工具，满足您的日常需求</p>
-                </div>
-                
-                <div class="flex space-x-8">
-                    <div>
-                        <h4 class="text-white font-medium mb-3">工具</h4>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">计算器</a></li>
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">单位转换</a></li>
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">密码生成</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h4 class="text-white font-medium mb-3">关于</h4>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">关于我们</a></li>
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">使用指南</a></li>
-                            <li><a href="#" class="text-light-300 hover:text-primary transition-colors">联系我们</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="border-t border-dark-100 dark:border-dark-400 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-light-300 text-sm">© 2026 工具中心. 保留所有权利.</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <a href="#" class="text-light-300 hover:text-primary transition-colors">
-                        <i class="fa fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-light-300 hover:text-primary transition-colors">
-                        <i class="fa fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-light-300 hover:text-primary transition-colors">
-                        <i class="fa fa-envelope text-xl"></i>
-                    </a>
-                </div>
+    <footer class="bg-dark-200 dark:bg-dark-300 border-t border-dark-100 dark:border-dark-400 py-4 mt-16">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-light-300 text-sm">© 2026 工具中心. 保留所有权利.</p>
+            <div class="flex items-center space-x-4 mt-2 md:mt-0">
+                <a href="#" class="text-light-300 hover:text-primary transition-colors">
+                    <i class="fa fa-github text-xl"></i>
+                </a>
+                <a href="#" class="text-light-300 hover:text-primary transition-colors">
+                    <i class="fa fa-envelope text-xl"></i>
+                </a>
             </div>
         </div>
     </footer>
