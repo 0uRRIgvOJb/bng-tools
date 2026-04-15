@@ -143,8 +143,12 @@
                 </button>
                 <h2 id="tool-title" class="text-3xl font-bold"></h2>
             </div>
-            <div id="tool-iframe-container" class="bg-dark-200 dark:bg-dark-300 rounded-xl shadow-lg border border-dark-100 dark:border-dark-400 overflow-hidden">
-                <iframe id="tool-iframe" class="w-full h-[500px]" frameborder="0"></iframe>
+            <div id="tool-message" class="bg-dark-200 dark:bg-dark-300 rounded-xl shadow-lg border border-dark-100 dark:border-dark-400 p-8 text-center">
+                <div class="text-5xl mb-4">
+                    <i class="fa fa-cogs text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">工具开发中</h3>
+                <p class="text-light-300">该工具正在开发中，敬请期待！</p>
             </div>
         </section>
 
@@ -455,9 +459,6 @@
             
             // 设置工具标题
             document.getElementById('tool-title').textContent = name;
-            
-            // 设置iframe源
-            document.getElementById('tool-iframe').src = file;
             
             // 更新页面标题
             document.title = `${name} - 工具中心`;
