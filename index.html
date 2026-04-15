@@ -127,33 +127,16 @@
     <!-- 主要内容区 -->
     <main class="container mx-auto px-4 py-8">
         <!-- 欢迎区域 -->
-        <section id="welcome-section" class="text-center mb-12 animate-fade-in">
+        <section class="text-center mb-12 animate-fade-in">
             <h2 class="text-4xl md:text-5xl font-bold mb-4 text-shadow">欢迎使用工具中心</h2>
             <!-- 描述文本已移除 -->
             
             <!-- 时间显示 -->
             <div id="time" class="mt-6 text-lg text-light-300 font-mono"></div>
         </section>
-        
-        <!-- 工具内容区域 -->
-        <section id="tool-content" class="hidden">
-            <div class="flex items-center space-x-3 mb-6">
-                <button id="back-to-home" class="text-light-300 hover:text-primary transition-colors p-1">
-                    <i class="fa fa-arrow-left"></i>
-                </button>
-                <h2 id="tool-title" class="text-3xl font-bold"></h2>
-            </div>
-            <div id="tool-message" class="bg-dark-200 dark:bg-dark-300 rounded-xl shadow-lg border border-dark-100 dark:border-dark-400 p-8 text-center">
-                <div class="text-5xl mb-4">
-                    <i class="fa fa-cogs text-primary"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-3">工具开发中</h3>
-                <p class="text-light-300">该工具正在开发中，敬请期待！</p>
-            </div>
-        </section>
 
         <!-- 搜索区域 -->
-        <section id="search-section" class="max-w-2xl mx-auto mb-12 animate-slide-up">
+        <section class="max-w-2xl mx-auto mb-12 animate-slide-up">
             <div class="relative">
                 <input 
                     type="text" 
@@ -171,7 +154,7 @@
         </section>
 
         <!-- 分类筛选 -->
-        <section id="category-section" class="mb-10 overflow-x-auto animate-slide-up" style="animation-delay: 0.1s;">
+        <section class="mb-10 overflow-x-auto animate-slide-up" style="animation-delay: 0.1s;">
             <div class="flex space-x-3 pb-2">
                 <button class="category-btn active whitespace-nowrap px-5 py-2 rounded-full bg-primary text-white font-medium hover:bg-blue-600 transition-colors" data-category="all">
                     全部
@@ -364,7 +347,7 @@
                 ).join('') : '';
                 
                 card.innerHTML = `
-                    <div class="tool-card block p-6 h-full flex flex-col cursor-pointer" data-file="${item.file}" data-name="${item.name}">
+                    <a href="./${item.file}" class="block p-6 h-full flex flex-col">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">${item.name}</h3>
                             <span class="text-xs px-3 py-1 rounded-full ${item.type === '工具' ? 'bg-blue-500 bg-opacity-20 text-blue-300' : 'bg-purple-500 bg-opacity-20 text-purple-300'}">${item.type}</span>
@@ -380,7 +363,7 @@
                                 <i class="fa fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 `;
                 
                 cardsContainer.appendChild(card);
@@ -445,46 +428,6 @@
             }
         }
         
-        // 显示工具内容
-        function showToolContent(file, name) {
-            // 隐藏欢迎区域和工具卡片区域
-            document.getElementById('welcome-section').classList.add('hidden');
-            document.getElementById('tools-section').classList.add('hidden');
-            document.getElementById('search-section').classList.add('hidden');
-            document.getElementById('category-section').classList.add('hidden');
-            
-            // 显示工具内容区域
-            const toolContentSection = document.getElementById('tool-content');
-            toolContentSection.classList.remove('hidden');
-            
-            // 设置工具标题
-            document.getElementById('tool-title').textContent = name;
-            
-            // 更新页面标题
-            document.title = `${name} - 工具中心`;
-            
-            // 滚动到顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // 返回首页
-        function backToHome() {
-            // 显示欢迎区域和工具卡片区域
-            document.getElementById('welcome-section').classList.remove('hidden');
-            document.getElementById('tools-section').classList.remove('hidden');
-            document.getElementById('search-section').classList.remove('hidden');
-            document.getElementById('category-section').classList.remove('hidden');
-            
-            // 隐藏工具内容区域
-            document.getElementById('tool-content').classList.add('hidden');
-            
-            // 恢复页面标题
-            document.title = '工具中心 - 首页';
-            
-            // 滚动到顶部
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
         // 初始化
         function init() {
             // 设置主题
@@ -502,7 +445,6 @@
             searchInput.addEventListener('keypress', handleKeyPress);
             retryButton.addEventListener('click', loadPages);
             themeToggle.addEventListener('click', toggleTheme);
-            document.getElementById('back-to-home').addEventListener('click', backToHome);
             
             // 分类按钮事件
             categoryButtons.forEach(btn => {
@@ -519,16 +461,6 @@
                     document.body.classList.remove('search-active');
                 });
             }
-            
-            // 监听工具卡片点击事件（使用事件委托）
-            document.getElementById('cards-container').addEventListener('click', function(event) {
-                const toolCard = event.target.closest('.tool-card');
-                if (toolCard) {
-                    const file = toolCard.dataset.file;
-                    const name = toolCard.dataset.name;
-                    showToolContent(file, name);
-                }
-            });
         }
         
         // 页面加载完成后初始化
