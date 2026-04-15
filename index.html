@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在线计算器 - 工具中心</title>
+    <title>工具中心 - 首页</title>
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
     <script>
         tailwind.config = {
             theme: {
@@ -27,6 +28,28 @@
                             300: '#94a3b8',
                             400: '#64748b'
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             },
@@ -35,6 +58,15 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-transition {
+                transition: all 0.3s ease;
+            }
+            .search-focus {
+                @apply focus:ring-2 focus:ring-primary focus:border-transparent;
+            }
             .glass-effect {
                 @apply bg-opacity-70 backdrop-blur-md;
             }
@@ -63,13 +95,9 @@
             scroll-behavior: smooth;
         }
         
-        /* 计算器按钮动画 */
-        .calc-btn {
-            transition: all 0.2s ease;
-        }
-        
-        .calc-btn:active {
-            transform: scale(0.95);
+        /* 加载动画 */
+        .skeleton {
+            @apply animate-pulse bg-dark-100 dark:bg-dark-400 rounded;
         }
     </style>
 </head>
@@ -77,14 +105,12 @@
     <!-- 顶部导航栏 -->
     <header class="sticky top-0 z-50 bg-dark-200 dark:bg-dark-300 glass-effect border-b border-dark-100 dark:border-dark-400 shadow-md">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo 和返回链接 -->
+            <!-- Logo -->
             <div class="flex items-center space-x-2">
-                <a href="index.html" class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-blue-400 flex items-center justify-center shadow-lg">
-                        <i class="fa fa-wrench text-white text-xl"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold text-white">工具中心</h1>
-                </a>
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-blue-400 flex items-center justify-center shadow-lg">
+                    <i class="fa fa-wrench text-white text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white">工具中心</h1>
             </div>
             
             <!-- 右侧操作区 -->
@@ -100,122 +126,154 @@
 
     <!-- 主要内容区 -->
     <main class="container mx-auto px-4 py-8">
-        <!-- 页面标题 -->
-        <section class="mb-8">
-            <div class="flex items-center space-x-3">
-                <a href="index.html" class="text-light-300 hover:text-primary transition-colors">
+        <!-- 欢迎区域 -->
+        <section id="welcome-section" class="text-center mb-12 animate-fade-in">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-shadow">欢迎使用工具中心</h2>
+            <!-- 描述文本已移除 -->
+            
+            <!-- 时间显示 -->
+            <div id="time" class="mt-6 text-lg text-light-300 font-mono"></div>
+        </section>
+        
+        <!-- 工具内容区域 -->
+        <section id="tool-content" class="hidden">
+            <div class="flex items-center space-x-3 mb-6">
+                <button id="back-to-home" class="text-light-300 hover:text-primary transition-colors">
                     <i class="fa fa-arrow-left text-xl"></i>
-                </a>
-                <h2 class="text-3xl font-bold">在线计算器</h2>
+                </button>
+                <h2 id="tool-title" class="text-3xl font-bold"></h2>
             </div>
-            <p class="text-light-300 mt-2">一个简单易用的在线计算器</p>
+            <div id="tool-iframe-container" class="bg-dark-200 dark:bg-dark-300 rounded-xl shadow-lg border border-dark-100 dark:border-dark-400 overflow-hidden">
+                <iframe id="tool-iframe" class="w-full h-[600px]" frameborder="0"></iframe>
+            </div>
         </section>
 
-        <!-- 计算器主体 -->
-        <section class="max-w-md mx-auto bg-dark-200 dark:bg-dark-300 rounded-xl shadow-lg border border-dark-100 dark:border-dark-400 overflow-hidden">
-            <!-- 显示屏 -->
-            <div class="p-6 bg-dark-100 dark:bg-dark-400">
-                <div class="text-right">
-                    <div id="calc-history" class="text-light-300 text-sm mb-1 min-h-[20px]"></div>
-                    <div id="calc-display" class="text-4xl font-mono font-bold text-white overflow-x-auto whitespace-nowrap"></div>
-                </div>
+        <!-- 搜索区域 -->
+        <section id="search-section" class="max-w-2xl mx-auto mb-12 animate-slide-up">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="搜索工具或功能..." 
+                    class="w-full py-4 px-5 pr-12 rounded-xl bg-dark-200 dark:bg-dark-300 border border-dark-100 dark:border-dark-400 focus:outline-none search-focus text-lg transition-all"
+                >
+                <button id="search-button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-light-300 hover:text-primary transition-colors">
+                    <i class="fa fa-search text-xl"></i>
+                </button>
             </div>
             
-            <!-- 按钮区 -->
-            <div class="p-4 grid grid-cols-4 gap-3">
-                <!-- 第一行 -->
-                <button class="calc-btn bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg font-medium" data-action="clear">
-                    C
+            <!-- 搜索结果提示 -->
+            <div id="search-results-info" class="mt-3 text-center text-light-300 hidden"></div>
+        </section>
+
+        <!-- 分类筛选 -->
+        <section id="category-section" class="mb-10 overflow-x-auto animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="flex space-x-3 pb-2">
+                <button class="category-btn active whitespace-nowrap px-5 py-2 rounded-full bg-primary text-white font-medium hover:bg-blue-600 transition-colors" data-category="all">
+                    全部
                 </button>
-                <button class="calc-btn bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg font-medium" data-action="clear-entry">
-                    CE
+                <button class="category-btn whitespace-nowrap px-5 py-2 rounded-full bg-dark-200 dark:bg-dark-300 text-light-300 font-medium hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors" data-category="工具">
+                    工具
                 </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-action="backspace">
-                    <i class="fa fa-backspace"></i>
+                <button class="category-btn whitespace-nowrap px-5 py-2 rounded-full bg-dark-200 dark:bg-dark-300 text-light-300 font-medium hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors" data-category="其他">
+                    其他
                 </button>
-                <button class="calc-btn bg-primary hover:bg-blue-600 text-white py-4 rounded-lg font-medium" data-value="/">
-                    ÷
+            </div>
+        </section>
+
+        <!-- 工具卡片区域 -->
+        <section id="tools-section" class="animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="cards-container">
+                <!-- 卡片将通过 JavaScript 动态生成 -->
+            </div>
+            
+            <!-- 加载状态 -->
+            <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 骨架屏 -->
+                <div class="skeleton h-32 rounded-xl"></div>
+                <div class="skeleton h-32 rounded-xl"></div>
+                <div class="skeleton h-32 rounded-xl"></div>
+                <div class="skeleton h-32 rounded-xl"></div>
+                <div class="skeleton h-32 rounded-xl"></div>
+                <div class="skeleton h-32 rounded-xl"></div>
+            </div>
+            
+            <!-- 错误状态 -->
+            <div id="error-state" class="text-center py-12 hidden">
+                <div class="text-6xl mb-4"><i class="fa fa-exclamation-triangle text-yellow-500"></i></div>
+                <h3 class="text-2xl font-bold mb-2">加载失败</h3>
+                <p class="text-light-300 mb-6">无法加载工具列表，请稍后再试</p>
+                <button id="retry-button" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    重试
                 </button>
-                
-                <!-- 第二行 -->
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="7">
-                    7
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="8">
-                    8
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="9">
-                    9
-                </button>
-                <button class="calc-btn bg-primary hover:bg-blue-600 text-white py-4 rounded-lg font-medium" data-value="*">
-                    ×
-                </button>
-                
-                <!-- 第三行 -->
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="4">
-                    4
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="5">
-                    5
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="6">
-                    6
-                </button>
-                <button class="calc-btn bg-primary hover:bg-blue-600 text-white py-4 rounded-lg font-medium" data-value="-">
-                    −
-                </button>
-                
-                <!-- 第四行 -->
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="1">
-                    1
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="2">
-                    2
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value="3">
-                    3
-                </button>
-                <button class="calc-btn bg-primary hover:bg-blue-600 text-white py-4 rounded-lg font-medium" data-value="+">
-                    +
-                </button>
-                
-                <!-- 第五行 -->
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium col-span-2" data-value="0">
-                    0
-                </button>
-                <button class="calc-btn bg-dark-100 dark:bg-dark-400 hover:bg-secondary py-4 rounded-lg font-medium" data-value=".">
-                    .
-                </button>
-                <button class="calc-btn bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium" data-action="calculate">
-                    =
-                </button>
+            </div>
+            
+            <!-- 空结果状态 -->
+            <div id="empty-state" class="text-center py-12 hidden">
+                <div class="text-6xl mb-4"><i class="fa fa-search text-light-300"></i></div>
+                <h3 class="text-2xl font-bold mb-2">未找到结果</h3>
+                <p class="text-light-300">没有找到与您搜索的内容匹配的工具</p>
             </div>
         </section>
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-dark-200 dark:bg-dark-300 border-t border-dark-100 dark:border-dark-400 py-6 mt-16">
-        <div class="container mx-auto px-4 text-center">
+    <footer class="bg-dark-200 dark:bg-dark-300 border-t border-dark-100 dark:border-dark-400 py-4 mt-16">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <p class="text-light-300 text-sm">© 2026 工具中心. 保留所有权利.</p>
+            <div class="flex items-center space-x-4 mt-2 md:mt-0">
+                <a href="#" class="text-light-300 hover:text-primary transition-colors">
+                    <i class="fa fa-github text-xl"></i>
+                </a>
+                <a href="#" class="text-light-300 hover:text-primary transition-colors">
+                    <i class="fa fa-envelope text-xl"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
     <!-- JavaScript -->
     <script>
         // DOM 元素
-        const display = document.getElementById('calc-display');
-        const history = document.getElementById('calc-history');
+        const timeElement = document.getElementById('time');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchResultsInfo = document.getElementById('search-results-info');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const cardsContainer = document.getElementById('cards-container');
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const emptyState = document.getElementById('empty-state');
+        const retryButton = document.getElementById('retry-button');
         const themeToggle = document.getElementById('theme-toggle');
-        const buttons = document.querySelectorAll('.calc-btn');
         
-        // 计算器状态
-        let currentInput = '0';
-        let previousInput = '';
-        let operator = null;
-        let resetOnNextInput = false;
+        // 全局变量
+        let pagesData = [];
+        let filteredData = [];
+        let currentCategory = 'all';
+        let currentSearch = '';
+        
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
+            };
+            
+            const timeString = now.toLocaleString('zh-TW', options);
+            timeElement.textContent = timeString;
+        }
         
         // 设置主题
         function setupTheme() {
+            // 检查本地存储中的主题设置
             const savedTheme = localStorage.getItem('theme');
             
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -236,187 +294,198 @@
             }
         }
         
-        // 更新显示屏
-        function updateDisplay() {
-            display.textContent = currentInput;
-            
-            if (previousInput && operator) {
-                const operatorSymbol = {
-                    '+': '+',
-                    '-': '−',
-                    '*': '×',
-                    '/': '÷'
-                }[operator];
+        // 加载页面数据
+        async function loadPages() {
+            try {
+                // 显示加载状态
+                loadingState.classList.remove('hidden');
+                errorState.classList.add('hidden');
+                emptyState.classList.add('hidden');
+                cardsContainer.classList.add('hidden');
                 
-                history.textContent = `${previousInput} ${operatorSymbol}`;
-            } else {
-                history.textContent = '';
+                const res = await fetch('./pages.json?v=' + Date.now(), {
+                    cache: 'no-store'
+                });
+                
+                if (!res.ok) {
+                    throw new Error('pages.json 读取失败');
+                }
+                
+                pagesData = await res.json();
+                
+                // 初始化数据
+                filteredData = [...pagesData];
+                
+                // 渲染卡片
+                renderCards();
+                
+                // 隐藏加载状态，显示卡片
+                loadingState.classList.add('hidden');
+                cardsContainer.classList.remove('hidden');
+                
+            } catch (err) {
+                console.error('加载页面数据失败:', err);
+                
+                // 显示错误状态
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                cardsContainer.classList.add('hidden');
             }
         }
         
-        // 输入数字或小数点
-        function inputValue(value) {
-            if (resetOnNextInput) {
-                currentInput = '0';
-                resetOnNextInput = false;
-            }
+        // 渲染卡片
+        function renderCards() {
+            // 清空容器
+            cardsContainer.innerHTML = '';
             
-            if (value === '.') {
-                if (currentInput.includes('.')) return;
-                currentInput += '.';
-            } else {
-                currentInput = currentInput === '0' ? value : currentInput + value;
-            }
-            
-            updateDisplay();
-        }
-        
-        // 处理运算符
-        function inputOperator(op) {
-            if (operator && !resetOnNextInput) {
-                calculate();
-            }
-            
-            previousInput = currentInput;
-            operator = op;
-            resetOnNextInput = true;
-            
-            updateDisplay();
-        }
-        
-        // 计算结果
-        function calculate() {
-            if (!operator || resetOnNextInput) return;
-            
-            const prev = parseFloat(previousInput);
-            const current = parseFloat(currentInput);
-            let result;
-            
-            if (isNaN(prev) || isNaN(current)) return;
-            
-            switch (operator) {
-                case '+':
-                    result = prev + current;
-                    break;
-                case '-':
-                    result = prev - current;
-                    break;
-                case '*':
-                    result = prev * current;
-                    break;
-                case '/':
-                    if (current === 0) {
-                        result = '错误';
-                    } else {
-                        result = prev / current;
-                    }
-                    break;
-                default:
-                    return;
-            }
-            
-            // 处理小数位数
-            if (typeof result === 'number') {
-                result = Math.round(result * 1000000000000) / 1000000000000;
-            }
-            
-            history.textContent = `${previousInput} ${
-                operator === '+' ? '+' : 
-                operator === '-' ? '−' : 
-                operator === '*' ? '×' : '÷'
-            } ${currentInput} =`;
-            
-            currentInput = result.toString();
-            operator = null;
-            previousInput = '';
-            resetOnNextInput = true;
-            
-            updateDisplay();
-        }
-        
-        // 清除所有
-        function clearAll() {
-            currentInput = '0';
-            previousInput = '';
-            operator = null;
-            resetOnNextInput = false;
-            updateDisplay();
-        }
-        
-        // 清除当前输入
-        function clearEntry() {
-            currentInput = '0';
-            updateDisplay();
-        }
-        
-        // 退格
-        function backspace() {
-            if (resetOnNextInput) {
-                currentInput = '0';
-                resetOnNextInput = false;
-                updateDisplay();
+            if (filteredData.length === 0) {
+                emptyState.classList.remove('hidden');
                 return;
-            }
-            
-            if (currentInput.length > 1) {
-                currentInput = currentInput.slice(0, -1);
             } else {
-                currentInput = '0';
+                emptyState.classList.add('hidden');
             }
             
-            updateDisplay();
+            // 渲染每个卡片
+            filteredData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-dark-200 dark:bg-dark-300 rounded-xl shadow-card hover:shadow-card-hover card-transition hover:-translate-y-1 border border-dark-100 dark:border-dark-400 overflow-hidden group';
+                card.style.animationDelay = `${index * 0.05}s`;
+                card.style.animationName = 'slideUp';
+                card.style.animationDuration = '0.5s';
+                card.style.animationFillMode = 'both';
+                
+                // 生成标签HTML
+                const tagsHtml = item.tags ? item.tags.map(tag => 
+                    `<span class="text-xs px-2 py-1 rounded-full bg-dark-100 dark:bg-dark-400 text-light-300 mr-2 mb-2 inline-block">${tag}</span>`
+                ).join('') : '';
+                
+                card.innerHTML = `
+                    <div class="tool-card block p-6 h-full flex flex-col cursor-pointer" data-file="${item.file}" data-name="${item.name}">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">${item.name}</h3>
+                            <span class="text-xs px-3 py-1 rounded-full ${item.type === '工具' ? 'bg-blue-500 bg-opacity-20 text-blue-300' : 'bg-purple-500 bg-opacity-20 text-purple-300'}">${item.type}</span>
+                        </div>
+                        
+                        <div class="mt-auto">
+                            <div class="flex flex-wrap mb-4">
+                                ${tagsHtml}
+                            </div>
+                            
+                            <div class="flex items-center text-light-300 text-sm group-hover:text-primary transition-colors">
+                                <span>查看详情</span>
+                                <i class="fa fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                cardsContainer.appendChild(card);
+            });
         }
         
-        // 处理按钮点击
-        function handleButtonClick(event) {
-            const button = event.target;
-            const value = button.dataset.value;
-            const action = button.dataset.action;
+        // 过滤数据
+        function filterData() {
+            filteredData = pagesData.filter(item => {
+                // 分类过滤
+                const categoryMatch = currentCategory === 'all' || item.type === currentCategory;
+                
+                // 搜索过滤
+                const searchMatch = !currentSearch || 
+                    item.name.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(currentSearch.toLowerCase())));
+                
+                return categoryMatch && searchMatch;
+            });
             
-            if (value) {
-                if (['+', '-', '*', '/'].includes(value)) {
-                    inputOperator(value);
-                } else {
-                    inputValue(value);
-                }
-            } else if (action) {
-                switch (action) {
-                    case 'clear':
-                        clearAll();
-                        break;
-                    case 'clear-entry':
-                        clearEntry();
-                        break;
-                    case 'backspace':
-                        backspace();
-                        break;
-                    case 'calculate':
-                        calculate();
-                        break;
-                }
+            // 更新搜索结果信息
+            if (currentSearch) {
+                searchResultsInfo.textContent = `找到 ${filteredData.length} 个与"${currentSearch}"相关的结果`;
+                searchResultsInfo.classList.remove('hidden');
+            } else {
+                searchResultsInfo.classList.add('hidden');
             }
+            
+            // 重新渲染卡片
+            renderCards();
         }
         
-        // 处理键盘输入
+        // 处理分类按钮点击
+        function handleCategoryClick(event) {
+            // 移除所有按钮的活动状态
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('bg-dark-200', 'dark:bg-dark-300', 'text-light-300');
+            });
+            
+            // 添加当前按钮的活动状态
+            event.target.classList.add('active', 'bg-primary', 'text-white');
+            event.target.classList.remove('bg-dark-200', 'dark:bg-dark-300', 'text-light-300');
+            
+            // 更新当前分类
+            currentCategory = event.target.dataset.category;
+            
+            // 过滤数据
+            filterData();
+        }
+        
+        // 处理搜索
+        function handleSearch() {
+            currentSearch = searchInput.value.trim();
+            filterData();
+        }
+        
+        // 处理键盘事件
         function handleKeyPress(event) {
-            const key = event.key;
-            
-            if (/[0-9.]/.test(key)) {
-                event.preventDefault();
-                inputValue(key);
-            } else if (['+', '-', '*', '/'].includes(key)) {
-                event.preventDefault();
-                inputOperator(key);
-            } else if (key === 'Enter' || key === '=') {
-                event.preventDefault();
-                calculate();
-            } else if (key === 'Escape') {
-                event.preventDefault();
-                clearAll();
-            } else if (key === 'Backspace') {
-                event.preventDefault();
-                backspace();
+            if (event.key === 'Enter') {
+                handleSearch();
             }
+        }
+        
+        // 显示工具内容
+        function showToolContent(file, name) {
+            // 隐藏欢迎区域和工具卡片区域
+            document.getElementById('welcome-section').classList.add('hidden');
+            document.getElementById('tools-section').classList.add('hidden');
+            document.getElementById('search-section').classList.add('hidden');
+            document.getElementById('category-section').classList.add('hidden');
+            
+            // 显示工具内容区域
+            const toolContentSection = document.getElementById('tool-content');
+            toolContentSection.classList.remove('hidden');
+            
+            // 设置工具标题，确保显示正确的标题
+            let displayTitle = name;
+            if (name === '在线计算器') {
+                displayTitle = '在线计算器';
+            }
+            document.getElementById('tool-title').textContent = displayTitle;
+            
+            // 设置iframe源
+            document.getElementById('tool-iframe').src = file;
+            
+            // 更新页面标题
+            document.title = `${name} - 工具中心`;
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // 返回首页
+        function backToHome() {
+            // 显示欢迎区域和工具卡片区域
+            document.getElementById('welcome-section').classList.remove('hidden');
+            document.getElementById('tools-section').classList.remove('hidden');
+            document.getElementById('search-section').classList.remove('hidden');
+            document.getElementById('category-section').classList.remove('hidden');
+            
+            // 隐藏工具内容区域
+            document.getElementById('tool-content').classList.add('hidden');
+            
+            // 恢复页面标题
+            document.title = '工具中心 - 首页';
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         // 初始化
@@ -424,18 +493,45 @@
             // 设置主题
             setupTheme();
             
-            // 更新显示屏
-            updateDisplay();
+            // 更新时间
+            setInterval(updateTime, 1000);
+            updateTime();
+            
+            // 加载页面数据
+            loadPages();
             
             // 事件监听
-            buttons.forEach(button => {
-                button.addEventListener('click', handleButtonClick);
+            searchButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', handleKeyPress);
+            retryButton.addEventListener('click', loadPages);
+            themeToggle.addEventListener('click', toggleTheme);
+            document.getElementById('back-to-home').addEventListener('click', backToHome);
+            
+            // 分类按钮事件
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', handleCategoryClick);
             });
             
-            themeToggle.addEventListener('click', toggleTheme);
+            // 移动端搜索优化
+            if (window.innerWidth < 768) {
+                searchInput.addEventListener('focus', () => {
+                    document.body.classList.add('search-active');
+                });
+                
+                searchInput.addEventListener('blur', () => {
+                    document.body.classList.remove('search-active');
+                });
+            }
             
-            // 键盘支持
-            document.addEventListener('keydown', handleKeyPress);
+            // 监听工具卡片点击事件（使用事件委托）
+            document.getElementById('cards-container').addEventListener('click', function(event) {
+                const toolCard = event.target.closest('.tool-card');
+                if (toolCard) {
+                    const file = toolCard.dataset.file;
+                    const name = toolCard.dataset.name;
+                    showToolContent(file, name);
+                }
+            });
         }
         
         // 页面加载完成后初始化
