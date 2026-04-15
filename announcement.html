@@ -153,32 +153,50 @@
             <div class="lg:w-1/3">
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">選擇模板類型</h2>
-                    <div class="space-y-3">
-                        <button id="template1" class="w-full text-left p-3 rounded-md bg-gradient-blue text-white shadow-sm hover:shadow-md transition-custom">
+                    <!-- 分类按钮 -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button class="category-btn px-3 py-1 rounded-full bg-primary text-white text-sm font-medium" data-category="all">全部</button>
+                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="maintenance">維護相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="completion">完成相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="cancellation">取消相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="game">遊戲相關</button>
+                    </div>
+                    <div class="space-y-3 template-container">
+                        <!-- 維護相關 -->
+                        <button id="template1" class="template-btn w-full text-left p-3 rounded-md bg-gradient-blue text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
                             <i class="fa fa-wrench mr-2"></i>維修公告模板
                         </button>
-                        <button id="template2" class="w-full text-left p-3 rounded-md bg-gradient-purple text-white shadow-sm hover:shadow-md transition-custom">
-                            <i class="fa fa-calendar-times-o mr-2"></i>維修時間異動公告模板
-                        </button>
-                        <button id="template3" class="w-full text-left p-3 rounded-md bg-gradient-red text-white shadow-sm hover:shadow-md transition-custom">
+                        <button id="template3" class="template-btn w-full text-left p-3 rounded-md bg-gradient-red text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
                             <i class="fa fa-exclamation-triangle mr-2"></i>臨時維修公告模板
                         </button>
-                        <button id="template4" class="w-full text-left p-3 rounded-md bg-gradient-green text-white shadow-sm hover:shadow-md transition-custom">
-                            <i class="fa fa-check-circle mr-2"></i>維修完成公告模板
-                        </button>
-                        <button id="template5" class="w-full text-left p-3 rounded-md bg-gradient-yellow text-white shadow-sm hover:shadow-md transition-custom">
-                            <i class="fa fa-ban mr-2"></i>例行維護取消公告模板
-                        </button>
-                        <button id="template6" class="w-full text-left p-3 rounded-md bg-gradient-orange text-white shadow-sm hover:shadow-md transition-custom">
+                        <button id="template6" class="template-btn w-full text-left p-3 rounded-md bg-gradient-orange text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
                             <i class="fa fa-clock-o mr-2"></i>臨時維護無確定時間公告模板
                         </button>
-                        <button id="template7" class="w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom">
-                            <i class="fa fa-gamepad mr-2"></i>部分/單一遊戲維護公告模板
+                        <button id="template2" class="template-btn w-full text-left p-3 rounded-md bg-gradient-purple text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
+                            <i class="fa fa-calendar-times-o mr-2"></i>維修時間異動公告模板
                         </button>
-                        <button id="template8" class="w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom">
+                        
+                        <!-- 完成相關 -->
+                        <button id="template4" class="template-btn w-full text-left p-3 rounded-md bg-gradient-green text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
+                            <i class="fa fa-check-circle mr-2"></i>維修完成公告模板
+                        </button>
+                        <button id="template10" class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
+                            <i class="fa fa-check-circle mr-2"></i>臨時維護完成公告模板
+                        </button>
+                        <button id="template8" class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
                             <i class="fa fa-check-square-o mr-2"></i>單一遊戲-臨時維修完成公告模板
                         </button>
-                        <button id="template9" class="w-full text-left p-3 rounded-md bg-gradient-pink text-white shadow-sm hover:shadow-md transition-custom">
+                        
+                        <!-- 取消相關 -->
+                        <button id="template5" class="template-btn w-full text-left p-3 rounded-md bg-gradient-yellow text-white shadow-sm hover:shadow-md transition-custom" data-category="cancellation">
+                            <i class="fa fa-ban mr-2"></i>例行維護取消公告模板
+                        </button>
+                        
+                        <!-- 遊戲相關 -->
+                        <button id="template7" class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom" data-category="game">
+                            <i class="fa fa-gamepad mr-2"></i>部分/單一遊戲維護公告模板
+                        </button>
+                        <button id="template9" class="template-btn w-full text-left p-3 rounded-md bg-gradient-pink text-white shadow-sm hover:shadow-md transition-custom" data-category="game">
                             <i class="fa fa-arrow-up mr-2"></i>遊戲下架公告-臨時維修完成公告模板
                         </button>
                     </div>
@@ -360,6 +378,16 @@ ${data.announcementContent}
                     return `【${data.platform}${data.game}${data.action}通知】
 敬愛的客戶您好，${data.game}已完成${data.action}作業，貴司已可${data.action === '上架' ? '開放' : '移除'}該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
+            },
+            template10: {
+                title: "臨時維護完成公告模板",
+                fields: [
+                    { name: "platform", label: "平台", type: "text", required: true }
+                ],
+                generateContent: (data) => {
+                    return `【${data.platform}臨時維護完成公告】
+敬愛的客戶您好，本次臨時維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
+                }
             }
         };
 
@@ -372,6 +400,29 @@ ${data.announcementContent}
             Object.keys(templates).forEach(templateId => {
                 document.getElementById(templateId).addEventListener('click', () => {
                     selectTemplate(templateId);
+                });
+            });
+            
+            // 绑定分类按钮事件
+            document.querySelectorAll('.category-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    // 更新按钮样式
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    button.classList.remove('bg-gray-200', 'text-gray-700');
+                    button.classList.add('bg-primary', 'text-white');
+                    
+                    // 筛选模板
+                    const category = button.getAttribute('data-category');
+                    document.querySelectorAll('.template-btn').forEach(templateBtn => {
+                        if (category === 'all' || templateBtn.getAttribute('data-category') === category) {
+                            templateBtn.style.display = 'block';
+                        } else {
+                            templateBtn.style.display = 'none';
+                        }
+                    });
                 });
             });
 
