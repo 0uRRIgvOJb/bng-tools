@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>公告模板生成器</title>
-    <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -38,10 +36,6 @@
                     },
                     fontFamily: {
                         sans: ['Noto Sans TC', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'custom': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                        'custom-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                     }
                 }
             }
@@ -49,93 +43,23 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .transition-custom {
-                transition: all 0.3s ease;
-            }
-            .bg-gradient-blue {
-                background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            }
-            .bg-gradient-green {
-                background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
-            }
-            .bg-gradient-red {
-                background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%);
-            }
-            .bg-gradient-yellow {
-                background: linear-gradient(135deg, #92400e 0%, #f59e0b 100%);
-            }
-            .bg-gradient-purple {
-                background: linear-gradient(135deg, #581c87 0%, #8b5cf6 100%);
-            }
-            .bg-gradient-pink {
-                background: linear-gradient(135deg, #831843 0%, #ec4899 100%);
-            }
-            .bg-gradient-orange {
-                background: linear-gradient(135deg, #9a3412 0%, #f97316 100%);
-            }
-            .bg-gradient-indigo {
-                background: linear-gradient(135deg, #3730a3 0%, #6366f1 100%);
-            }
-            .bg-gradient-teal {
-                background: linear-gradient(135deg, #0f5132 0%, #14b8a6 100%);
-            }
-            .template-card {
-                @apply relative overflow-hidden rounded-lg shadow-custom transition-custom hover:shadow-custom-hover;
-            }
-            .template-card:hover .template-overlay {
-                opacity: 1;
-            }
-            .template-overlay {
-                @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 transition-custom;
-            }
-            .form-input {
-                @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-custom;
-            }
-            .form-label {
-                @apply block text-sm font-medium text-gray-700 mb-1;
-            }
-            .btn {
-                @apply px-4 py-2 rounded-md font-medium transition-custom focus:outline-none focus:ring-2 focus:ring-offset-2;
-            }
-            .btn-primary {
-                @apply bg-primary text-white hover:bg-blue-700 focus:ring-blue-500;
-            }
-            .btn-success {
-                @apply bg-success text-white hover:bg-green-700 focus:ring-green-500;
-            }
-            .btn-danger {
-                @apply bg-danger text-white hover:bg-red-700 focus:ring-red-500;
-            }
-            .btn-warning {
-                @apply bg-warning text-white hover:bg-yellow-700 focus:ring-yellow-500;
-            }
-            .btn-info {
-                @apply bg-info text-white hover:bg-blue-600 focus:ring-blue-500;
-            }
-            .btn-outline {
-                @apply border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500;
-            }
-            .btn-icon {
-                @apply inline-flex items-center justify-center;
-            }
-            .btn-icon svg {
-                @apply mr-2 h-5 w-5;
-            }
-            .tab {
-                @apply px-4 py-2 font-medium border-b-2 border-transparent cursor-pointer transition-custom;
-            }
-            .tab-active {
-                @apply border-primary text-primary;
-            }
-            .tab-inactive {
-                @apply text-gray-500 hover:text-gray-700 hover:border-gray-300;
-            }
-            .copy-success {
-                @apply bg-success text-white;
-            }
-            .copy-error {
-                @apply bg-danger text-white;
-            }
+            .transition-custom { transition: all 0.3s ease; }
+            .bg-gradient-blue{background:linear-gradient(135deg,#1e3a8a,#3b82f6);}
+            .bg-gradient-green{background:linear-gradient(135deg,#064e3b,#10b981);}
+            .bg-gradient-red{background:linear-gradient(135deg,#7f1d1d,#ef4444);}
+            .bg-gradient-yellow{background:linear-gradient(135deg,#92400e,#f59e0b);}
+            .bg-gradient-purple{background:linear-gradient(135deg,#581c87,#8b5cf6);}
+            .bg-gradient-pink{background:linear-gradient(135deg,#831843,#ec4899);}
+            .bg-gradient-orange{background:linear-gradient(135deg,#9a3412,#f97316);}
+            .bg-gradient-indigo{background:linear-gradient(135deg,#3730a3,#6366f1);}
+            .bg-gradient-teal{background:linear-gradient(135deg,#0f5132,#14b8a6);}
+            .form-input{@apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-custom;}
+            .form-label{@apply block text-sm font-medium text-gray-700 mb-1;}
+            .btn{@apply px-4 py-2 rounded-md font-medium transition-custom;}
+            .btn-primary{@apply bg-primary text-white hover:bg-blue-700;}
+            .category-btn-active{@apply bg-primary text-white;}
+            .category-btn-normal{@apply bg-gray-200 text-gray-700;}
+            .form-input-disabled{@apply bg-gray-100 cursor-not-allowed;}
         }
     </style>
 </head>
@@ -151,53 +75,33 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">選擇模板類型</h2>
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <button class="category-btn px-3 py-1 rounded-full bg-primary text-white text-sm font-medium" data-category="all">全部</button>
-                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="maintenance">維護相關</button>
-                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="completion">完成相關</button>
-                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="cancellation">取消相關</button>
-                        <button class="category-btn px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium" data-category="game">遊戲相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full text-sm font-medium category-btn-active" data-category="all">全部</button>
+                        <button class="category-btn px-3 py-1 rounded-full text-sm font-medium category-btn-normal" data-category="maintenance">維護相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full text-sm font-medium category-btn-normal" data-category="completion">完成相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full text-sm font-medium category-btn-normal" data-category="cancellation">取消相關</button>
+                        <button class="category-btn px-3 py-1 rounded-full text-sm font-medium category-btn-normal" data-category="game">遊戲相關</button>
                     </div>
                     <div class="space-y-3 template-container">
                         <!-- 維護相關 -->
-                        <button id="template1" class="template-btn w-full text-left p-3 rounded-md bg-gradient-blue text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
-                            <i class="fa fa-wrench mr-2"></i>維修公告模板
-                        </button>
-                        <button id="template3" class="template-btn w-full text-left p-3 rounded-md bg-gradient-red text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
-                            <i class="fa fa-exclamation-triangle mr-2"></i>臨時維修公告模板
-                        </button>
-                        <button id="template6" class="template-btn w-full text-left p-3 rounded-md bg-gradient-orange text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
-                            <i class="fa fa-clock-o mr-2"></i>臨時維護無確定時間公告模板
-                        </button>
-                        <button id="template2" class="template-btn w-full text-left p-3 rounded-md bg-gradient-purple text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
-                            <i class="fa fa-calendar-times-o mr-2"></i>維修時間異動公告模板
-                        </button>
-                        <button id="template11" class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom" data-category="maintenance">
-                            <i class="fa fa-gamepad mr-2"></i>單一/部份遊戲臨時維護公告
-                        </button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-blue text-white" data-category="maintenance" data-id="template1">維修公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-red text-white" data-category="maintenance" data-id="template3">臨時維修公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-orange text-white" data-category="maintenance" data-id="template6">臨時維護無確定時間公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-purple text-white" data-category="maintenance" data-id="template2">維修時間異動公告模板</button>
+                        <!-- 修正：模板按钮标题改为「單一 / 部份遊戲臨時維護公告」 -->
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white" data-category="maintenance" data-id="template11">單一 / 部份遊戲臨時維護公告</button>
 
                         <!-- 完成相關 -->
-                        <button id="template4" class="template-btn w-full text-left p-3 rounded-md bg-gradient-green text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
-                            <i class="fa fa-check-circle mr-2"></i>維修完成公告模板
-                        </button>
-                        <button id="template10" class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
-                            <i class="fa fa-check-circle mr-2"></i>臨時維護完成公告模板
-                        </button>
-                        <button id="template8" class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white shadow-sm hover:shadow-md transition-custom" data-category="completion">
-                            <i class="fa fa-check-square-o mr-2"></i>單一/部份臨時維修完成公告模版
-                        </button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-green text-white" data-category="completion" data-id="template4">維修完成公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white" data-category="completion" data-id="template10">臨時維護完成公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-teal text-white" data-category="completion" data-id="template8">單一/部份臨時維修完成公告模版</button>
 
                         <!-- 取消相關 -->
-                        <button id="template5" class="template-btn w-full text-left p-3 rounded-md bg-gradient-yellow text-white shadow-sm hover:shadow-md transition-custom" data-category="cancellation">
-                            <i class="fa fa-ban mr-2"></i>例行維護取消公告模板
-                        </button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-yellow text-white" data-category="cancellation" data-id="template5">例行維護取消公告模板</button>
 
                         <!-- 遊戲相關 -->
-                        <button id="template7" class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white shadow-sm hover:shadow-md transition-custom" data-category="game">
-                            <i class="fa fa-gamepad mr-2"></i>部分/單一遊戲維護公告模板
-                        </button>
-                        <button id="template9" class="template-btn w-full text-left p-3 rounded-md bg-gradient-pink text-white shadow-sm hover:shadow-md transition-custom" data-category="game">
-                            <i class="fa fa-arrow-up mr-2"></i>遊戲下架公告-臨時維修完成公告模板
-                        </button>
+                        <!-- 修正：模板按钮标题改为「單一/部份遊戲維護公告模板」 -->
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white" data-category="game" data-id="template7">單一/部份遊戲維護公告模板</button>
+                        <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-pink text-white" data-category="game" data-id="template9">遊戲下架公告模板</button>
                     </div>
                 </div>
             </div>
@@ -216,20 +120,13 @@
                 <div id="resultContainer" class="bg-white rounded-lg shadow-md p-6 hidden">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">公告預覽</h2>
-                        <button id="copyButton" class="btn btn-primary btn-icon">
-                            <i class="fa fa-copy"></i>
-                            複製公告
-                        </button>
+                        <button type="button" id="copyButton" class="btn btn-primary">複製公告</button>
                     </div>
-                    <div id="resultContent" class="border border-gray-200 rounded-md p-4 min-h-[200px] bg-gray-50 font-sans text-gray-800 whitespace-pre-wrap"></div>
+                    <div id="resultContent" class="border border-gray-200 rounded-md p-4 min-h-[200px] bg-gray-50 whitespace-pre-wrap"></div>
                     <div id="copyStatus" class="mt-3 text-center py-2 rounded-md hidden"></div>
                 </div>
             </div>
         </div>
-
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            <p>公告模板生成器 © 2026 | 支援繁體中文顯示</p>
-        </footer>
     </div>
 
     <script>
@@ -237,12 +134,12 @@
             template1: {
                 title: "維修公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "text", required: true },
-                    { name: "endTime", label: "結束時間", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"startTime",label:"開始時間",type:"text",required:true},
+                    {name:"endTime",label:"結束時間",type:"text",required:true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}例行維護通知】
 維護開始時間：${data.startTime}(${data.timezone})
 維護結束時間：${data.endTime}(${data.timezone})
@@ -252,13 +149,13 @@
             template2: {
                 title: "維修時間異動公告模板",
                 fields: [
-                    { name: "originalStartTime", label: "原定開始時間", type: "text", required: true },
-                    { name: "originalEndTime", label: "原定結束時間", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true },
-                    { name: "newStartTime", label: "更改後開始時間", type: "text", required: true },
-                    { name: "newEndTime", label: "更改後結束時間", type: "text", required: true }
+                    {name:"originalStartTime",label:"原定開始時間",type:"text",required:true},
+                    {name:"originalEndTime",label:"原定結束時間",type:"text",required:true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true},
+                    {name:"newStartTime",label:"更改後開始時間",type:"text",required:true},
+                    {name:"newEndTime",label:"更改後結束時間",type:"text",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【維修時間異動通知】
 原定維護時間：
 維護開始時間：${data.originalStartTime}(${data.timezone})
@@ -272,12 +169,12 @@
             template3: {
                 title: "臨時維修公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "text", required: true },
-                    { name: "endTime", label: "結束時間", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"startTime",label:"開始時間",type:"text",required:true},
+                    {name:"endTime",label:"結束時間",type:"text",required:true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}臨時維護通知】
 維護開始時間：${data.startTime}(${data.timezone})
 維護結束時間：${data.endTime}(${data.timezone})
@@ -286,8 +183,8 @@
             },
             template4: {
                 title: "維修完成公告模板",
-                fields: [{ name: "platform", label: "平台", type: "text", required: true }],
-                generateContent: (data) => {
+                fields: [{name:"platform",label:"平台",type:"text",required:true}],
+                content(data){
                     return `【${data.platform}維護完成通知】
 敬愛的客戶您好，本次維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
@@ -295,10 +192,10 @@
             template5: {
                 title: "例行維護取消公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "announcementContent", label: "遊戲商公告內容", type: "textarea", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"announcementContent",label:"遊戲商公告內容",type:"textarea",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}例行維護取消通知】
 ${data.announcementContent}
 若有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
@@ -307,195 +204,276 @@ ${data.announcementContent}
             template6: {
                 title: "臨時維護無確定時間公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}臨時維護通知】
 維護開始時間：即刻(${data.timezone})
 維護結束時間：待定(${data.timezone})
 若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
                 }
             },
+            // 修正：template7 标题改为「單一/部份遊戲維護公告模板」
             template7: {
-                title: "部分/單一遊戲維護公告模板",
+                title: "單一/部份遊戲維護公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "maintenanceType", label: "維護類型", type: "select", options: ["部分", "單一"], required: true },
-                    { name: "affectedRange", label: "影響範圍", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "text", required: true },
-                    { name: "endTime", label: "結束時間", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"typeSel",label:"類型選擇",type:"select",options:["單一","部份"],required:true},
+                    {name:"affectedRange",label:"影響範圍",type:"text",required:true},
+                    {name:"startTime",label:"開始時間",type:"text",required:true},
+                    {name:"endTime",label:"結束時間",type:"text",required:true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true}
                 ],
-                generateContent: (data) => {
-                    return `【${data.platform}${data.maintenanceType}遊戲維護通知】
-影響範圍：${data.affectedRange}
+                content(data){
+                    let content = `【${data.platform}${data.typeSel}遊戲維護通知】
 維護開始時間：${data.startTime}(${data.timezone})
 維護結束時間：${data.endTime}(${data.timezone})
-若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+
+影響範圍：${data.affectedRange}`;
+                    if(data.typeSel === "部份" && data.affGame?.trim()){
+                        content += `\n影響遊戲：${data.affGame.trim()}`;
+                    }
+                    content += `\n若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                    return content;
                 }
             },
-            // 修正後：單一/部份臨時維修完成公告模版
             template8: {
                 title: "單一/部份臨時維修完成公告模版",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "typeSel", label: "類型選擇", type: "select", options: ["單一", "部份"], required: true },
-                    { name: "affectedRange", label: "影響範圍", type: "text", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"typeSel",label:"類型選擇",required:true,type:"select",options:["單一","部份"]},
+                    {name:"affectedRange",label:"影響範圍",type:"text",required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}${data.typeSel}臨時維護完成通知】
 影響範圍：${data.affectedRange}
 敬愛的客戶您好，本次維護作業已完成，貴司已可正常開放該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
             template9: {
-                title: "遊戲下架公告-臨時維修完成公告模板",
+                title: "遊戲下架公告模板",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "game", label: "上/下架遊戲", type: "text", required: true },
-                    { name: "action", label: "上/下架", type: "select", options: ["上架", "下架"], required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"game",label:"上/下架遊戲",type:"text",required:true},
+                    {name:"action",label:"上/下架",type:"select",options:["上架","下架"],required:true}
                 ],
-                generateContent: (data) => {
+                content(data){
                     return `【${data.platform}${data.game}${data.action}通知】
-敬愛的客戶您好，${data.game}已完成${data.action}作業，貴司已可${data.action === '上架' ? '開放' : '移除'}該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
+敬愛的客戶您好，${data.game}已完成${data.action}作業，貴司已可${data.action==='上架'?'開放':'移除'}該遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
             template10: {
                 title: "臨時維護完成公告模板",
-                fields: [{ name: "platform", label: "平台", type: "text", required: true }],
-                generateContent: (data) => {
+                fields: [{name:"platform",label:"平台",type:"text",required:true}],
+                content(data){
                     return `【${data.platform}臨時維護完成公告】
 敬愛的客戶您好，本次臨時維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
-            // 新增：單一/部份遊戲臨時維護公告
+            // 修正：template11 标题改为「單一 / 部份遊戲臨時維護公告」，并强制时间为即刻/待定
             template11: {
-                title: "單一/部份遊戲臨時維護公告",
+                title: "單一 / 部份遊戲臨時維護公告",
                 fields: [
-                    { name: "platform", label: "平台", type: "text", required: true },
-                    { name: "typeSel", label: "類型選擇", type: "select", options: ["單一", "部份"], required: true },
-                    { name: "affectedRange", label: "影響範圍", type: "text", required: true },
-                    { name: "startTime", label: "開始時間", type: "text", required: true },
-                    { name: "endTime", label: "結束時間", type: "text", required: true },
-                    { name: "timezone", label: "時差", type: "text", value: "GMT+8", required: true }
+                    {name:"platform",label:"平台",type:"text",required:true},
+                    {name:"typeSel",label:"類型選擇",type:"select",options:["單一","部份"],required:true},
+                    {name:"startTime",label:"開始時間",type:"text",value:"即刻",required:true, disabled: true},
+                    {name:"endTime",label:"結束時間",type:"text",value:"待定",required:true, disabled: true},
+                    {name:"timezone",label:"時差",type:"text",value:"GMT+8",required:true},
+                    {name:"affectedRange",label:"影響範圍",type:"text",required:true},
                 ],
-                generateContent: (data) => {
-                    return `【${data.platform}${data.typeSel}遊戲臨時維護通知】
-影響範圍：${data.affectedRange}
-維護開始時間：${data.startTime}(${data.timezone})
-維護結束時間：${data.endTime}(${data.timezone})
-若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                content(data){
+                    // 强制使用即刻/待定，忽略用户输入
+                    const fixedStartTime = "即刻";
+                    const fixedEndTime = "待定";
+                    
+                    let base = `【${data.platform}${data.typeSel}遊戲臨時維護通知】
+維護開始時間：${fixedStartTime}(${data.timezone})
+維護結束時間：${fixedEndTime}(${data.timezone})
+
+影響範圍：${data.affectedRange}`;
+                    if(data.typeSel === "部份" && data.affGame?.trim()){
+                        base += `\n影響遊戲：${data.affGame.trim()}`;
+                    }
+                    base += `\n若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
+                    return base;
                 }
             }
         };
 
-        let currentTemplate = null;
+        let currentTplId = "";
 
-        document.addEventListener('DOMContentLoaded', () => {
-            Object.keys(templates).forEach(templateId => {
-                document.getElementById(templateId)?.addEventListener('click', () => {
-                    selectTemplate(templateId);
-                });
+        document.addEventListener('DOMContentLoaded', ()=>{
+            // 分類按鈕
+            document.querySelectorAll('.category-btn').forEach(btn=>{
+                btn.onclick = function(){
+                    document.querySelectorAll('.category-btn').forEach(b=>{
+                        b.classList.remove('category-btn-active');
+                        b.classList.add('category-btn-normal');
+                    });
+                    this.classList.remove('category-btn-normal');
+                    this.classList.add('category-btn-active');
+                    let cat = this.dataset.category;
+                    document.querySelectorAll('.template-btn').forEach(t=>{
+                        t.style.display = (cat==='all' || t.dataset.category===cat) ? 'block' : 'none';
+                    });
+                }
             });
 
-            document.querySelectorAll('.category-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.category-btn').forEach(btn => {
-                        btn.classList.remove('bg-primary','text-white');
-                        btn.classList.add('bg-gray-200','text-gray-700');
-                    });
-                    button.classList.remove('bg-gray-200','text-gray-700');
-                    button.classList.add('bg-primary','text-white');
-
-                    const category = button.dataset.category;
-                    document.querySelectorAll('.template-btn').forEach(btn => {
-                        btn.style.display = (category === 'all' || btn.dataset.category === category) ? 'block' : 'none';
-                    });
-                });
+            // 模板按鈕
+            document.querySelectorAll('.template-btn').forEach(btn=>{
+                btn.onclick = function(){
+                    let tid = this.dataset.id;
+                    selectTemplate(tid);
+                }
             });
 
-            document.getElementById('announcementForm').addEventListener('submit', (e) => {
+            // 表單提交（增強驗證）
+            document.getElementById('announcementForm').onsubmit = function(e){
                 e.preventDefault();
-                generateAnnouncement();
-            });
+                let inputs = this.querySelectorAll('input, select, textarea');
+                let empty = false;
+                
+                // 基礎必填驗證（跳過禁用的輸入框）
+                inputs.forEach(inp=>{
+                    if(inp.hasAttribute('required') && !inp.disabled && !inp.value.trim()){
+                        empty = true;
+                    }
+                });
 
-            document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+                // 針對「部份」類型，驗證影響遊戲必填
+                const typeSel = this.querySelector('[name="typeSel"]');
+                const affGame = this.querySelector('[name="affGame"]');
+                if(typeSel && typeSel.value === "部份" && affGame && !affGame.value.trim()){
+                    empty = true;
+                }
+
+                if(empty){
+                    alert("有欄位尚未填寫");
+                    return;
+                }
+                generate();
+            };
+
+            // 複製
+            document.getElementById('copyButton').onclick = copyText;
         });
 
-        function selectTemplate(templateId) {
-            currentTemplate = templateId;
-            document.getElementById('formTitle').textContent = templates[templateId].title;
-            const form = document.getElementById('announcementForm');
-            form.innerHTML = '';
+        // 切換模板、動態產生欄位（核心修復）
+        function selectTemplate(tid){
+            currentTplId = tid;
+            let tpl = templates[tid];
+            document.getElementById('formTitle').innerText = tpl.title;
+            let form = document.getElementById('announcementForm');
+            form.innerHTML = "";
 
-            templates[templateId].fields.forEach(field => {
-                const div = document.createElement('div');
-                const label = document.createElement('label');
-                label.className = 'form-label';
-                label.textContent = field.label + (field.required ? ' *' : '');
+            // 生成基礎欄位（逐個生成，方便插入影響遊戲欄位）
+            let affectedRangeElement = null;
+            tpl.fields.forEach(f=>{
+                let wrap = document.createElement("div");
+                let lab = document.createElement("label");
+                lab.className = "form-label";
+                lab.innerText = f.label + (f.required?" *":"");
 
-                let input;
-                if(field.type === 'textarea'){
-                    input = document.createElement('textarea');
-                    input.rows = 4;
-                }else if(field.type === 'select'){
-                    input = document.createElement('select');
-                    field.options.forEach(opt=>{
-                        const op = document.createElement('option');
+                let el;
+                if(f.type === "textarea"){
+                    el = document.createElement("textarea");
+                    el.rows = 3;
+                }else if(f.type === "select"){
+                    el = document.createElement("select");
+                    f.options.forEach(opt=>{
+                        let op = document.createElement("option");
                         op.value = opt;
-                        op.textContent = opt;
-                        input.appendChild(op);
+                        op.innerText = opt;
+                        el.appendChild(op);
                     });
                 }else{
-                    input = document.createElement('input');
-                    input.type = field.type;
+                    el = document.createElement("input");
+                    el.type = f.type;
                 }
-                input.className = 'form-input';
-                input.name = field.name;
-                input.required = field.required;
-                if(field.value) input.value = field.value;
+                
+                // 設置禁用狀態和樣式
+                if(f.disabled) {
+                    el.disabled = true;
+                    el.classList.add('form-input-disabled');
+                }
+                
+                el.className = "form-input";
+                el.name = f.name;
+                if(f.required) el.required = true;
+                if(f.value) el.value = f.value;
 
-                div.appendChild(label);
-                div.appendChild(input);
-                form.appendChild(div);
+                wrap.appendChild(lab);
+                wrap.appendChild(el);
+                form.appendChild(wrap);
+
+                // 記錄影響範圍欄位的位置
+                if(f.name === "affectedRange"){
+                    affectedRangeElement = wrap;
+                }
             });
 
-            const submitBox = document.createElement('div');
-            submitBox.className = 'pt-4';
-            const submitBtn = document.createElement('button');
-            submitBtn.type = 'submit';
-            submitBtn.className = 'btn btn-primary w-full';
-            submitBtn.textContent = '生成公告';
-            submitBox.appendChild(submitBtn);
+            // 核心調整：把影響遊戲欄位插入到影響範圍下方
+            if(tid === "template11" || tid === "template7"){
+                // 創建影響遊戲欄位
+                let gameWrap = document.createElement("div");
+                gameWrap.id = "affGameWrap";
+                gameWrap.style.display = "none";
+                gameWrap.innerHTML = `
+                    <label class="form-label">影響遊戲 *</label>
+                    <input type="text" name="affGame" class="form-input" placeholder="請填寫受影響的遊戲名稱">
+                `;
+
+                // 插入到影響範圍欄位的後面
+                if(affectedRangeElement){
+                    affectedRangeElement.after(gameWrap);
+                } else {
+                    form.appendChild(gameWrap); // 備用方案
+                }
+
+                // 綁定類型選擇事件
+                let sel = form.querySelector('[name="typeSel"]');
+                const toggleGameField = () => {
+                    const gameWrapEl = document.getElementById("affGameWrap");
+                    gameWrapEl.style.display = sel.value === "部份" ? "block" : "none";
+                    // 同步必填屬性
+                    const affGameInput = gameWrapEl.querySelector('input');
+                    affGameInput.required = sel.value === "部份";
+                };
+
+                // 初始化立即觸發
+                sel.addEventListener('change', toggleGameField);
+                toggleGameField();
+            }
+
+            // 加入送出按鈕
+            let submitBox = document.createElement("div");
+            submitBox.className = "pt-4";
+            submitBox.innerHTML = `<button type="submit" class="btn btn-primary w-full">生成公告</button>`;
             form.appendChild(submitBox);
 
             document.getElementById('resultContainer').classList.add('hidden');
         }
 
-        function generateAnnouncement() {
-            if(!currentTemplate) return;
-            const form = document.getElementById('announcementForm');
-            const data = {};
-            new FormData(form).forEach((v,k)=>data[k]=v);
-            const html = templates[currentTemplate].generateContent(data);
-            document.getElementById('resultContent').textContent = html;
+        // 生成公告
+        function generate(){
+            let form = document.getElementById('announcementForm');
+            let fd = new FormData(form);
+            let data = {};
+            fd.forEach((v,k)=>data[k]=v);
+            let html = templates[currentTplId].content(data);
+            document.getElementById('resultContent').innerText = html;
             document.getElementById('resultContainer').classList.remove('hidden');
         }
 
-        function copyToClipboard() {
-            const txt = document.getElementById('resultContent').textContent;
-            const status = document.getElementById('copyStatus');
+        // 複製
+        function copyText(){
+            let txt = document.getElementById('resultContent').innerText;
             navigator.clipboard.writeText(txt).then(()=>{
-                status.textContent = '公告內容已複製到剪貼簿！';
-                status.className = 'mt-3 text-center py-2 rounded-md copy-success';
-                status.classList.remove('hidden');
+                alert("複製成功");
             }).catch(()=>{
-                status.textContent = '複製失敗，請手動複製';
-                status.className = 'mt-3 text-center py-2 rounded-md copy-error';
-                status.classList.remove('hidden');
+                alert("複製失敗，請手動複製");
             });
-            setTimeout(()=>status.classList.add('hidden'),3000);
         }
     </script>
 </body>
