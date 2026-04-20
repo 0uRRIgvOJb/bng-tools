@@ -60,6 +60,14 @@
             .category-btn-active{@apply bg-primary text-white;}
             .category-btn-normal{@apply bg-gray-200 text-gray-700;}
             .form-input-disabled{@apply bg-gray-100 cursor-not-allowed;}
+            /* 弹窗样式 - 修复初始化显示问题 */
+            .modal-overlay{@apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300;}
+            .modal-overlay.show{@apply opacity-100 pointer-events-auto;}
+            .modal-container{@apply bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden transform translate-y-8 opacity-0 transition-all duration-300;}
+            .modal-overlay.show .modal-container{@apply translate-y-0 opacity-100;}
+            .modal-header{@apply bg-gray-50 px-6 py-4 border-b flex justify-between items-center;}
+            .modal-body{@apply p-6 max-h-[60vh] overflow-y-auto whitespace-pre-wrap;}
+            .modal-footer{@apply px-6 py-4 border-t flex justify-end gap-3;}
         }
     </style>
 </head>
@@ -87,7 +95,6 @@
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-red text-white" data-category="maintenance" data-id="template3">臨時維修公告模板</button>
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-orange text-white" data-category="maintenance" data-id="template6">臨時維護無確定時間公告模板</button>
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-purple text-white" data-category="maintenance" data-id="template2">維修時間異動公告模板</button>
-                        <!-- 修正：模板按钮标题改为「單一 / 部份遊戲臨時維護公告」 -->
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white" data-category="maintenance" data-id="template11">單一 / 部份遊戲臨時維護公告</button>
 
                         <!-- 完成相關 -->
@@ -99,7 +106,6 @@
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-yellow text-white" data-category="cancellation" data-id="template5">例行維護取消公告模板</button>
 
                         <!-- 遊戲相關 -->
-                        <!-- 修正：模板按钮标题改为「單一/部份遊戲維護公告模板」 -->
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-indigo text-white" data-category="game" data-id="template7">單一/部份遊戲維護公告模板</button>
                         <button class="template-btn w-full text-left p-3 rounded-md bg-gradient-pink text-white" data-category="game" data-id="template9">遊戲下架公告模板</button>
                     </div>
@@ -116,15 +122,27 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div id="resultContainer" class="bg-white rounded-lg shadow-md p-6 hidden">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-800">公告預覽</h2>
-                        <button type="button" id="copyButton" class="btn btn-primary">複製公告</button>
-                    </div>
-                    <div id="resultContent" class="border border-gray-200 rounded-md p-4 min-h-[200px] bg-gray-50 whitespace-pre-wrap"></div>
-                    <div id="copyStatus" class="mt-3 text-center py-2 rounded-md hidden"></div>
-                </div>
+    <!-- 公告预览弹窗 - 修复class命名和初始状态 -->
+    <div id="announcementModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="text-lg font-semibold text-gray-800">公告預覽</h3>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 transition-custom" onclick="closeModal()">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="modal-body text-gray-800"></div>
+            <div class="modal-footer">
+                <button id="copyModalBtn" class="btn btn-primary">
+                    <i class="fa fa-copy mr-2"></i>複製公告
+                </button>
+                <button class="btn bg-gray-200 text-gray-700 hover:bg-gray-300" onclick="closeModal()">
+                    <i class="fa fa-times mr-2"></i>關閉
+                </button>
             </div>
         </div>
     </div>
@@ -214,7 +232,6 @@ ${data.announcementContent}
 若維護時間有任何異動，我們將再另行通知，造成不便之處敬請見諒，謝謝！`;
                 }
             },
-            // 修正：template7 标题改为「單一/部份遊戲維護公告模板」
             template7: {
                 title: "單一/部份遊戲維護公告模板",
                 fields: [
@@ -271,7 +288,6 @@ ${data.announcementContent}
 敬愛的客戶您好，本次臨時維護作業已完成，貴司已可正常開放我方遊戲，再次感謝您的支持與諒解，若有任何疑問歡迎隨時與我們聯繫。`;
                 }
             },
-            // 修正：template11 标题改为「單一 / 部份遊戲臨時維護公告」，并强制时间为即刻/待定
             template11: {
                 title: "單一 / 部份遊戲臨時維護公告",
                 fields: [
@@ -283,7 +299,6 @@ ${data.announcementContent}
                     {name:"affectedRange",label:"影響範圍",type:"text",required:true},
                 ],
                 content(data){
-                    // 强制使用即刻/待定，忽略用户输入
                     const fixedStartTime = "即刻";
                     const fixedEndTime = "待定";
                     
@@ -302,6 +317,7 @@ ${data.announcementContent}
         };
 
         let currentTplId = "";
+        let currentAnnouncementText = "";
 
         document.addEventListener('DOMContentLoaded', ()=>{
             // 分類按鈕
@@ -328,7 +344,7 @@ ${data.announcementContent}
                 }
             });
 
-            // 表單提交（增強驗證）
+            // 表單提交
             document.getElementById('announcementForm').onsubmit = function(e){
                 e.preventDefault();
                 let inputs = this.querySelectorAll('input, select, textarea');
@@ -352,14 +368,14 @@ ${data.announcementContent}
                     alert("有欄位尚未填寫");
                     return;
                 }
-                generate();
+                generateAndShowModal();
             };
 
-            // 複製
-            document.getElementById('copyButton').onclick = copyText;
+            // 彈窗複製按鈕
+            document.getElementById('copyModalBtn').addEventListener('click', copyModalText);
         });
 
-        // 切換模板、動態產生欄位（核心修復）
+        // 切換模板
         function selectTemplate(tid){
             currentTplId = tid;
             let tpl = templates[tid];
@@ -367,7 +383,7 @@ ${data.announcementContent}
             let form = document.getElementById('announcementForm');
             form.innerHTML = "";
 
-            // 生成基礎欄位（逐個生成，方便插入影響遊戲欄位）
+            // 生成基礎欄位
             let affectedRangeElement = null;
             tpl.fields.forEach(f=>{
                 let wrap = document.createElement("div");
@@ -413,9 +429,8 @@ ${data.announcementContent}
                 }
             });
 
-            // 核心調整：把影響遊戲欄位插入到影響範圍下方
+            // 插入影響遊戲欄位
             if(tid === "template11" || tid === "template7"){
-                // 創建影響遊戲欄位
                 let gameWrap = document.createElement("div");
                 gameWrap.id = "affGameWrap";
                 gameWrap.style.display = "none";
@@ -424,11 +439,10 @@ ${data.announcementContent}
                     <input type="text" name="affGame" class="form-input" placeholder="請填寫受影響的遊戲名稱">
                 `;
 
-                // 插入到影響範圍欄位的後面
                 if(affectedRangeElement){
                     affectedRangeElement.after(gameWrap);
                 } else {
-                    form.appendChild(gameWrap); // 備用方案
+                    form.appendChild(gameWrap);
                 }
 
                 // 綁定類型選擇事件
@@ -436,12 +450,10 @@ ${data.announcementContent}
                 const toggleGameField = () => {
                     const gameWrapEl = document.getElementById("affGameWrap");
                     gameWrapEl.style.display = sel.value === "部份" ? "block" : "none";
-                    // 同步必填屬性
                     const affGameInput = gameWrapEl.querySelector('input');
                     affGameInput.required = sel.value === "部份";
                 };
 
-                // 初始化立即觸發
                 sel.addEventListener('change', toggleGameField);
                 toggleGameField();
             }
@@ -451,30 +463,60 @@ ${data.announcementContent}
             submitBox.className = "pt-4";
             submitBox.innerHTML = `<button type="submit" class="btn btn-primary w-full">生成公告</button>`;
             form.appendChild(submitBox);
-
-            document.getElementById('resultContainer').classList.add('hidden');
         }
 
-        // 生成公告
-        function generate(){
+        // 生成公告並顯示彈窗 - 修复显示逻辑
+        function generateAndShowModal(){
             let form = document.getElementById('announcementForm');
             let fd = new FormData(form);
             let data = {};
             fd.forEach((v,k)=>data[k]=v);
-            let html = templates[currentTplId].content(data);
-            document.getElementById('resultContent').innerText = html;
-            document.getElementById('resultContainer').classList.remove('hidden');
+            currentAnnouncementText = templates[currentTplId].content(data);
+            
+            // 設置彈窗內容並顯示
+            document.getElementById('modalContent').innerText = currentAnnouncementText;
+            document.getElementById('announcementModal').classList.add('show');
+            // 防止背景滾動
+            document.body.style.overflow = 'hidden';
         }
 
-        // 複製
-        function copyText(){
-            let txt = document.getElementById('resultContent').innerText;
-            navigator.clipboard.writeText(txt).then(()=>{
-                alert("複製成功");
+        // 關閉彈窗 - 修复关闭逻辑
+        function closeModal(event){
+            // 如果點擊的是彈窗外層或者關閉按鈕
+            if(!event || event.target === document.getElementById('announcementModal')){
+                document.getElementById('announcementModal').classList.remove('show');
+                // 恢復背景滾動
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 複製彈窗中的公告內容
+        function copyModalText(){
+            navigator.clipboard.writeText(currentAnnouncementText).then(()=>{
+                // 顯示複製成功提示
+                const copyBtn = document.getElementById('copyModalBtn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fa fa-check mr-2"></i>複製成功';
+                copyBtn.classList.remove('bg-primary');
+                copyBtn.classList.add('bg-success');
+                
+                // 3秒後恢復原狀
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.classList.remove('bg-success');
+                    copyBtn.classList.add('bg-primary');
+                }, 3000);
             }).catch(()=>{
                 alert("複製失敗，請手動複製");
             });
         }
+
+        // 按ESC鍵關閉彈窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
