@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>公告智能分析工具 - 稳定版</title>
@@ -22,7 +22,21 @@
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            position: relative;
         }
+        /* 右上角回首页按钮 */
+        .home-btn{
+            position: absolute;
+            top:15px;
+            right:20px;
+            background:#28a745;
+            color:#fff;
+            border:none;
+            padding:6px 12px;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        .home-btn:hover{background:#218838;}
         h1 {
             text-align: center;
             color: #1a73e8;
@@ -45,6 +59,9 @@
         .clear-btn {
             background: #dc3545;
             margin-left: 10px;
+        }
+        .clear-btn:hover {
+            background: #b02a37;
         }
         .result-area {
             background: #f8f9fa;
@@ -126,17 +143,19 @@
 <body>
 
 <div class="container">
-    <h1>🎯 公告智能分析工具（稳定版）</h1>
+    <!-- 右上角回首页 -->
+    <button class="home-btn" onclick="backHome()">🏠 回首页</button>
+
+    <h1>🎯 公告智能分析工具</h1>
 
     <div style="margin-bottom:20px;">
-        <textarea id="textInput" placeholder="请直接粘贴公告文字，系统会自动：
-1. 找到最相关平台
-2. 判断是否滚动/热更新
-3. 判断是单一/部分/全部游戏
-4. 提取维护时间
-5. 判断是否完成/延长时间"></textarea>
+        <textarea id="textInput" placeholder="贴上公告文字，自动分析：
+• 最相关平台
+• 币别 / 产品系列 / 游戏类别
+• 大厅、桌台、单一/部分/全游戏
+• 维护时间、热更新、延长、已完成"></textarea>
         <button class="btn" onclick="startAnalyze()">开始智能分析</button>
-        <button class="btn clear-btn" onclick="clearHistory()">清空记录</button>
+        <button class="btn clear-btn" id="clearRecordBtn">清空记录</button>
     </div>
 
     <div class="result-area">
@@ -219,18 +238,35 @@ const platformData = [
 ];
 
 let historyRecords = JSON.parse(localStorage.getItem('announce_history') || '[]');
+const resultContent = document.getElementById('resultContent');
+const historyList = document.getElementById('historyList');
+
+// 回首页清空内容
+function backHome(){
+    document.getElementById('textInput').value = "";
+    resultContent.innerHTML = "请粘贴公告文字";
+}
+
+// 修复：绑定清空记录点击事件
+document.getElementById('clearRecordBtn').addEventListener('click',function(){
+    if(confirm('确定要清空所有本地记录？无法复原')){
+        historyRecords = [];
+        localStorage.removeItem('announce_history');
+        renderHistory();
+    }
+});
 
 function startAnalyze() {
     const text = document.getElementById('textInput').value.trim();
     if (!text) {
-        document.getElementById('resultContent').innerHTML = `<p style="color:red;">请输入公告内容</p>`;
+        resultContent.innerHTML = `<p style="color:red;">请输入公告内容</p>`;
         return;
     }
 
     const lower = text.toLowerCase();
     let html = ``;
 
-    // 找出最相关平台
+    // 1. 最相关平台
     let scoredPlatforms = [];
     platformData.forEach(platform => {
         let score = 0;
@@ -239,61 +275,78 @@ function startAnalyze() {
         });
         if (score > 0) scoredPlatforms.push({ platform, score });
     });
-
     scoredPlatforms.sort((a, b) => b.score - a.score);
 
     if (scoredPlatforms.length > 0) {
         const top = scoredPlatforms[0];
         html += `
         <div class="result-item">
-            <strong>🏆 最相关平台：</strong>${top.platform.platform} <span class="score-tag">匹配度 ${top.score}</span><br>
+            <strong>🏆 最相关平台：</strong>${top.platform.platform} 
+            <span class="score-tag">匹配度 ${top.score}</span><br>
             <strong>📌 备注信息：</strong>${top.platform.note || '无'}
         </div><hr>`;
     }
 
-    // 公告重点自动分析
+    // 2. 币别判断
+    let currency = "未识别";
+    if(lower.includes('台幣')||lower.includes('twd')||lower.includes('台幣線')) currency = "台幣 TWD";
+    if(lower.includes('美金')||lower.includes('usd')||lower.includes('美金線')) currency = "美金 USD";
+    if(lower.includes('歐元')||lower.includes('eur')) currency = "歐元 EUR";
+    if(lower.includes('多币')||lower.includes('雙幣')) currency = "多币别共用";
+
+    // 3. 产品/游戏类型
+    let productType = [];
+    if(lower.includes('真人')||lower.includes('live')) productType.push("真人视讯");
+    if(lower.includes('電子')||lower.includes('slot')) productType.push("电子游戏");
+    if(lower.includes('捕魚')) productType.push("捕鱼系列");
+    if(lower.includes('棋牌')) productType.push("棋牌桌游");
+    if(lower.includes('電競')||lower.includes('esport')) productType.push("电竞赛事");
+    if(lower.includes('彩票')||lower.includes('彩券')) productType.push("彩票彩种");
+    if(lower.includes('體育')) productType.push("体育赛事");
+
+    // 4. 影响范围强化（大厅/桌/单一/部分/系列）
+    let rangeText = "无法判断";
+    if(lower.includes('全部')||lower.includes('全平台')||lower.includes('全系列')) rangeText = "✅ 全平台 / 全系列产品";
+    else if(lower.includes('大廳')||lower.includes('大厅')) rangeText = "📍 特定大厅维护";
+    else if(lower.includes('桌台')||lower.includes('單桌')||lower.includes('多张桌')) rangeText = "🪑 部分桌台/牌桌";
+    else if(lower.includes('單一')||lower.includes('單款')||lower.includes('单个游戏')) rangeText = "🎮 单一独立游戏";
+    else if(lower.includes('部份')||lower.includes('部分')||lower.includes('多款')) rangeText = "📂 部分游戏 / 特定系列";
+
+    // 5. 维护模式
     let isRolling = false;
-    let isSingleGame = false;
-    let isPartGame = false;
-    let isAllGame = false;
+    if (lower.includes('滚动') || lower.includes('熱更新') || lower.includes('hotfix') || lower.includes('无停机')) isRolling = true;
+
+    // 6. 维护状态
     let isDone = false;
     let isExtended = false;
-    let timeInfo = "未找到时间";
-
-    if (lower.includes('滚动') || lower.includes('熱更新') || lower.includes('hotfix') || lower.includes('无停机')) isRolling = true;
-    if (lower.includes('单一游戏') || lower.includes('单个游戏')) isSingleGame = true;
-    else if (lower.includes('部分游戏') || lower.includes('部份游戏')) isPartGame = true;
-    else if (lower.includes('全部') || lower.includes('所有') || lower.includes('全平台')) isAllGame = true;
-
     if (lower.includes('完成') || lower.includes('结束') || lower.includes('恢复') || lower.includes('开放')) isDone = true;
     if (lower.includes('延长') || lower.includes('延后') || lower.includes('更改时间') || lower.includes('延迟')) isExtended = true;
 
+    // 7. 时间提取
+    let timeInfo = "未找到维护时间";
     const timeMatch = text.match(/(\d{1,2}[:：/]\d{1,2}).*?(\d{1,2}[:：/]\d{1,2})/) ||
                       text.match(/(\d+月\d+日.*?\d+:\d+).*?(\d+:\d+)/);
     if (timeMatch) timeInfo = timeMatch[1] + " ～ " + timeMatch[2];
 
+    // 组装分析内容
     html += `
     <div class="analysis-box">
-        <div class="analysis-title">🔍 公告重点自动分析</div>
+        <div class="analysis-title">🔍 公告完整重点分析</div>
+        <div class="result-item">💰 维护币别：<strong>${currency}</strong></div>
+        <div class="result-item">📦 产品类别：<strong>${productType.length>0 ? productType.join('、') : '未指定'}</strong></div>
+        <div class="result-item">🌐 影响范围：<strong>${rangeText}</strong></div>
         <div class="result-item">🔄 滚动/热更新：<strong>${isRolling ? '是' : '否'}</strong></div>
-        <div class="result-item">🎮 影响范围：<strong>`;
-
-    if (isSingleGame) html += '单一游戏';
-    else if (isPartGame) html += '部分游戏';
-    else if (isAllGame) html += '全部游戏/全平台';
-    else html += '无法判断';
-
-    html += `</strong></div>
         <div class="result-item">⏰ 维护时间：<strong>${timeInfo}</strong></div>
-        <div class="result-item">✅ 维护状态：<strong>${isDone ? '已完成' : '维护中'}</strong></div>
-        <div class="result-item">⏳ 时间延长/更改：<strong>${isExtended ? '是' : '否'}</strong></div>
+        <div class="result-item">✅ 维护状态：<strong>${isDone ? '已维护完成 / 恢复上线' : '例行维护中'}</strong></div>
+        <div class="result-item">⏳ 时间异动：<strong>${isExtended ? '⚠️ 有延长/更改时间' : '无调整'}</strong></div>
     </div>`;
 
-    document.getElementById('resultContent').innerHTML = html;
+    resultContent.innerHTML = html;
     saveHistory(scoredPlatforms.length > 0 ? scoredPlatforms[0].platform.platform : "未知", text);
     renderHistory();
 }
 
+// 储存记录
 function saveHistory(platform, content) {
     const record = {
         time: new Date().toLocaleString(),
@@ -305,25 +358,18 @@ function saveHistory(platform, content) {
     localStorage.setItem('announce_history', JSON.stringify(historyRecords));
 }
 
+// 渲染记录
 function renderHistory() {
-    const list = document.getElementById('historyList');
     if (historyRecords.length === 0) {
-        list.innerHTML = `<p style="color:#999;">暂无记录</p>`;
+        historyList.innerHTML = `<p style="color:#999;">暂无记录</p>`;
         return;
     }
-    list.innerHTML = historyRecords.map(r => `
+    historyList.innerHTML = historyRecords.map(r => `
         <div class="history-item">${r.time}｜${r.platform}<br><small>${r.content}</small></div>
     `).join('');
 }
 
-function clearHistory() {
-    if (confirm('确定清空所有记录？')) {
-        historyRecords = [];
-        localStorage.removeItem('announce_history');
-        renderHistory();
-    }
-}
-
+// 初始化载入记录
 renderHistory();
 </script>
 </body>
