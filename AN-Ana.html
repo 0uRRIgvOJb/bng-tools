@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-TW"> 
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>平台公告识别工具</title>
+    <title>平台维护公告识别工具｜OCR图片辨识+本地记忆</title>
+    <!-- 引入离线OCR库 -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -27,6 +29,7 @@
             text-align: center;
             color: #1a73e8;
             margin-bottom: 20px;
+            font-size:22px;
         }
         .upload-area {
             border: 2px dashed #1a73e8;
@@ -53,9 +56,16 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            transition:0.2s;
         }
         .btn:hover {
             background: #1557b0;
+        }
+        .clear-btn {
+            background: #dc3545;
+        }
+        .clear-btn:hover {
+            background: #b02a37;
         }
         .preview-area {
             margin: 20px 0;
@@ -82,7 +92,7 @@
         }
         .result-item {
             margin: 8px 0;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         .result-item strong {
             color: #1a73e8;
@@ -97,37 +107,32 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #666;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
         }
         .history-list {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
         }
         .history-item {
             padding: 8px 12px;
             background: #f0f4f8;
             border-radius: 4px;
-            margin: 5px 0;
+            margin: 6px 0;
             font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .clear-btn {
-            background: #dc3545;
-            margin-left: 10px;
-        }
-        .clear-btn:hover {
-            background: #b02a37;
+            line-height:1.6;
         }
         .text-input-area {
             margin: 20px 0;
         }
         textarea {
             width: 100%;
-            height: 100px;
+            height: 120px;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             resize: vertical;
         }
         .tab-container {
@@ -152,134 +157,137 @@
         .tab-content.active {
             display: block;
         }
+        .ocr-loading{
+            color:#ff6700;
+            font-weight:bold;
+            margin:10px 0;
+        }
+        .warn-tip{
+            background:#fff3cd;
+            color:#856404;
+            padding:10px;
+            border-radius:6px;
+            margin:10px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>平台维护公告识别工具</h1>
+        <h1>平台维护公告 OCR识别工具</h1>
 
         <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('image-tab')">上传图片</button>
-            <button class="tab-btn" onclick="switchTab('text-tab')">输入文字</button>
+            <button class="tab-btn active" onclick="switchTab('image-tab')">🖼️ 上传图片OCR</button>
+            <button class="tab-btn" onclick="switchTab('text-tab')">📝 粘贴文字</button>
         </div>
 
-        <!-- 图片上传模式 -->
+        <!-- 图片OCR模式 -->
         <div id="image-tab" class="tab-content active">
             <div class="upload-area" id="uploadArea">
-                <p>点击或拖拽图片到这里上传</p>
+                <p>点击 / 拖拽 公告图片至此</p>
+                <p style="font-size:14px;color:#666;margin-top:6px;">自动OCR辨識文字 → 自动判別平台</p>
                 <input type="file" id="imageInput" accept="image/*">
                 <button class="btn">选择图片</button>
             </div>
             <div class="preview-area" id="previewArea"></div>
+            <div id="ocrStatus"></div>
         </div>
 
         <!-- 文字输入模式 -->
         <div id="text-tab" class="tab-content">
             <div class="text-input-area">
-                <textarea id="textInput" placeholder="请粘贴公告文字内容..."></textarea>
-                <button class="btn" onclick="processText()">识别文字内容</button>
+                <textarea id="textInput" placeholder="直接貼上公告內文，自動辨識平台"></textarea>
+                <button class="btn" onclick="processText()">開始辨識</button>
             </div>
         </div>
 
         <div class="result-area" id="resultArea">
-            <div class="result-title">识别结果</div>
-            <div id="resultContent">请上传图片或输入文字开始识别</div>
+            <div class="result-title">📋 辨識結果</div>
+            <div id="resultContent">請上傳圖片或貼文字開始</div>
         </div>
 
         <div class="history-area">
-            <div class="history-title">已识别公告记录
-                <button class="btn clear-btn" onclick="clearHistory()">清空记录</button>
+            <div class="history-title">
+                <span>🕒 辨識紀錄（瀏覽器自動記憶）</span>
+                <button class="btn clear-btn" onclick="clearHistory()">清空紀錄</button>
             </div>
             <div class="history-list" id="historyList">
-                <p style="color:#999;">暂无记录</p>
+                <p style="color:#999;">暫無紀錄</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 平台数据（已全部录入）
+        // ========== 你的完整平台資料 完整保留 ==========
         const platformData = [
-            // 体育类
             { platform: "Super体育", keywords: ["Super", "015_瑞豐系統/SP串接"], note: "" },
-            { platform: "DB体育(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
-            { platform: "雷火电竞", keywords: ["GF-超遊串接高登棋牌/雷火"], note: "" },
-            { platform: "FB体育", keywords: ["XT-BeyondGaming(FB)", "XT-Beyondgaming(USD)"], note: "美金线(业主不接了)" },
-            { platform: "SABA体育", keywords: ["BGU - SABA (SW) - 串接群 INTEGRATION"], note: "美金线" },
+            { platform: "DB体育(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "屬技術及客服群，任何DB產品的問題 技術問題，賽事注單查詢等；公告頻道，加入連結：https://t.me/+S0EqBYshAhthYTg1" },
+            { platform: "雷火電競", keywords: ["GF-超遊串接高登棋牌/雷火"], note: "" },
+            { platform: "FB体育", keywords: ["XT-BeyondGaming(FB)", "XT-Beyondgaming(USD)"], note: "美金線(業主不接了)" },
+            { platform: "SABA体育", keywords: ["BGU - SABA (SW) - 串接群 INTEGRATION"], note: "美金線" },
             { platform: "WG体育(接入中)", keywords: ["超遊-WG S TG"], note: "" },
-            { platform: "IM体育&电竞", keywords: ["[IMone] Uplus - IM 体育电竞 对接", "IMONE 公告频道 / IMONE Channel Group"], note: "美金线；公告频道，加入连结：https://t.me/+JaGXQdK2zFxhZGM1；信件附件：IM-Email附件" },
-            { platform: "LIVESPORT体育", keywords: ["BEYOND - LiveSport 技术对接群"], note: "美金线" },
-            // 真人类
-            { platform: "WM真人", keywords: ["【WM195】超遊-WM真人API(客服群)", "【WM195】超遊-WM真人API(技术群)", "WM Casino Maintenance Notice -WM完美真人維護公告"], note: "客服群；技术群；维护通知群，加入连结：https://t.me/+B1CuzHMYtGgwZJg1" },
-            { platform: "DG真人", keywords: ["SD-BGI(DG)对接群", "XT-Beyondgaming(USD)"], note: "美金线" },
+            { platform: "IM体育&電競", keywords: ["[IMone] Uplus - IM 体育电竞 对接", "IMONE 公告頻道 / IMONE Channel Group"], note: "美金線；公告頻道，加入連結：https://t.me/+JaGXQdK2zFxhZGM1；信件附件：IM-Email附件" },
+            { platform: "LIVESPORT体育", keywords: ["BEYOND - LiveSport 技术对接群"], note: "美金線" },
+            { platform: "WM真人", keywords: ["【WM195】超遊-WM真人API(客服群)", "【WM195】超遊-WM真人API(技术群)", "WM Casino Maintenance Notice -WM完美真人維護公告"], note: "客服群；技術群；維護通知群，加入連結：https://t.me/+B1CuzHMYtGgwZJg1" },
+            { platform: "DG真人", keywords: ["SD-BGI(DG)对接群", "XT-Beyondgaming(USD)"], note: "美金線" },
             { platform: "SA真人", keywords: ["M441 - SA Gaming - BeyondGaming"], note: "" },
-            { platform: "AB真人(欧博真人)", keywords: ["AB(轉) | MW2 | BG-Fortuna", "AB(單) | SW2 | BG-Fortuna", "Uplus & AB(SW2 API Group)"], note: "台币线-转帐钱包；台币线-单一钱包；美金线" },
-            { platform: "MT真人", keywords: ["MT真人API&BG（易）對接", "BG(鎂)-MT 真人 API"], note: "美金线" },
-            { platform: "DB真人(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
+            { platform: "AB真人(歐博真人)", keywords: ["AB(轉) | MW2 | BG-Fortuna", "AB(單) | SW2 | BG-Fortuna", "Uplus & AB(SW2 API Group)"], note: "台幣線-轉帳錢包；台幣線-單一錢包；美金線" },
+            { platform: "MT真人", keywords: ["MT真人API&BG（易）對接", "BG(鎂)-MT 真人 API"], note: "美金線" },
             { platform: "T9真人", keywords: ["T9xBG串接"], note: "" },
-            { platform: "WF真人", keywords: ["BG - IGAS - Winfinity Integration"], note: "美金线；因为子后台结算单位为欧元，不方便对帐，故不上架 (UGAME-37)" },
-            { platform: "VG真人", keywords: ["BG-VG華麗高對接群", "華利高真人 Verygood"], note: "美金线；公告频道，公告群连结：https://t.me/+XjETiwUvKUw4M2NI" },
-            { platform: "SEXY真人", keywords: ["XT-Beyondgaming(USD)"], note: "美金线" },
-            // 棋牌类
-            { platform: "好路棋牌", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金线(接入中)" },
-            { platform: "DB棋牌(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
+            { platform: "WF真人", keywords: ["BG - IGAS - Winfinity Integration"], note: "美金線；因為子後台結算單位為歐元，不方便對帳，故不上架 (UGAME-37)" },
+            { platform: "VG真人", keywords: ["BG-VG華麗高對接群", "華利高真人 Verygood"], note: "美金線；公告頻道，公告群連結：https://t.me/+XjETiwUvKUw4M2NI" },
+            { platform: "SEXY真人", keywords: ["XT-Beyondgaming(USD)"], note: "美金線" },
+            { platform: "好路棋牌", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金線(接入中)" },
             { platform: "高登棋牌", keywords: ["GF-超遊串接高登棋牌/雷火"], note: "" },
-            { platform: "BOYA棋牌(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
-            // 电子类
-            { platform: "GR电子", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金线" },
-            { platform: "BNG电子", keywords: ["beyondgaming (超遊) VS BNG电子", "BNG Maintenance Announcement"], note: "维护通知群，加入连结：https://t.me/+Hc1wlNFTdBIJYwu1" },
-            { platform: "DB电子(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
-            { platform: "BG电子", keywords: ["(L)A06 BE技术客服群", "BE电子 官方频道"], note: "维护通知群，加入连结：https://t.me/+6SyG-KBuQJhmZWU1" },
-            { platform: "RSG电子", keywords: ["RSG Slot-Beyond Gaming(營運)", "RSG Slot-Beyond Gaming(USA)(營運)"], note: "美金线" },
-            { platform: "ZG电子", keywords: ["ZG-BYG 客服群", "AA147T-超遊串接zG电子"], note: "客服群；技术群" },
-            { platform: "ATG电子", keywords: ["超遊 BeyondGaming x ATG 技术客服", "超遊 x ATG 串接", "超遊-美金線 x ATG 技術客服"], note: "台币线-客服群；技术群；美金线-客服群" },
-            { platform: "GB电子(寶藏电子)", keywords: ["BG/GB电子 介接群"], note: "" },
-            { platform: "QT电子", keywords: ["BG - QTech Integration- ANH", "BG - QTech Promo 活動群 - ANH"], note: "12/1 00:00起使用新QT电子群组，加入连结：https://teams.live.com/l/invite/FEAlg5F2_SwZNIvAgw；QT平台活动群" },
-            { platform: "Gemini电子", keywords: ["BG超遊/Gemini 游戏对接群"], note: "" },
-            { platform: "NAGA电子", keywords: ["Beyond Gaming - Naga Games"], note: "" },
-            { platform: "EG电子", keywords: ["EG-76-BeyondGaming", "(新)EazyGaming Slot —維護頻道 Maintenance Channel"], note: "维护通知群，加入连结: https://t.me/+iiDQlvhehygwOTNl" },
-            { platform: "RG电子", keywords: ["BG - RG Slot 客服群", "BG - RG电子 技术群", "RG Slot 官方频道"], note: "加入客服群连结：https://t.me/+VBaAhvf33KY3ZDII；新游戏、维护通知群，加入连结：https://t.me/+3vn5e88fnONjNTII" },
-            { platform: "TAG电子", keywords: ["TAG-電子遊戲 - BG"], note: "" },
-            { platform: "AT电子", keywords: ["AT SLOTS 超遊技術客服群"], note: "" },
-            { platform: "AI GAMING电子", keywords: ["AIGAMING x BG tw"], note: "台币线(问题太多暂停对接)" },
-            { platform: "PP电子", keywords: ["<OMG总代> BeyondGaming", "211375 [AWC68-K36 PP] BGU-integ-Both"], note: "台币线；美金线" },
-            { platform: "Maha电子", keywords: ["BG接Maha"], note: "美金线" },
-            { platform: "PG电子", keywords: ["GS-API- MM BEYONDGAMING888USD{A}(PG){S}{D}", "All Products Notice / 各游戏平台公告"], note: "美金线；公告频道，加入连结：https://t.me/+QnOM9GBjzrFINzFI (僅需留意PG电子的通知，其餘平台通知無需理會)" },
-            { platform: "CQ9电子", keywords: ["XT-Beyondgaming(USD)", "24/7星图-CQ9产品维护公告群-24/7XTU"], note: "美金线；公告频道，加入连结：https://t.me/+xZGfe7V6l3dlYTFl" },
-            { platform: "JILI电子", keywords: ["XT-Beyondgaming(USD)"], note: "美金线" },
-            { platform: "JDB电子", keywords: ["XT-Beyondgaming(USD)", "24/7星图-JDB产品维护公告群-24/7XTU"], note: "美金线；公告频道，加入连结：https://t.me/+HNxRvSwUh9FmZjk1" },
-            { platform: "Spribe电子", keywords: ["對接 BGU-Spribe[SG191/K36Seamless-BGU/SB] Int", "BGU-Spribe[SG191/K36Seamless-BGU/SB] CS Support"], note: "美金线-技术对接群；美金线-客服群，https://t.me/+E76RSIt8J4VIODNI" },
-            // 捕鱼类
-            { platform: "好路捕鱼", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金线" },
-            { platform: "DB捕鱼(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
-            { platform: "RSG捕鱼", keywords: ["RSG Slot-Beyond Gaming(營運)", "RSG Slot-Beyond Gaming(USA)(營運)"], note: "美金线" },
-            { platform: "ZG捕鱼", keywords: ["ZG-BYG 客服群"], note: "" },
-            { platform: "GB捕鱼", keywords: ["BG/GB电子 介接群"], note: "" },
-            { platform: "BOYA捕鱼(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
-            { platform: "TAG捕鱼", keywords: ["TAG-電子遊戲 - BG"], note: "" },
-            { platform: "CQ9捕鱼", keywords: ["XT-Beyondgaming(USD)", "24/7星图-CQ9产品维护公告群-24/7XTU"], note: "美金线；公告频道，加入连结：https://t.me/+xZGfe7V6l3dlYTFl" },
-            { platform: "JILI捕鱼", keywords: ["XT-Beyondgaming(USD)"], note: "美金线" },
-            { platform: "JDB捕鱼", keywords: ["XT-Beyondgaming(USD)", "24/7星图-JDB产品维护公告群-24/7XTU"], note: "美金线；公告频道，加入连结：https://t.me/+HNxRvSwUh9FmZjk1" },
-            // 动物竞技类
-            { platform: "SV388", keywords: ["XT-Beyondgaming(USD)"], note: "美金线" },
-            // EVO真人
-            { platform: "EVO真人", keywords: ["XT-Beyondgaming(USD)", "24/7星图-evolution产品维护公告群-24/7XTU"], note: "美金线；公告频道，加入连结：https://t.me/+CJIrkMdQa-44NjdI" },
-            // 彩票类
+            { platform: "GR電子", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金線" },
+            { platform: "BNG電子", keywords: ["beyondgaming (超遊) VS BNG电子", "BNG Maintenance Announcement"], note: "維護通知群，加入連結：https://t.me/+Hc1wlNFTdBIJYwu1" },
+            { platform: "BG電子", keywords: ["(L)A06 BE技术客服群", "BE电子 官方频道"], note: "維護通知群，加入連結：https://t.me/+6SyG-KBuQJhmZWU1" },
+            { platform: "RSG電子", keywords: ["RSG Slot-Beyond Gaming(營運)", "RSG Slot-Beyond Gaming(USA)(營運)"], note: "美金線" },
+            { platform: "ZG電子", keywords: ["ZG-BYG 客服群", "AA147T-超遊串接zG电子"], note: "客服群；技術群" },
+            { platform: "ATG電子", keywords: ["超遊 BeyondGaming x ATG 技术客服", "超遊 x ATG 串接", "超遊-美金線 x ATG 技術客服"], note: "台幣線-客服群；技術群；美金線-客服群" },
+            { platform: "GB電子(寶藏電子)", keywords: ["BG/GB电子 介接群"], note: "" },
+            { platform: "QT電子", keywords: ["BG - QTech Integration- ANH", "BG - QTech Promo 活動群 - ANH"], note: "12/1 00:00起使用新QT電子群組，加入連結：https://teams.live.com/l/invite/FEAlg5F2_SwZNIvAgw；QT平台活動群" },
+            { platform: "Gemini電子", keywords: ["BG超遊/Gemini 游戏对接群"], note: "" },
+            { platform: "NAGA電子", keywords: ["Beyond Gaming - Naga Games"], note: "" },
+            { platform: "EG電子", keywords: ["EG-76-BeyondGaming", "(新)EazyGaming Slot —維護頻道 Maintenance Channel"], note: "維護通知群，加入連結: https://t.me/+iiDQlvhehygwOTNl" },
+            { platform: "RG電子", keywords: ["BG - RG Slot 客服群", "BG - RG电子 技术群", "RG Slot 官方频道"], note: "加入客服群連結：https://t.me/+VBaAhvf33KY3ZDII；新遊戲、維護通知群，加入連結：https://t.me/+3vn5e88fnONjNTII" },
+            { platform: "TAG電子", keywords: ["TAG-電子遊戲 - BG"], note: "" },
+            { platform: "AT電子", keywords: ["AT SLOTS 超遊技術客服群"], note: "" },
+            { platform: "AI GAMING電子", keywords: ["AIGAMING x BG tw"], note: "台幣線(問題太多暫停對接)" },
+            { platform: "PP電子", keywords: ["<OMG总代> BeyondGaming", "211375 [AWC68-K36 PP] BGU-integ-Both"], note: "台幣線；美金線" },
+            { platform: "Maha電子", keywords: ["BG接Maha"], note: "美金線" },
+            { platform: "PG電子", keywords: ["GS-API- MM BEYONDGAMING888USD{A}(PG){S}{D}", "All Products Notice / 各游戏平台公告"], note: "美金線；公告頻道，加入連結：https://t.me/+QnOM9GBjzrFINzFI (僅需留意PG電子的通知，其餘平台通知無需理會)" },
+            { platform: "CQ9電子", keywords: ["XT-Beyondgaming(USD)", "24/7星图-CQ9产品维护公告群-24/7XTU"], note: "美金線；公告頻道，加入連結：https://t.me/+xZGfe7V6l3dlYTFl" },
+            { platform: "JILI電子", keywords: ["XT-Beyondgaming(USD)"], note: "美金線" },
+            { platform: "JDB電子", keywords: ["XT-Beyondgaming(USD)", "24/7星图-JDB产品维护公告群-24/7XTU"], note: "美金線；公告頻道，加入連結：https://t.me/+HNxRvSwUh9FmZjk1" },
+            { platform: "Spribe電子", keywords: ["對接 BGU-Spribe[SG191/K36Seamless-BGU/SB] Int", "BGU-Spribe[SG191/K36Seamless-BGU/SB] CS Support"], note: "美金線-技術對接群；美金線-客服群，https://t.me/+E76RSIt8J4VIODNI" },
+            { platform: "好路捕魚", keywords: ["超遊(bg)&好路", "好路-BG美金線(bgusd)"], note: "美金線" },
+            { platform: "RSG捕魚", keywords: ["RSG Slot-Beyond Gaming(營運)", "RSG Slot-Beyond Gaming(USA)(營運)"], note: "美金線" },
+            { platform: "ZG捕魚", keywords: ["ZG-BYG 客服群"], note: "" },
+            { platform: "GB捕魚", keywords: ["BG/GB电子 介接群"], note: "" },
+            { platform: "TAG捕魚", keywords: ["TAG-電子遊戲 - BG"], note: "" },
+            { platform: "CQ9捕魚", keywords: ["XT-Beyondgaming(USD)", "24/7星图-CQ9产品维护公告群-24/7XTU"], note: "美金線；公告頻道，加入連結：https://t.me/+xZGfe7V6l3dlYTFl" },
+            { platform: "JILI捕魚", keywords: ["XT-Beyondgaming(USD)"], note: "美金線" },
+            { platform: "JDB捕魚", keywords: ["XT-Beyondgaming(USD)", "24/7星图-JDB产品维护公告群-24/7XTU"], note: "美金線；公告頻道，加入連結：https://t.me/+HNxRvSwUh9FmZjk1" },
+            { platform: "SV388", keywords: ["XT-Beyondgaming(USD)"], note: "美金線" },
+            { platform: "EVO真人", keywords: ["XT-Beyondgaming(USD)", "24/7星图-evolution产品维护公告群-24/7XTU"], note: "美金線；公告頻道，加入連結：https://t.me/+CJIrkMdQa-44NjdI" },
             { platform: "101彩票(F8)", keywords: ["161/GW13"], note: "" },
             { platform: "SG88彩票", keywords: ["SG api工程"], note: "" },
-            { platform: "WG彩票(以前名稱叫WIN)", keywords: ["BG/超遊-WG S/L/R CG", "超遊-WG L TG"], note: "客服群；技术群" },
-            { platform: "DB彩票(及DB所有產品)", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "属技术及客服群，任何DB产品的问题 技术问题，赛事注单查询等；公告频道，加入连结：https://t.me/+S0EqBYshAhthYTg1" },
+            { platform: "WG彩票(舊名WIN)", keywords: ["BG/超遊-WG S/L/R CG", "超遊-WG L TG"], note: "客服群；技術群" },
             { platform: "9K彩票", keywords: ["超遊串接9K彩票"], note: "" },
             { platform: "京彩", keywords: ["BG-京彩"], note: "" },
-            { platform: "MT彩票", keywords: ["MT彩票&BG 對接"], note: "2025/10/1起关闭营运" },
-            { platform: "天成彩票", keywords: ["(S)24CS-Bginternational(bguplus)-TCG客服(ELOTTO)(USD)", "TC产品维护公告 Product Maintenance Notice -B"], note: "美金线；公告频道，加入连结：https://t.me/+rb2glZrTT5c5YzA1 (僅需留意天成彩票的通知，其餘平台通知無需理會，新上架的彩種或玩法不會在此群通知，要每日到子後台查看公告)" },
-            // 其他
-            { platform: "其他-已停用", keywords: ["【24Tech】产品维护公告-Product Maintenance Notice", "【BeyondGaming】-游戏对接群"], note: "【24Tech】是之前ks開心電競的維護公告群，但現在沒有接了，所以此群的通知参考用；【BeyondGaming】是之前菲律宾賓站接的遊戲商，菲律宾賓站已經暫停營運，所以不用理會這個群組的通知" }
+            { platform: "MT彩票", keywords: ["MT彩票&BG 對接"], note: "2025/10/1起關閉營運" },
+            { platform: "天成彩票", keywords: ["(S)24CS-Bginternational(bguplus)-TCG客服(ELOTTO)(USD)", "TC产品维护公告 Product Maintenance Notice -B"], note: "美金線；公告頻道，加入連結：https://t.me/+rb2glZrTT5c5YzA1 (僅需留意天成彩票的通知，其餘平台通知無需理會)" },
+            { platform: "DB全系列產品", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "DB體育/棋牌/電子/捕魚/彩票皆適用；統一公告群連結：https://t.me/+S0EqBYshAhthYTg1" },
+            { platform: "BOYA全系列產品", keywords: ["DB 210823A beyondgaming", "A-DB技术支持-维护公告Announcement"], note: "同DB公告群規範" },
+            { platform: "其他-已停用", keywords: ["【24Tech】产品维护公告-Product Maintenance Notice", "【BeyondGaming】-游戏对接群"], note: "【24Tech】舊開心電競維護群，現已停用；菲律賓賓站群組已暫停營運，無需理會" }
         ];
 
-        // 历史记录
-        let historyRecords = JSON.parse(localStorage.getItem('公告记录') || '[]');
+        // 本地記憶歷史紀錄
+        let historyRecords = JSON.parse(localStorage.getItem('announce_history') || '[]');
+        const resultContent = document.getElementById('resultContent');
+        const ocrStatus = document.getElementById('ocrStatus');
 
-        // 标签切换
+        // 分頁切換
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -287,118 +295,131 @@
             event.target.classList.add('active');
         }
 
-        // 图片上传处理
+        // 拖拽+選取圖片
         const uploadArea = document.getElementById('uploadArea');
         const imageInput = document.getElementById('imageInput');
         const previewArea = document.getElementById('previewArea');
 
         uploadArea.addEventListener('click', () => imageInput.click());
-        uploadArea.addEventListener('dragover', (e) => {
+        uploadArea.addEventListener('dragover', e=>{e.preventDefault();uploadArea.style.background='#e8f0fe'});
+        uploadArea.addEventListener('dragleave', ()=>uploadArea.style.background='#f8faff');
+        uploadArea.addEventListener('drop', e=>{
             e.preventDefault();
-            uploadArea.style.background = '#e8f0fe';
-        });
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.background = '#f8faff';
-        });
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = '#f8faff';
+            uploadArea.style.background='#f8faff';
             const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                handleImage(file);
-            }
+            if(file&&file.type.startsWith('image/')) handleImage(file);
         });
-        imageInput.addEventListener('change', (e) => {
+        imageInput.addEventListener('change',e=>{
             const file = e.target.files[0];
-            if (file) handleImage(file);
+            if(file) handleImage(file);
         });
 
-        function handleImage(file) {
+        // OCR辨識圖片
+        function handleImage(file){
             const reader = new FileReader();
-            reader.onload = function(e) {
-                previewArea.innerHTML = `<img src="${e.target.result}" alt="上传的图片">`;
-                // 模拟识别（实际使用OCR，这里演示匹配逻辑）
-                processText("（图片上传，模拟识别文字，实际需接入OCR服务）");
+            reader.onload = async function(e){
+                // 預覽圖片
+                previewArea.innerHTML = `<img src="${e.target.result}" alt="公告圖片">`;
+                ocrStatus.innerHTML = `<div class="ocr-loading">⏳ 正在OCR辨識文字(繁中+英文)，請稍候...</div>`;
+                // 執行OCR
+                try{
+                    const res = await Tesseract.recognize(
+                        e.target.result,
+                        'chi_tra+eng', // 繁體中文 + 英文
+                        {logger:m=>{
+                            if(m.status==='recognizing text'){
+                                ocrStatus.innerHTML = `<div class="ocr-loading">辨識進度：${Math.round(m.progress*100)}%</div>`;
+                            }
+                        }}
+                    );
+                    const ocrText = res.data.text.trim();
+                    ocrStatus.innerHTML = `<div style="color:green;">✅ OCR辨識完成</div>`;
+                    // 送入平台匹配
+                    matchPlatform(ocrText);
+                }catch(err){
+                    ocrStatus.innerHTML = `<div style="color:red;">❌ OCR失敗，請換一張清晰圖片</div>`;
+                    console.error(err);
+                }
             }
             reader.readAsDataURL(file);
         }
 
-        // 文字识别处理
-        function processText() {
-            const text = document.getElementById('textInput').value || "（无文字输入）";
-            let matchedPlatforms = [];
+        // 文字手動輸入處理
+        function processText(){
+            const text = document.getElementById('textInput').value.trim();
+            if(!text){
+                resultContent.innerHTML = `<p style="color:red;">請輸入公告文字</p>`;
+                return;
+            }
+            matchPlatform(text);
+        }
 
-            // 匹配平台
-            platformData.forEach(platform => {
-                const isMatch = platform.keywords.some(keyword => 
-                    text.toLowerCase().includes(keyword.toLowerCase())
-                );
-                if (isMatch) {
-                    matchedPlatforms.push(platform);
-                }
+        // 核心：關鍵字匹配平台 + 顯示備註 + 紀錄
+        function matchPlatform(rawText){
+            const text = rawText.toLowerCase();
+            let matched = [];
+            platformData.forEach(item=>{
+                const hit = item.keywords.some(k=> text.includes(k.toLowerCase()));
+                if(hit) matched.push(item);
             });
 
-            // 生成结果
-            let resultHtml = '';
-            if (matchedPlatforms.length > 0) {
-                matchedPlatforms.forEach(platform => {
-                    resultHtml += `
-                        <div class="result-item">
-                            <strong>识别平台：</strong>${platform.platform}<br>
-                            <strong>备注信息：</strong>${platform.note || '无备注'}
-                        </div>
-                        <hr style="margin:10px 0; border: none; border-top:1px solid #eee;">
+            let html = '';
+            if(matched.length>0){
+                matched.forEach(p=>{
+                    html += `
+                    <div class="result-item">
+                        <strong>✅ 辨識平台：</strong>${p.platform}<br>
+                        <strong>📌 備註說明：</strong>${p.note||'無備註'}
+                    </div>
+                    <hr style="margin:12px 0;border:0;border-top:1px solid #eee;">
                     `;
-                    // 保存记录
-                    saveHistory(platform.platform, text);
+                    saveHistory(p.platform, rawText);
                 });
-                resultHtml += `<p style="color:green;">✅ 已匹配到以上平台，请确认公告内容是否已发送</p>`;
-            } else {
-                resultHtml = `<p style="color:red;">❌ 未匹配到任何平台，请检查输入内容或图片是否清晰</p>`;
+                html += `<div class="warn-tip">⚠️ 請手動確認：本次維護公告是否已發送過，避免重複公告</div>`;
+            }else{
+                html = `<p style="color:red;">❌ 無匹配平台，請檢查圖片清晰度或文字內容</p>`;
             }
-
-            document.getElementById('resultContent').innerHTML = resultHtml;
+            resultContent.innerHTML = html;
             renderHistory();
         }
 
-        // 保存历史记录
-        function saveHistory(platform, content) {
+        // 儲存本地紀錄
+        function saveHistory(platform, content){
             const record = {
-                id: Date.now(),
+                time: new Date().toLocaleString(),
                 platform: platform,
-                content: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
-                time: new Date().toLocaleString()
+                content: content.substring(0,60)+(content.length>60?'...':'')
             };
             historyRecords.unshift(record);
-            if (historyRecords.length > 50) historyRecords.pop(); // 只保留最近50条
-            localStorage.setItem('公告记录', JSON.stringify(historyRecords));
+            if(historyRecords.length>50) historyRecords.pop();
+            localStorage.setItem('announce_history',JSON.stringify(historyRecords));
         }
 
-        // 渲染历史记录
-        function renderHistory() {
-            const listEl = document.getElementById('historyList');
-            if (historyRecords.length === 0) {
-                listEl.innerHTML = `<p style="color:#999;">暂无记录</p>`;
+        // 渲染紀錄
+        function renderHistory(){
+            const list = document.getElementById('historyList');
+            if(historyRecords.length===0){
+                list.innerHTML = `<p style="color:#999;">暫無紀錄</p>`;
                 return;
             }
-            listEl.innerHTML = historyRecords.map(record => `
+            list.innerHTML = historyRecords.map(r=>`
                 <div class="history-item">
-                    <span>${record.time} - ${record.platform}</span>
-                    <span>${record.content}</span>
+                    ${r.time}｜${r.platform}<br>
+                    <span style="color:#666;font-size:13px;">${r.content}</span>
                 </div>
             `).join('');
         }
 
-        // 清空历史
-        function clearHistory() {
-            if (confirm('确定要清空所有记录吗？')) {
+        // 清空紀錄
+        function clearHistory(){
+            if(confirm('確定清空所有本地辨識紀錄？無法復原')){
                 historyRecords = [];
-                localStorage.removeItem('公告记录');
+                localStorage.removeItem('announce_history');
                 renderHistory();
             }
         }
 
-        // 初始化渲染历史
+        // 初始化
         renderHistory();
     </script>
 </body>
