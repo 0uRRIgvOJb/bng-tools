@@ -3,183 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>维护公告查询</title>
+<title>游戏维护公告日历</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"微軟正黑體",Roboto,sans-serif;}
-body{background:#f1f3f6;padding:15px;}
-.container{max-width:1200px;margin:0 auto;}
-h1{text-align:center;color:#222;margin-bottom:20px;font-size:24px;}
-.top-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
-#search{flex:1;min-width:280px;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:15px;}
-.filter-btn{padding:9px 14px;border:none;border-radius:6px;background:#0066cc;color:#fff;cursor:pointer;}
-.filter-btn:hover{background:#0052a3;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:微软正黑体,Roboto,sans-serif;}
+body{background:#f4f6f9;padding:20px;}
+.container{max-width:1100px;margin:0 auto;}
+header{text-align:center;margin-bottom:20px;}
+h1{color:#222;}
+.controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.controls button{padding:8px 16px;background:#0066cc;color:white;border:none;border-radius:6px;cursor:pointer;}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.day-head{background:#eee;padding:10px;text-align:center;font-weight:bold;}
+.day{background:white;border-radius:8px;padding:10px;min-height:90px;cursor:pointer;box-shadow:0 1px 3px #0001;position:relative;}
+.day.today{border:2px solid #0066cc;}
+.day.has{background:#e3f2fd;}
+.day-num{font-weight:bold;margin-bottom:4px;}
+.dot{width:8px;height:8px;background:#0066cc;border-radius:50%;display:inline-block;margin-right:4px;}
 
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px #00000015;}
-th{background:#0066cc;color:#fff;padding:12px 10px;text-align:left;}
-td{padding:12px 10px;border-bottom:1px solid #eee;vertical-align:top;}
-
-.row-done{background:#f8f8f8;color:#999;}
-.row-today{background:#eef8ff;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0006;align-items:center;justify-content:center;z-index:100;}
+.modal-box{background:white;width:90%;max-width:600px;border-radius:10px;max-height:80vh;overflow-y:auto;padding:20px;}
+.modal-header{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:10px;}
+.close{font-size:22px;cursor:pointer;background:none;border:none;}
+.item{padding:10px 0;border-bottom:1px solid #eee;}
+.item.done{color:#999;background:#f8f8f8;}
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>游戏维护公告查询</h1>
-    <div class="top-bar">
-        <input type="text" id="search" placeholder="搜寻厂商、日期、维护内容...">
-        <button class="filter-btn" data-cate="all">全部</button>
-        <button class="filter-btn" data-cate="真人">真人</button>
-        <button class="filter-btn" data-cate="電子">電子</button>
-        <button class="filter-btn" data-cate="體育">體育</button>
-    </div>
+  <header><h1>游戏维护公告日历</h1></header>
+  <div class="controls">
+    <button id="prev">上一月</button>
+    <h2 id="month"></h2>
+    <button id="next">下一月</button>
+  </div>
+  <div class="calendar" id="cal"></div>
+</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>分類</th>
-                <th>廠商</th>
-                <th>維護開始</th>
-                <th>維護結束</th>
-                <th>維護內容</th>
-            </tr>
-        </thead>
-        <tbody id="tbBody">
-            <tr><td colspan="5" style="text-align:center;padding:40px;color:#666;">載入中...</td></tr>
-        </tbody>
-    </table>
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="mTitle"></h2>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div id="mBody"></div>
+  </div>
 </div>
 
 <script>
-// 已填好你的表格ID
 const SHEET_ID = "1CXLCmObghSk1sNem2V_aryXZKHJII4M1hBTu-aIH3Cs";
-const SHEET_NAME = "A";
+const SHEET = "A";
+let events = {};
+let curDate = new Date();
 
-let rawData = [];
-
-function loadSheet(){
-    let url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
-    fetch(url)
-    .then(res=>res.text())
-    .then(csv=>{
-        rawData = csv2array(csv);
-        render(rawData);
-    })
-    .catch(()=>{
-        document.getElementById("tbBody").innerHTML = 
-        `<tr><td colspan="5" style="color:red;text-align:center;">讀取失敗，請確認表格已公開、工作表名稱是 A</td></tr>`;
-    });
-}
-
-function csv2array(csv){
-    let lines = csv.split("\n");
-    let arr = [];
-    for(let i=1;i<lines.length;i++){
-        let line = lines[i].trim();
-        if(!line) continue;
-        let text = line.replace(/^"|"$/g,"");
-        arr.push(text);
+// 读取表格
+async function load(){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const rows = text.split("\n").map(r=>{
+    let c = [];
+    let inQ = false;
+    let cur = "";
+    for(let ch of r){
+      if(ch === '"') inQ=!inQ;
+      else if(ch === "," && !inQ) {c.push(cur);cur="";}
+      else cur+=ch;
     }
-    return arr;
+    c.push(cur);
+    return c.map(x=>x.replace(/^"|"$/g,"").trim());
+  });
+
+  parseTable(rows);
+  renderCal(curDate);
 }
 
-function parseText(txt){
-    let cate = "其他";
-    let brand = "";
-    let start = "";
-    let end = "待定";
+// 解析你公司的日历格式
+function parseTable(rows){
+  const dateRow = rows[1]; // 日期行 5/1,5/6...
+  const dayEvents = {};
 
-    let mBrand = txt.match(/【([^-】]+)-/);
-    if(mBrand) brand = mBrand[1];
+  for(let col=0;col<dateRow.length;col++){
+    const dStr = dateRow[col];
+    if(!dStr || !/^\d+\/\d+$/.test(dStr)) continue;
 
-    if(brand.includes("真人")) cate = "真人";
-    else if(brand.includes("電子")) cate = "電子";
-    else if(brand.includes("體育") || brand.includes("電競")) cate = "體育";
+    const key = `2025-${dStr.split("/").map(x=>x.padStart(2,"0")).join("-")}`;
+    const list = [];
 
-    let mStart = txt.match(/維護開始時間[:：]\s*([0-9\/]+[^(]*\([^\)]+\)\s*[0-9:]+)/);
-    if(mStart) start = mStart[1].trim();
-
-    let mEnd = txt.match(/維護結束時間[:：]\s*([^(\n]+)/);
-    if(mEnd){
-        let e = mEnd[1].trim();
-        if(!e.includes("待定")) end = e;
+    for(let r=2;r<rows.length;r++){
+      const cell = rows[r][col];
+      if(!cell) continue;
+      if(/^\d+\/\d+$/.test(cell)) break;
+      list.push(cell);
     }
 
-    return {cate,brand,start,end,content:txt};
+    dayEvents[key] = list.filter(x=>x);
+  }
+
+  events = dayEvents;
 }
 
-function isToday(startStr){
-    if(!startStr) return false;
-    let m = startStr.match(/(\d{1,2})\/(\d{1,2})/);
-    if(!m) return false;
-    let now = new Date();
-    let mon = now.getMonth() + 1;
-    let day = now.getDate();
-    let sMon = parseInt(m[1]);
-    let sDay = parseInt(m[2]);
-    return sMon === mon && sDay === day;
+// 渲染日历
+function renderCal(date){
+  const y = date.getFullYear();
+  const m = date.getMonth();
+  document.getElementById("month").innerText = `${y}年${m+1}月`;
+
+  const first = new Date(y,m,1).getDay();
+  const days = new Date(y,m+1,0).getDate();
+  const cal = document.getElementById("cal");
+  cal.innerHTML = "";
+
+  const heads = ["日","一","二","三","四","五","六"];
+  heads.forEach(h=>{
+    const div=document.createElement("div");
+    div.className="day-head";
+    div.innerText=h;
+    cal.appendChild(div);
+  });
+
+  for(let i=0;i<first;i++) cal.appendChild(document.createElement("div"));
+
+  const today = new Date();
+
+  for(let d=1;d<=days;d++){
+    const key = `${y}-${(m+1).toString().padStart(2,"0")}-${d.toString().padStart(2,"0")}`;
+    const has = events[key] && events[key].length>0;
+
+    const div=document.createElement("div");
+    div.className="day";
+    if(has) div.classList.add("has");
+    if(today.getFullYear()===y && today.getMonth()===m && today.getDate()===d) div.classList.add("today");
+
+    div.innerHTML=`<div class="day-num">${d}</div>${has?'<span class="dot"></span>':''}`;
+    div.onclick=()=>openModal(key,events[key]||[]);
+    cal.appendChild(div);
+  }
 }
 
-function isFinish(endStr){
-    if(endStr.includes("待定")) return false;
-    let m = endStr.match(/(\d{1,2})\/(\d{1,2})[\s\S]*?(\d{1,2}):(\d{1,2})/);
-    if(!m) return false;
-
-    let now = new Date();
-    let endDate = new Date(now.getFullYear(), parseInt(m[1])-1, parseInt(m[2]), parseInt(m[3]), parseInt(m[4]));
-    return now > endDate;
+// 弹窗
+function openModal(day,list){
+  document.getElementById("mTitle").innerText=day;
+  const body=document.getElementById("mBody");
+  if(list.length===0){
+    body.innerHTML="<p>当日无维护</p>";
+  }else{
+    body.innerHTML=list.map((txt,i)=>{
+      let done = false;
+      const endMatch = txt.match(/維護結束時間[^0-9]*([0-9\/]+)[^\d]*([0-9:]+)/);
+      if(endMatch){
+        const [_,d,t]=endMatch;
+        const ed = new Date(`${d.replace("/","-")} ${t}`);
+        done = ed < new Date();
+      }
+      return `<div class="item ${done?'done':''}">${txt}</div>`;
+    }).join("");
+  }
+  document.getElementById("modal").style.display="flex";
 }
 
-function render(list){
-    let listParse = list.map(item=>parseText(item));
-
-    listParse.sort((a,b)=>{
-        let aT = isToday(a.start) ? 1 : 0;
-        let bT = isToday(b.start) ? 1 : 0;
-        return bT - aT;
-    });
-
-    let html = "";
-    listParse.forEach(row=>{
-        let cls = "";
-        if(isFinish(row.end)) cls = "row-done";
-        else if(isToday(row.start)) cls = "row-today";
-
-        html += `
-        <tr class="${cls}">
-            <td>${row.cate}</td>
-            <td>${row.brand}</td>
-            <td>${row.start}</td>
-            <td>${row.end}</td>
-            <td style="max-width:400px;white-space:pre-wrap;word-break:break-all;font-size:14px;">${row.content}</td>
-        </tr>
-        `;
-    });
-
-    document.getElementById("tbBody").innerHTML = html;
+function closeModal(){
+  document.getElementById("modal").style.display="none";
 }
 
-document.getElementById("search").addEventListener("input",e=>{
-    let kw = e.target.value.toLowerCase();
-    let filter = rawData.filter(item=>item.toLowerCase().includes(kw));
-    render(filter);
-});
+document.getElementById("prev").onclick=()=>{curDate.setMonth(curDate.getMonth()-1);renderCal(curDate);};
+document.getElementById("next").onclick=()=>{curDate.setMonth(curDate.getMonth()+1);renderCal(curDate);};
 
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-        let c = btn.dataset.cate;
-        if(c === "all"){
-            render(rawData);
-            return;
-        }
-        let filter = rawData.filter(item=>{
-            let p = parseText(item);
-            return p.cate === c;
-        });
-        render(filter);
-    });
-});
-
-loadSheet();
+load();
 </script>
 </body>
 </html>
