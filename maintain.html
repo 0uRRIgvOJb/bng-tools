@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>维护公告查询</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"微軟正黑體",Roboto,sans-serif;}
+body{background:#f1f3f6;padding:15px;}
+.container{max-width:1200px;margin:0 auto;}
+h1{text-align:center;color:#222;margin-bottom:20px;font-size:24px;}
+.top-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+#search{flex:1;min-width:280px;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:15px;}
+.filter-btn{padding:9px 14px;border:none;border-radius:6px;background:#0066cc;color:#fff;cursor:pointer;}
+.filter-btn:hover{background:#0052a3;}
+
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px #00000015;}
+th{background:#0066cc;color:#fff;padding:12px 10px;text-align:left;}
+td{padding:12px 10px;border-bottom:1px solid #eee;vertical-align:top;}
+
+.row-done{background:#f8f8f8;color:#999;}
+.row-today{background:#eef8ff;}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>游戏维护公告查询</h1>
+    <div class="top-bar">
+        <input type="text" id="search" placeholder="搜寻厂商、日期、维护内容...">
+        <button class="filter-btn" data-cate="all">全部</button>
+        <button class="filter-btn" data-cate="真人">真人</button>
+        <button class="filter-btn" data-cate="電子">電子</button>
+        <button class="filter-btn" data-cate="體育">體育</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>分類</th>
+                <th>廠商</th>
+                <th>維護開始</th>
+                <th>維護結束</th>
+                <th>維護內容</th>
+            </tr>
+        </thead>
+        <tbody id="tbBody">
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:#666;">載入中...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+// 已填好你的表格ID
+const SHEET_ID = "1CXLCmObghSk1sNem2V_aryXZKHJII4M1hBTu-aIH3Cs";
+const SHEET_NAME = "A";
+
+let rawData = [];
+
+function loadSheet(){
+    let url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+    fetch(url)
+    .then(res=>res.text())
+    .then(csv=>{
+        rawData = csv2array(csv);
+        render(rawData);
+    })
+    .catch(()=>{
+        document.getElementById("tbBody").innerHTML = 
+        `<tr><td colspan="5" style="color:red;text-align:center;">讀取失敗，請確認表格已公開、工作表名稱是 A</td></tr>`;
+    });
+}
+
+function csv2array(csv){
+    let lines = csv.split("\n");
+    let arr = [];
+    for(let i=1;i<lines.length;i++){
+        let line = lines[i].trim();
+        if(!line) continue;
+        let text = line.replace(/^"|"$/g,"");
+        arr.push(text);
+    }
+    return arr;
+}
+
+function parseText(txt){
+    let cate = "其他";
+    let brand = "";
+    let start = "";
+    let end = "待定";
+
+    let mBrand = txt.match(/【([^-】]+)-/);
+    if(mBrand) brand = mBrand[1];
+
+    if(brand.includes("真人")) cate = "真人";
+    else if(brand.includes("電子")) cate = "電子";
+    else if(brand.includes("體育") || brand.includes("電競")) cate = "體育";
+
+    let mStart = txt.match(/維護開始時間[:：]\s*([0-9\/]+[^(]*\([^\)]+\)\s*[0-9:]+)/);
+    if(mStart) start = mStart[1].trim();
+
+    let mEnd = txt.match(/維護結束時間[:：]\s*([^(\n]+)/);
+    if(mEnd){
+        let e = mEnd[1].trim();
+        if(!e.includes("待定")) end = e;
+    }
+
+    return {cate,brand,start,end,content:txt};
+}
+
+function isToday(startStr){
+    if(!startStr) return false;
+    let m = startStr.match(/(\d{1,2})\/(\d{1,2})/);
+    if(!m) return false;
+    let now = new Date();
+    let mon = now.getMonth() + 1;
+    let day = now.getDate();
+    let sMon = parseInt(m[1]);
+    let sDay = parseInt(m[2]);
+    return sMon === mon && sDay === day;
+}
+
+function isFinish(endStr){
+    if(endStr.includes("待定")) return false;
+    let m = endStr.match(/(\d{1,2})\/(\d{1,2})[\s\S]*?(\d{1,2}):(\d{1,2})/);
+    if(!m) return false;
+
+    let now = new Date();
+    let endDate = new Date(now.getFullYear(), parseInt(m[1])-1, parseInt(m[2]), parseInt(m[3]), parseInt(m[4]));
+    return now > endDate;
+}
+
+function render(list){
+    let listParse = list.map(item=>parseText(item));
+
+    listParse.sort((a,b)=>{
+        let aT = isToday(a.start) ? 1 : 0;
+        let bT = isToday(b.start) ? 1 : 0;
+        return bT - aT;
+    });
+
+    let html = "";
+    listParse.forEach(row=>{
+        let cls = "";
+        if(isFinish(row.end)) cls = "row-done";
+        else if(isToday(row.start)) cls = "row-today";
+
+        html += `
+        <tr class="${cls}">
+            <td>${row.cate}</td>
+            <td>${row.brand}</td>
+            <td>${row.start}</td>
+            <td>${row.end}</td>
+            <td style="max-width:400px;white-space:pre-wrap;word-break:break-all;font-size:14px;">${row.content}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("tbBody").innerHTML = html;
+}
+
+document.getElementById("search").addEventListener("input",e=>{
+    let kw = e.target.value.toLowerCase();
+    let filter = rawData.filter(item=>item.toLowerCase().includes(kw));
+    render(filter);
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+        let c = btn.dataset.cate;
+        if(c === "all"){
+            render(rawData);
+            return;
+        }
+        let filter = rawData.filter(item=>{
+            let p = parseText(item);
+            return p.cate === c;
+        });
+        render(filter);
+    });
+});
+
+loadSheet();
+</script>
+</body>
+</html>
