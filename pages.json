@@ -14,11 +14,6 @@
     "file": "announcement.html",
     "type": "工具"
   },
-      { 
-    "name": "维护",
-    "file": "maintain.html",
-    "type": "工具"
-  },
  {
     "name": "卡牌冒险",
     "file": "card-game.html",
