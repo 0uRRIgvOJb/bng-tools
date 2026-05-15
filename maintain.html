@@ -16,44 +16,49 @@
             --border-color:#4b5563;
             --hover-bg:#4b5563;
         }
-        body {background:var(--bg-color);padding:24px;max-width:1300px;margin:0 auto;color:var(--text-color);}
-        h1 {text-align:center;color:var(--main-color);margin-bottom:24px;font-size:28px;letter-spacing:2px;}
-        .top-bar{display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:24px;flex-wrap:wrap;position:relative;}
-        .home-btn{position:absolute;right:0;background:var(--main-color);color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:0.3s;}
+        body {background:var(--bg-color);padding:16px;max-width:1300px;margin:0 auto;color:var(--text-color);}
+        h1 {text-align:center;color:var(--main-color);margin-bottom:16px;font-size:24px;letter-spacing:2px;}
+        .top-bar{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:16px;flex-wrap:wrap;position:relative;}
+        .home-btn{position:absolute;right:0;background:var(--main-color);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;transition:0.3s;font-size:14px;}
         .home-btn:hover{background:#2563eb;transform:scale(1.03);}
-        #searchInput{padding:12px 16px;width:340px;border:1px solid var(--border-color);border-radius:10px;font-size:15px;outline:none;transition:0.3s;background:var(--card-bg);color:var(--text-color);}
+        #searchInput{padding:10px 14px;width:300px;border:1px solid var(--border-color);border-radius:8px;font-size:14px;outline:none;transition:0.3s;background:var(--card-bg);color:var(--text-color);}
         #searchInput:focus{border-color:var(--main-color);box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
-        .refresh-btn{background:var(--main-color);color:#fff;border:none;padding:12px 22px;border-radius:10px;cursor:pointer;font-size:15px;transition:0.3s;}
+        .refresh-btn{background:var(--main-color);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;transition:0.3s;}
         .refresh-btn:hover{background:#2563eb;transform:scale(1.03);}
-        .calendar-container{background:var(--card-bg);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:28px;}
-        .calendar-header{text-align:center;margin-bottom:24px;}
-        .calendar-header h2{font-size:22px;color:var(--text-color);}
-        .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
-        .calendar-day-header{text-align:center;font-weight:bold;color:var(--text-color);padding:12px;background:#4b5563;border-radius:8px;font-size:15px;}
-        .calendar-day{min-height:130px;border:1px solid var(--border-color);border-radius:12px;padding:10px;position:relative;transition:0.3s;background:var(--card-bg);}
-        .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:var(--hover-bg);transform:translateY(-2px);}
+        .calendar-container{background:var(--card-bg);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:16px;}
+        .calendar-header{text-align:center;margin-bottom:16px;}
+        .calendar-header h2{font-size:20px;color:var(--text-color);}
+        .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+        .calendar-day-header{text-align:center;font-weight:bold;color:var(--text-color);padding:8px;background:#4b5563;border-radius:6px;font-size:13px;}
+        .calendar-day{min-height:100px;border:1px solid var(--border-color);border-radius:8px;padding:8px;position:relative;transition:0.3s;background:var(--card-bg);}
+        .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:var(--hover-bg);transform:translateY(-1px);}
         .calendar-day.has-notice{background:#453c24;border-color:var(--warn-color);}
-        /* 過期日期置灰樣式 */
-        .calendar-day.past-day{background:#1f2937;border-color:#374151;opacity:0.7;cursor:not-allowed !important;pointer-events:none;}
+        .calendar-day.past-day{background:#1f2937;border-color:#374151;opacity:0.7;}
         .calendar-day.past-day .day-number{color:#9ca3af;}
-        .day-number{font-weight:bold;color:var(--text-color);font-size:17px;margin-bottom:6px;}
-        .notice-badge{position:absolute;top:8px;right:8px;background:#ef4444;color:white;border-radius:999px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;}
+        .day-number{font-weight:bold;color:var(--text-color);font-size:15px;margin-bottom:4px;}
+        .notice-badge{position:absolute;top:6px;right:6px;background:#ef4444;color:white;border-radius:999px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;}
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
-        .modal-content{background:var(--card-bg);border-radius:20px;padding:28px;width:92%;max-width:720px;max-height:82vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.3);border:1px solid var(--border-color);}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);padding-bottom:14px;margin-bottom:18px;}
-        .modal-header h3{font-size:20px;color:var(--text-color);}
-        .modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:var(--gray-color);transition:0.2s;}
+        .modal-content{background:var(--card-bg);border-radius:16px;padding:24px;width:92%;max-width:720px;max-height:82vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.3);border:1px solid var(--border-color);}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);padding-bottom:12px;margin-bottom:16px;}
+        .modal-header h3{font-size:18px;color:var(--text-color);}
+        .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-color);transition:0.2s;}
         .modal-close:hover{color:#ef4444;}
-        .notice-item{border-left:5px solid var(--main-color);padding:14px 18px;margin-bottom:16px;background:#4b5563;border-radius:10px;}
-        .notice-title{font-weight:bold;margin-bottom:8px;font-size:16px;color:var(--text-color);}
-        .notice-content{line-height:1.7;white-space:pre-line;font-size:15px;color:#d1d5db;}
-        .category-tag{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;color:#fff;margin-right:8px;}
+        .notice-item{border-left:5px solid var(--main-color);padding:12px 16px;margin-bottom:14px;background:#4b5563;border-radius:8px;}
+        .notice-title{font-weight:bold;margin-bottom:6px;font-size:15px;color:var(--text-color);}
+        /* 核心修正：line-height 改为 1.6（正确的行高倍数） */
+        .notice-content{
+            line-height:1.6;
+            white-space:pre-line;
+            font-size:14px;
+            color:#d1d5db;
+        }
+        .category-tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:12px;color:#fff;margin-right:6px;}
         .category-真人{background:#db2777;}
         .category-電子{background:#7c3aed;}
         .category-體育{background:#16a34a;}
         .category-電競{background:#ea580c;}
         .category-其他{background:#64748b;}
-        .loading{text-align:center;padding:40px;color:var(--gray-color);font-size:16px;}
+        .loading{text-align:center;padding:30px;color:var(--gray-color);font-size:14px;}
     </style>
 </head>
 <body>
@@ -93,7 +98,6 @@ const YEAR = 2026;
 const SHOW_MONTH = 4;
 let dateData = {};
 let allList = [];
-// 取得今日日期用於判斷過期
 const nowDate = new Date();
 
 modalClose.onclick = () => modalOverlay.style.display = "none";
@@ -106,7 +110,6 @@ searchInput.addEventListener('input', function() {
     res.length && showSearchPop(res, key);
 });
 
-// 公告文字清理
 function cleanNoticeText(text) {
     return String(text || "")
         .replace(/^"+|"+$/g, "")
@@ -148,7 +151,6 @@ function loadSheetData(){
     });
 }
 
-// 多格式日期解析
 function parseSingleCellNotice(text){
     text = cleanNoticeText(text);
 
@@ -190,7 +192,6 @@ function parseSingleCellNotice(text){
     };
 }
 
-// 繪製日曆 + 自動判斷過期置灰
 function drawCalendar(){
     let grid = calendarGrid;
     while (grid.children.length > 7) grid.removeChild(grid.lastChild);
@@ -212,7 +213,6 @@ function drawCalendar(){
         let monthNum = SHOW_MONTH + 1;
         let dayKey = `${YEAR}-${String(monthNum).padStart(2, 0)}-${String(d).padStart(2, 0)}`;
         
-        // 判斷是否為過去日期，自動置灰
         let currDayObj = new Date(YEAR, SHOW_MONTH, d);
         if(currDayObj < nowDate){
             dayBox.classList.add("past-day");
@@ -224,7 +224,6 @@ function drawCalendar(){
             dayBox.innerHTML += `<div class="notice-badge">${dateData[dayKey].length}</div>`;
         }
         dayBox.onclick = () => {
-            if(currDayObj < nowDate)return;
             dateData[dayKey] ? openDayPop(dayKey) : alert(`${monthNum}月${d}日暫無維護公告`);
         };
         grid.appendChild(dayBox);
