@@ -7,50 +7,53 @@
     <style>
         * {box-sizing: border-box;font-family: "微軟正黑體", sans-serif;margin:0;padding:0;}
         :root{
-            --main-color:#2563eb;
+            --main-color:#3b82f6;
             --warn-color:#f59e0b;
-            --gray-color:#9ca3af;
-            --bg-color:#f0f4f8;
-            --card-bg:#ffffff;
-            --text-color:#1f2937;
+            --gray-color:#6b7280;
+            --bg-color:#1f2937;
+            --card-bg:#374151;
+            --text-color:#f3f4f6;
+            --border-color:#4b5563;
+            --hover-bg:#4b5563;
         }
         body {background:var(--bg-color);padding:24px;max-width:1300px;margin:0 auto;color:var(--text-color);}
         h1 {text-align:center;color:var(--main-color);margin-bottom:24px;font-size:28px;letter-spacing:2px;}
         .top-bar{display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:24px;flex-wrap:wrap;position:relative;}
         .home-btn{position:absolute;right:0;background:var(--main-color);color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:0.3s;}
-        .home-btn:hover{background:#1d4ed8;transform:scale(1.03);}
-        #searchInput{padding:12px 16px;width:340px;border:1px solid #d1d5db;border-radius:10px;font-size:15px;outline:none;transition:0.3s;}
-        #searchInput:focus{border-color:var(--main-color);box-shadow:0 0 0 3px rgba(37,99,235,0.2);}
+        .home-btn:hover{background:#2563eb;transform:scale(1.03);}
+        #searchInput{padding:12px 16px;width:340px;border:1px solid var(--border-color);border-radius:10px;font-size:15px;outline:none;transition:0.3s;background:var(--card-bg);color:var(--text-color);}
+        #searchInput:focus{border-color:var(--main-color);box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
         .refresh-btn{background:var(--main-color);color:#fff;border:none;padding:12px 22px;border-radius:10px;cursor:pointer;font-size:15px;transition:0.3s;}
-        .refresh-btn:hover{background:#1d4ed8;transform:scale(1.03);}
-        .calendar-container{background:var(--card-bg);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.08);padding:28px;}
+        .refresh-btn:hover{background:#2563eb;transform:scale(1.03);}
+        .calendar-container{background:var(--card-bg);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:28px;}
         .calendar-header{text-align:center;margin-bottom:24px;}
         .calendar-header h2{font-size:22px;color:var(--text-color);}
         .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
-        .calendar-day-header{text-align:center;font-weight:bold;color:#6b7280;padding:12px;background:#eef2ff;border-radius:8px;font-size:15px;}
-        .calendar-day{min-height:130px;border:1px solid #e5e7eb;border-radius:12px;padding:10px;position:relative;transition:0.3s;background:#fff;}
-        .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:#f8faff;transform:translateY(-2px);}
-        .calendar-day.has-notice{background:#fffbeb;border-color:var(--warn-color);}
+        .calendar-day-header{text-align:center;font-weight:bold;color:var(--text-color);padding:12px;background:#4b5563;border-radius:8px;font-size:15px;}
+        .calendar-day{min-height:130px;border:1px solid var(--border-color);border-radius:12px;padding:10px;position:relative;transition:0.3s;background:var(--card-bg);}
+        .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:var(--hover-bg);transform:translateY(-2px);}
+        .calendar-day.has-notice{background:#453c24;border-color:var(--warn-color);}
         /* 過期日期置灰樣式 */
-        .calendar-day.past-day{background:#f3f4f6;border-color:#e5e7eb;opacity:0.55;cursor:not-allowed !important;pointer-events:none;}
-        .day-number{font-weight:bold;color:#111;font-size:17px;margin-bottom:6px;}
+        .calendar-day.past-day{background:#1f2937;border-color:#374151;opacity:0.7;cursor:not-allowed !important;pointer-events:none;}
+        .calendar-day.past-day .day-number{color:#9ca3af;}
+        .day-number{font-weight:bold;color:var(--text-color);font-size:17px;margin-bottom:6px;}
         .notice-badge{position:absolute;top:8px;right:8px;background:#ef4444;color:white;border-radius:999px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
-        .modal-content{background:white;border-radius:20px;padding:28px;width:92%;max-width:720px;max-height:82vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.15);}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:14px;margin-bottom:18px;}
-        .modal-header h3{font-size:20px;color:#222;}
-        .modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:#666;transition:0.2s;}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
+        .modal-content{background:var(--card-bg);border-radius:20px;padding:28px;width:92%;max-width:720px;max-height:82vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.3);border:1px solid var(--border-color);}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);padding-bottom:14px;margin-bottom:18px;}
+        .modal-header h3{font-size:20px;color:var(--text-color);}
+        .modal-close{background:none;border:none;font-size:26px;cursor:pointer;color:var(--gray-color);transition:0.2s;}
         .modal-close:hover{color:#ef4444;}
-        .notice-item{border-left:5px solid var(--main-color);padding:14px 18px;margin-bottom:16px;background:#f9fafb;border-radius:10px;}
-        .notice-title{font-weight:bold;margin-bottom:8px;font-size:16px;}
-        .notice-content{line-height:1.7;white-space:pre-line;font-size:15px;color:#374151;}
+        .notice-item{border-left:5px solid var(--main-color);padding:14px 18px;margin-bottom:16px;background:#4b5563;border-radius:10px;}
+        .notice-title{font-weight:bold;margin-bottom:8px;font-size:16px;color:var(--text-color);}
+        .notice-content{line-height:1.7;white-space:pre-line;font-size:15px;color:#d1d5db;}
         .category-tag{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;color:#fff;margin-right:8px;}
         .category-真人{background:#db2777;}
         .category-電子{background:#7c3aed;}
         .category-體育{background:#16a34a;}
         .category-電競{background:#ea580c;}
         .category-其他{background:#64748b;}
-        .loading{text-align:center;padding:40px;color:#666;font-size:16px;}
+        .loading{text-align:center;padding:40px;color:var(--gray-color);font-size:16px;}
     </style>
 </head>
 <body>
