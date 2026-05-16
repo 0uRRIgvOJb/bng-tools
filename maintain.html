@@ -9,6 +9,7 @@
         :root{
             --main-color:#3b82f6;
             --warn-color:#f59e0b;
+            --today-color:#22c55e;
             --gray-color:#6b7280;
             --bg-color:#1f2937;
             --card-bg:#374151;
@@ -33,8 +34,18 @@
         .calendar-day{min-height:100px;border:1px solid var(--border-color);border-radius:8px;padding:8px;position:relative;transition:0.3s;background:var(--card-bg);}
         .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:var(--hover-bg);transform:translateY(-1px);}
         .calendar-day.has-notice{background:#453c24;border-color:var(--warn-color);}
+        /* 過去日期灰色 */
         .calendar-day.past-day{background:#1f2937;border-color:#374151;opacity:0.7;}
         .calendar-day.past-day .day-number{color:#9ca3af;}
+        /* 今日高亮樣式 */
+        .calendar-day.today-day{
+            border:2px solid var(--today-color);
+            background:#1e3a2d;
+        }
+        .calendar-day.today-day .day-number{
+            color:var(--today-color);
+            font-weight:bold;
+        }
         .day-number{font-weight:bold;color:var(--text-color);font-size:15px;margin-bottom:4px;}
         .notice-badge{position:absolute;top:6px;right:6px;background:#ef4444;color:white;border-radius:999px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;}
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
@@ -45,7 +56,6 @@
         .modal-close:hover{color:#ef4444;}
         .notice-item{border-left:5px solid var(--main-color);padding:12px 16px;margin-bottom:14px;background:#4b5563;border-radius:8px;}
         .notice-title{font-weight:bold;margin-bottom:6px;font-size:15px;color:var(--text-color);}
-        /* 核心修正：line-height 改为 1.6（正确的行高倍数） */
         .notice-content{
             line-height:1.6;
             white-space:pre-line;
@@ -99,6 +109,10 @@ const SHOW_MONTH = 4;
 let dateData = {};
 let allList = [];
 const nowDate = new Date();
+// 获取今日年月日
+const todayY = nowDate.getFullYear();
+const todayM = nowDate.getMonth();
+const todayD = nowDate.getDate();
 
 modalClose.onclick = () => modalOverlay.style.display = "none";
 modalOverlay.onclick = e => e.target === modalOverlay && (modalOverlay.style.display = "none");
@@ -141,7 +155,6 @@ function loadSheetData(){
             }
         });
 
-        console.log("最終抓到公告：", allList);
         loading.style.display = "none";
         drawCalendar();
     })
@@ -176,7 +189,6 @@ function parseSingleCellNotice(text){
         if (normalDate) dateMatch = normalDate;
     }
     if (!dateMatch) {
-        console.log("抓不到日期：", text);
         return null;
     }
 
@@ -211,11 +223,16 @@ function drawCalendar(){
         let dayBox = document.createElement("div");
         dayBox.className = "calendar-day";
         let monthNum = SHOW_MONTH + 1;
-        let dayKey = `${YEAR}-${String(monthNum).padStart(2, 0)}-${String(d).padStart(2, 0)}`;
+        let dayKey = `${YEAR}-${String(monthNum).padStart(2, '0')}-${String(d).padStart(2, 0)}`;
         
         let currDayObj = new Date(YEAR, SHOW_MONTH, d);
+        // 過去日期
         if(currDayObj < nowDate){
             dayBox.classList.add("past-day");
+        }
+        // 判斷是否是今天
+        if(YEAR === todayY && SHOW_MONTH === todayM && d === todayD){
+            dayBox.classList.add("today-day");
         }
 
         dayBox.innerHTML = `<div class="day-number">${d}</div>`;
