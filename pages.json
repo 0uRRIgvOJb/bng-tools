@@ -9,6 +9,11 @@
     "file": "BE (BG) tool.html",
     "type": "工具"
   },
+          {
+    "name": "前后台链接",
+    "file": "Website link.html",
+    "type": "工具"
+  },
       {
     "name": "公告模版",
     "file": "announcement.html",
