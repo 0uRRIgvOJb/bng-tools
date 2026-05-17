@@ -1,470 +1,467 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工具中心 - 首页</title>
-    <!-- Tailwind CSS v3 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- 统一的 Tailwind 配置 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#64748b',
-                        dark: {
-                            100: '#1e293b',
-                            200: '#172033',
-                            300: '#0f172a',
-                            400: '#0c1322'
-                        },
-                        light: {
-                            100: '#f8fafc',
-                            200: '#e2e8f0',
-                            300: '#94a3b8',
-                            400: '#64748b'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        }
-                    }
-                }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工具中心 - 首頁</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            dark: {
+              100: '#1e293b',
+              200: '#172033',
+              300: '#0f172a',
+              400: '#0c1322'
             },
-            darkMode: 'class'
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            light: {
+              100: '#f8fafc',
+              200: '#e2e8f0',
+              300: '#94a3b8',
+              400: '#64748b'
             }
-            .card-transition {
-                transition: all 0.3s ease;
-            }
-            .search-focus {
-                @apply focus:ring-2 focus:ring-primary focus:border-transparent;
-            }
-            .glass-effect {
-                @apply bg-opacity-70 backdrop-blur-md;
-            }
+          },
+          boxShadow: {
+            card: '0 8px 24px rgba(0,0,0,0.22)',
+            cardHover: '0 14px 34px rgba(0,0,0,0.32)'
+          }
         }
-        
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            @apply bg-dark-200 dark:bg-dark-300;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            @apply bg-dark-100 dark:bg-dark-400 rounded-full;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            @apply bg-secondary;
-        }
-        
-        /* 平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        /* 加载动画 */
-        .skeleton {
-            @apply animate-pulse bg-dark-100 dark:bg-dark-400 rounded;
-        }
-    </style>
+      },
+      darkMode: 'class'
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(14px);
+    }
+
+    .card {
+      animation: slideUp 0.35s ease both;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #172033 25%, #1e293b 50%, #172033 75%);
+      background-size: 200% 100%;
+      animation: loading 1.2s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-dark-300 to-dark-400 dark:from-dark-400 dark:to-dark-300 min-h-screen text-light-100 dark:text-light-200 transition-colors duration-300">
-    <!-- 顶部导航栏 -->
-    <header class="sticky top-0 z-50 bg-dark-200 dark:bg-dark-300 glass-effect border-b border-dark-100 dark:border-dark-400 shadow-md">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo -->
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-primary to-blue-400 flex items-center justify-center shadow-lg">
-                    <i class="fa fa-wrench text-white text-xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-white">工具中心</h1>
-            </div>
-            
-            <!-- 右侧操作区 -->
-            <div class="flex items-center space-x-4">
-                <!-- 主题切换 -->
-                <button id="theme-toggle" class="p-2 rounded-full hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors">
-                    <i class="fa fa-moon-o dark:hidden text-xl"></i>
-                    <i class="fa fa-sun-o hidden dark:block text-yellow-300 text-xl"></i>
-                </button>
-            </div>
+
+<body class="min-h-screen bg-gradient-to-br from-dark-300 to-dark-400 text-light-100">
+
+  <header class="sticky top-0 z-50 glass border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shadow-lg">
+          <i class="fa fa-wrench text-white text-xl"></i>
         </div>
-    </header>
+        <h1 class="text-2xl font-bold text-white">工具中心</h1>
+      </div>
 
-    <!-- 主要内容区 -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- 欢迎区域 -->
-        <section class="text-center mb-12 animate-fade-in">
-            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-shadow">欢迎使用工具中心</h2>
-            <!-- 描述文本已移除 -->
-            
-            <!-- 时间显示 -->
-            <div id="time" class="mt-6 text-lg text-light-300 font-mono"></div>
-        </section>
+      <button id="theme-toggle" class="w-10 h-10 rounded-full hover:bg-white/10 transition">
+        <i class="fa fa-sun-o text-yellow-300 text-xl"></i>
+      </button>
+    </div>
+  </header>
 
-        <!-- 搜索区域 -->
-        <section class="max-w-2xl mx-auto mb-12 animate-slide-up">
-            <div class="relative">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="搜索工具或功能..." 
-                    class="w-full py-4 px-5 pr-12 rounded-xl bg-dark-200 dark:bg-dark-300 border border-dark-100 dark:border-dark-400 focus:outline-none search-focus text-lg transition-all"
-                >
-                <button id="search-button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-light-300 hover:text-primary transition-colors">
-                    <i class="fa fa-search text-xl"></i>
-                </button>
-            </div>
-            
-            <!-- 搜索结果提示 -->
-            <div id="search-results-info" class="mt-3 text-center text-light-300 hidden"></div>
-        </section>
+  <main class="max-w-7xl mx-auto px-5 py-10">
 
-        <!-- 分类筛选 -->
-        <section class="mb-10 overflow-x-auto animate-slide-up" style="animation-delay: 0.1s;">
-            <div class="flex space-x-3 pb-2">
-                <button class="category-btn active whitespace-nowrap px-5 py-2 rounded-full bg-primary text-white font-medium hover:bg-blue-600 transition-colors" data-category="all">
-                    全部
-                </button>
-                <button class="category-btn whitespace-nowrap px-5 py-2 rounded-full bg-dark-200 dark:bg-dark-300 text-light-300 font-medium hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors" data-category="工具">
-                    工具
-                </button>
-                <button class="category-btn whitespace-nowrap px-5 py-2 rounded-full bg-dark-200 dark:bg-dark-300 text-light-300 font-medium hover:bg-dark-100 dark:hover:bg-dark-400 transition-colors" data-category="其他">
-                    其他
-                </button>
-            </div>
-        </section>
+    <section class="text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-black tracking-tight text-white mb-5">
+        歡迎使用工具中心
+      </h2>
+      <div id="time" class="text-light-300 font-mono text-base md:text-lg"></div>
+    </section>
 
-        <!-- 工具卡片区域 -->
-        <section id="tools-section" class="animate-slide-up" style="animation-delay: 0.2s;">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="cards-container">
-                <!-- 卡片将通过 JavaScript 动态生成 -->
-            </div>
-            
-            <!-- 加载状态 -->
-            <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- 骨架屏 -->
-                <div class="skeleton h-32 rounded-xl"></div>
-                <div class="skeleton h-32 rounded-xl"></div>
-                <div class="skeleton h-32 rounded-xl"></div>
-                <div class="skeleton h-32 rounded-xl"></div>
-                <div class="skeleton h-32 rounded-xl"></div>
-                <div class="skeleton h-32 rounded-xl"></div>
-            </div>
-            
-            <!-- 错误状态 -->
-            <div id="error-state" class="text-center py-12 hidden">
-                <div class="text-6xl mb-4"><i class="fa fa-exclamation-triangle text-yellow-500"></i></div>
-                <h3 class="text-2xl font-bold mb-2">加载失败</h3>
-                <p class="text-light-300 mb-6">无法加载工具列表，请稍后再试</p>
-                <button id="retry-button" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
-                    重试
-                </button>
-            </div>
-            
-            <!-- 空结果状态 -->
-            <div id="empty-state" class="text-center py-12 hidden">
-                <div class="text-6xl mb-4"><i class="fa fa-search text-light-300"></i></div>
-                <h3 class="text-2xl font-bold mb-2">未找到结果</h3>
-                <p class="text-light-300">没有找到与您搜索的内容匹配的工具</p>
-            </div>
-        </section>
-    </main>
+    <section class="max-w-2xl mx-auto mb-10">
+      <div class="relative">
+        <input
+          id="search-input"
+          type="text"
+          placeholder="搜尋工具或功能..."
+          class="w-full h-14 rounded-2xl bg-dark-200 border border-white/5 px-5 pr-14 text-lg text-white placeholder:text-light-400 outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
+        <button id="search-button" class="absolute right-4 top-1/2 -translate-y-1/2 text-light-300 hover:text-blue-400 transition">
+          <i class="fa fa-search text-xl"></i>
+        </button>
+      </div>
 
-    <!-- 页脚 -->
-    <footer class="bg-dark-200 dark:bg-dark-300 border-t border-dark-100 dark:border-dark-400 py-4 mt-16">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-light-300 text-sm">© 2026 工具中心. 保留所有权利.</p>
-            <div class="flex items-center space-x-4 mt-2 md:mt-0">
-                <a href="#" class="text-light-300 hover:text-primary transition-colors">
-                    <i class="fa fa-github text-xl"></i>
-                </a>
-                <a href="#" class="text-light-300 hover:text-primary transition-colors">
-                    <i class="fa fa-envelope text-xl"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
+      <div id="search-results-info" class="hidden mt-3 text-center text-light-300 text-sm"></div>
+    </section>
 
-    <!-- JavaScript -->
-    <script>
-        // DOM 元素
-        const timeElement = document.getElementById('time');
-        const searchInput = document.getElementById('search-input');
-        const searchButton = document.getElementById('search-button');
-        const searchResultsInfo = document.getElementById('search-results-info');
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const cardsContainer = document.getElementById('cards-container');
-        const loadingState = document.getElementById('loading-state');
-        const errorState = document.getElementById('error-state');
-        const emptyState = document.getElementById('empty-state');
-        const retryButton = document.getElementById('retry-button');
-        const themeToggle = document.getElementById('theme-toggle');
-        
-        // 全局变量
-        let pagesData = [];
-        let filteredData = [];
-        let currentCategory = 'all';
-        let currentSearch = '';
-        
-        // 更新时间
-        function updateTime() {
-            const now = new Date();
-            const options = { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit',
-                hour12: false,
-                timeZoneName: 'short'
-            };
-            
-            const timeString = now.toLocaleString('zh-TW', options);
-            timeElement.textContent = timeString;
+    <section class="mb-10 overflow-x-auto">
+      <div id="category-container" class="flex gap-3 pb-2"></div>
+    </section>
+
+    <section>
+      <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+      <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="skeleton h-32 rounded-2xl"></div>
+        <div class="skeleton h-32 rounded-2xl"></div>
+        <div class="skeleton h-32 rounded-2xl"></div>
+        <div class="skeleton h-32 rounded-2xl"></div>
+      </div>
+
+      <div id="error-state" class="hidden text-center py-16">
+        <i class="fa fa-exclamation-triangle text-yellow-400 text-6xl mb-5"></i>
+        <h3 class="text-2xl font-bold mb-2">載入失敗</h3>
+        <p class="text-light-300 mb-6">無法讀取 pages.json，請確認檔案是否存在</p>
+        <button id="retry-button" class="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white transition">
+          重新載入
+        </button>
+      </div>
+
+      <div id="empty-state" class="hidden text-center py-16">
+        <i class="fa fa-search text-light-300 text-6xl mb-5"></i>
+        <h3 class="text-2xl font-bold mb-2">沒有找到結果</h3>
+        <p class="text-light-300">請換個關鍵字或分類試試</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-white/5 mt-16 py-5">
+    <div class="max-w-7xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-3">
+      <p class="text-light-300 text-sm">© 2026 工具中心. 保留所有權利.</p>
+      <div class="flex gap-4">
+        <a href="#" class="text-light-300 hover:text-blue-400 transition">
+          <i class="fa fa-github text-xl"></i>
+        </a>
+        <a href="#" class="text-light-300 hover:text-blue-400 transition">
+          <i class="fa fa-envelope text-xl"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const timeElement = document.getElementById('time');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const searchResultsInfo = document.getElementById('search-results-info');
+    const categoryContainer = document.getElementById('category-container');
+    const cardsContainer = document.getElementById('cards-container');
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const emptyState = document.getElementById('empty-state');
+    const retryButton = document.getElementById('retry-button');
+    const themeToggle = document.getElementById('theme-toggle');
+
+    let pagesData = [];
+    let filteredData = [];
+    let currentCategory = 'all';
+    let currentSearch = '';
+
+    const TYPE_COLORS = [
+      'blue',
+      'purple',
+      'emerald',
+      'amber',
+      'rose',
+      'cyan',
+      'pink',
+      'indigo',
+      'orange',
+      'teal'
+    ];
+
+    function updateTime() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      const h = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+
+      timeElement.textContent = `${y}/${m}/${d} ${h}:${min}:${s} [GMT+8]`;
+    }
+
+    function getTypes() {
+      return [...new Set(pagesData.map(item => item.type).filter(Boolean))];
+    }
+
+    function getTypeColor(type) {
+      if (type === 'all') return 'blue';
+
+      const types = getTypes();
+      const index = types.indexOf(type);
+
+      return TYPE_COLORS[index % TYPE_COLORS.length];
+    }
+
+    function getColorClass(type, active = false) {
+      const color = getTypeColor(type);
+
+      const colors = {
+        blue: active ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-blue-500/15 text-blue-300 hover:bg-blue-500/25',
+        purple: active ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20' : 'bg-purple-500/15 text-purple-300 hover:bg-purple-500/25',
+        emerald: active ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25',
+        amber: active ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20' : 'bg-amber-500/15 text-amber-300 hover:bg-amber-500/25',
+        rose: active ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25',
+        cyan: active ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20' : 'bg-cyan-500/15 text-cyan-300 hover:bg-cyan-500/25',
+        pink: active ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/20' : 'bg-pink-500/15 text-pink-300 hover:bg-pink-500/25',
+        indigo: active ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25',
+        orange: active ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'bg-orange-500/15 text-orange-300 hover:bg-orange-500/25',
+        teal: active ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20' : 'bg-teal-500/15 text-teal-300 hover:bg-teal-500/25'
+      };
+
+      return colors[color] || colors.blue;
+    }
+
+    function renderCategories() {
+      const categories = ['all', ...getTypes()];
+      categoryContainer.innerHTML = '';
+
+      categories.forEach(type => {
+        const button = document.createElement('button');
+        const isActive = currentCategory === type;
+
+        button.className = `
+          whitespace-nowrap px-5 py-2 rounded-full font-semibold
+          transition-all duration-200
+          ${getColorClass(type, isActive)}
+        `;
+
+        button.textContent = type === 'all' ? '全部' : type;
+
+        button.addEventListener('click', () => {
+          currentCategory = type;
+          renderCategories();
+          filterData();
+        });
+
+        categoryContainer.appendChild(button);
+      });
+    }
+
+    async function loadPages() {
+      try {
+        loadingState.classList.remove('hidden');
+        errorState.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        cardsContainer.classList.add('hidden');
+
+        const response = await fetch('./pages.json?v=' + Date.now(), {
+          cache: 'no-store'
+        });
+
+        if (!response.ok) {
+          throw new Error('pages.json 讀取失敗');
         }
-        
-        // 设置主题
-        function setupTheme() {
-            // 检查本地存储中的主题设置
-            const savedTheme = localStorage.getItem('theme');
-            
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+
+        pagesData = await response.json();
+
+        if (!Array.isArray(pagesData)) {
+          throw new Error('pages.json 格式錯誤，最外層必須是陣列');
         }
-        
-        // 切换主题
-        function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
+
+        filteredData = [...pagesData];
+
+        renderCategories();
+        renderCards();
+
+        loadingState.classList.add('hidden');
+        cardsContainer.classList.remove('hidden');
+
+      } catch (error) {
+        console.error(error);
+        loadingState.classList.add('hidden');
+        cardsContainer.classList.add('hidden');
+        errorState.classList.remove('hidden');
+      }
+    }
+
+    function renderCards() {
+      cardsContainer.innerHTML = '';
+
+      if (filteredData.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      filteredData.forEach((item, index) => {
+        const card = document.createElement('div');
+
+        card.className = `
+          card group rounded-2xl bg-dark-200 border border-white/5
+          hover:border-white/10 shadow-card hover:shadow-cardHover
+          hover:-translate-y-1 transition-all duration-300 overflow-hidden
+        `;
+
+        card.style.animationDelay = `${index * 0.04}s`;
+
+        const tagsHtml = Array.isArray(item.tags)
+          ? item.tags.map(tag => `
+              <span class="text-xs px-2 py-1 rounded-full bg-white/5 text-light-300">
+                ${escapeHtml(tag)}
+              </span>
+            `).join('')
+          : '';
+
+        card.innerHTML = `
+          <a href="./${encodeURI(item.file)}" class="block p-6 h-full min-h-32">
+            <div class="flex items-start justify-between gap-4 mb-6">
+              <h3 class="text-xl font-black text-white group-hover:text-blue-300 transition leading-snug">
+                ${escapeHtml(item.name)}
+              </h3>
+
+              <span class="shrink-0 text-xs px-3 py-1 rounded-full font-semibold ${getColorClass(item.type, false)}">
+                ${escapeHtml(item.type || '未分類')}
+              </span>
+            </div>
+
+            ${tagsHtml ? `<div class="flex flex-wrap gap-2 mb-5">${tagsHtml}</div>` : ''}
+
+            <div class="flex items-center text-light-300 text-sm group-hover:text-blue-300 transition">
+              <span>查看詳情</span>
+              <i class="fa fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </a>
+        `;
+
+        cardsContainer.appendChild(card);
+      });
+    }
+
+    function filterData() {
+      const keyword = currentSearch.toLowerCase();
+
+      filteredData = pagesData.filter(item => {
+        const matchCategory = currentCategory === 'all' || item.type === currentCategory;
+
+        const matchSearch =
+          !keyword ||
+          String(item.name || '').toLowerCase().includes(keyword) ||
+          String(item.type || '').toLowerCase().includes(keyword) ||
+          String(item.file || '').toLowerCase().includes(keyword) ||
+          (Array.isArray(item.tags) && item.tags.some(tag => String(tag).toLowerCase().includes(keyword)));
+
+        return matchCategory && matchSearch;
+      });
+
+      if (currentSearch) {
+        searchResultsInfo.textContent = `找到 ${filteredData.length} 個與「${currentSearch}」相關的結果`;
+        searchResultsInfo.classList.remove('hidden');
+      } else {
+        searchResultsInfo.classList.add('hidden');
+      }
+
+      renderCards();
+    }
+
+    function handleSearch() {
+      currentSearch = searchInput.value.trim();
+      filterData();
+    }
+
+    function clearSearchWhenEmpty() {
+      if (searchInput.value.trim() === '') {
+        currentSearch = '';
+        filterData();
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function setupTheme() {
+      const savedTheme = localStorage.getItem('theme');
+
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    function init() {
+      setupTheme();
+
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      loadPages();
+
+      searchButton.addEventListener('click', handleSearch);
+
+      searchInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          handleSearch();
         }
-        
-        // 加载页面数据
-        async function loadPages() {
-            try {
-                // 显示加载状态
-                loadingState.classList.remove('hidden');
-                errorState.classList.add('hidden');
-                emptyState.classList.add('hidden');
-                cardsContainer.classList.add('hidden');
-                
-                const res = await fetch('./pages.json?v=' + Date.now(), {
-                    cache: 'no-store'
-                });
-                
-                if (!res.ok) {
-                    throw new Error('pages.json 读取失败');
-                }
-                
-                pagesData = await res.json();
-                
-                // 初始化数据
-                filteredData = [...pagesData];
-                
-                // 渲染卡片
-                renderCards();
-                
-                // 隐藏加载状态，显示卡片
-                loadingState.classList.add('hidden');
-                cardsContainer.classList.remove('hidden');
-                
-            } catch (err) {
-                console.error('加载页面数据失败:', err);
-                
-                // 显示错误状态
-                loadingState.classList.add('hidden');
-                errorState.classList.remove('hidden');
-                cardsContainer.classList.add('hidden');
-            }
-        }
-        
-        // 渲染卡片
-        function renderCards() {
-            // 清空容器
-            cardsContainer.innerHTML = '';
-            
-            if (filteredData.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-            
-            // 渲染每个卡片
-            filteredData.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'bg-dark-200 dark:bg-dark-300 rounded-xl shadow-card hover:shadow-card-hover card-transition hover:-translate-y-1 border border-dark-100 dark:border-dark-400 overflow-hidden group';
-                card.style.animationDelay = `${index * 0.05}s`;
-                card.style.animationName = 'slideUp';
-                card.style.animationDuration = '0.5s';
-                card.style.animationFillMode = 'both';
-                
-                // 生成标签HTML
-                const tagsHtml = item.tags ? item.tags.map(tag => 
-                    `<span class="text-xs px-2 py-1 rounded-full bg-dark-100 dark:bg-dark-400 text-light-300 mr-2 mb-2 inline-block">${tag}</span>`
-                ).join('') : '';
-                
-                card.innerHTML = `
-                    <a href="./${item.file}" class="block p-6 h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">${item.name}</h3>
-                            <span class="text-xs px-3 py-1 rounded-full ${item.type === '工具' ? 'bg-blue-500 bg-opacity-20 text-blue-300' : 'bg-purple-500 bg-opacity-20 text-purple-300'}">${item.type}</span>
-                        </div>
-                        
-                        <div class="mt-auto">
-                            <div class="flex flex-wrap mb-4">
-                                ${tagsHtml}
-                            </div>
-                            
-                            <div class="flex items-center text-light-300 text-sm group-hover:text-primary transition-colors">
-                                <span>查看详情</span>
-                                <i class="fa fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                            </div>
-                        </div>
-                    </a>
-                `;
-                
-                cardsContainer.appendChild(card);
-            });
-        }
-        
-        // 过滤数据
-        function filterData() {
-            filteredData = pagesData.filter(item => {
-                // 分类过滤
-                const categoryMatch = currentCategory === 'all' || item.type === currentCategory;
-                
-                // 搜索过滤
-                const searchMatch = !currentSearch || 
-                    item.name.toLowerCase().includes(currentSearch.toLowerCase()) || 
-                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(currentSearch.toLowerCase())));
-                
-                return categoryMatch && searchMatch;
-            });
-            
-            // 更新搜索结果信息
-            if (currentSearch) {
-                searchResultsInfo.textContent = `找到 ${filteredData.length} 个与"${currentSearch}"相关的结果`;
-                searchResultsInfo.classList.remove('hidden');
-            } else {
-                searchResultsInfo.classList.add('hidden');
-            }
-            
-            // 重新渲染卡片
-            renderCards();
-        }
-        
-        // 处理分类按钮点击
-        function handleCategoryClick(event) {
-            // 移除所有按钮的活动状态
-            categoryButtons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('bg-dark-200', 'dark:bg-dark-300', 'text-light-300');
-            });
-            
-            // 添加当前按钮的活动状态
-            event.target.classList.add('active', 'bg-primary', 'text-white');
-            event.target.classList.remove('bg-dark-200', 'dark:bg-dark-300', 'text-light-300');
-            
-            // 更新当前分类
-            currentCategory = event.target.dataset.category;
-            
-            // 过滤数据
-            filterData();
-        }
-        
-        // 处理搜索
-        function handleSearch() {
-            currentSearch = searchInput.value.trim();
-            filterData();
-        }
-        
-        // 处理键盘事件
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                handleSearch();
-            }
-        }
-        
-        // 初始化
-        function init() {
-            // 设置主题
-            setupTheme();
-            
-            // 更新时间
-            setInterval(updateTime, 1000);
-            updateTime();
-            
-            // 加载页面数据
-            loadPages();
-            
-            // 事件监听
-            searchButton.addEventListener('click', handleSearch);
-            searchInput.addEventListener('keypress', handleKeyPress);
-            retryButton.addEventListener('click', loadPages);
-            themeToggle.addEventListener('click', toggleTheme);
-            
-            // 分类按钮事件
-            categoryButtons.forEach(btn => {
-                btn.addEventListener('click', handleCategoryClick);
-            });
-            
-            // 移动端搜索优化
-            if (window.innerWidth < 768) {
-                searchInput.addEventListener('focus', () => {
-                    document.body.classList.add('search-active');
-                });
-                
-                searchInput.addEventListener('blur', () => {
-                    document.body.classList.remove('search-active');
-                });
-            }
-        }
-        
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+      });
+
+      searchInput.addEventListener('input', clearSearchWhenEmpty);
+
+      retryButton.addEventListener('click', loadPages);
+      themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
