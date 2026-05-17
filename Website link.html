@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前後台連結系統</title>
 
   <style>
     * {
@@ -18,37 +18,38 @@
     }
 
     .app {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: auto;
-      padding: 20px;
+      padding: 24px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .header h1 {
       margin: 0;
-      font-size: 30px;
+      font-size: 34px;
       color: #93c5fd;
     }
 
     .header p {
       color: #9ca3af;
       margin-top: 8px;
+      font-size: 16px;
     }
 
     .toolbar {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 18px;
     }
 
     #searchInput {
       flex: 1;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 15px;
+      border-radius: 14px;
       border: 1px solid #334155;
       background: #1e293b;
       color: white;
@@ -58,9 +59,9 @@
 
     button {
       border: none;
-      border-radius: 12px;
-      padding: 0 18px;
-      font-size: 15px;
+      border-radius: 14px;
+      padding: 0 22px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       color: white;
@@ -80,15 +81,29 @@
     }
 
     .info {
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       color: #cbd5e1;
       font-size: 14px;
     }
 
-    .grid {
+    .section-title {
+      font-size: 22px;
+      color: #bfdbfe;
+      margin: 24px 0 14px;
+      border-left: 5px solid #3b82f6;
+      padding-left: 10px;
+    }
+
+    .owner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    .link-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
+      gap: 14px;
     }
 
     .card {
@@ -99,21 +114,21 @@
       box-shadow: 0 10px 24px rgba(0,0,0,.25);
     }
 
-    .card-title {
-      font-size: 18px;
+    .owner-name {
+      font-size: 20px;
       font-weight: bold;
       color: #bfdbfe;
       margin-bottom: 12px;
       word-break: break-word;
     }
 
-    .link-group {
+    .btn-group {
       display: flex;
-      flex-direction: column;
-      gap: 9px;
+      gap: 10px;
     }
 
     .link-btn {
+      flex: 1;
       display: block;
       text-align: center;
       text-decoration: none;
@@ -121,7 +136,7 @@
       border-radius: 12px;
       color: white;
       font-weight: bold;
-      word-break: break-all;
+      word-break: break-word;
     }
 
     .frontend {
@@ -132,29 +147,37 @@
       background: #dc2626;
     }
 
-    .related {
-      background: #7c3aed;
+    .related-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 14px;
     }
 
-    .link-btn:hover {
-      filter: brightness(1.12);
-    }
-
-    .note {
-      margin-top: 12px;
-      padding: 10px;
-      border-radius: 12px;
-      background: #0f172a;
-      color: #cbd5e1;
-      font-size: 14px;
-      line-height: 1.6;
+    .related-name {
+      color: #e5e7eb;
+      font-weight: bold;
       word-break: break-word;
+    }
+
+    .related-btn {
+      white-space: nowrap;
+      text-decoration: none;
+      padding: 9px 13px;
+      border-radius: 10px;
+      background: #7c3aed;
+      color: white;
+      font-weight: bold;
     }
 
     .empty,
     .loading {
       text-align: center;
-      padding: 50px 10px;
+      padding: 60px 10px;
       color: #93c5fd;
       font-size: 18px;
     }
@@ -163,19 +186,13 @@
       color: #fca5a5;
     }
 
-    .tag {
-      display: inline-block;
-      margin-bottom: 10px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: #0f172a;
-      color: #93c5fd;
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       .app {
         padding: 14px;
+      }
+
+      .header h1 {
+        font-size: 26px;
       }
 
       .toolbar {
@@ -183,11 +200,11 @@
       }
 
       button {
-        padding: 13px;
+        padding: 14px;
       }
 
-      .header h1 {
-        font-size: 24px;
+      .btn-group {
+        flex-direction: column;
       }
     }
   </style>
@@ -201,7 +218,7 @@
     </div>
 
     <div class="toolbar">
-      <input id="searchInput" type="text" placeholder="輸入名稱、備註或連結關鍵字">
+      <input id="searchInput" type="text" placeholder="輸入業主、友善名稱或連結關鍵字">
       <button onclick="searchData()">搜尋</button>
       <button class="clear-btn" onclick="clearSearch()">清除</button>
     </div>
@@ -211,7 +228,10 @@
   </div>
 
   <script>
-    let allData = [];
+    const API_URL = '你的 Apps Script 部署網址';
+
+    let allOwners = [];
+    let allRelatedLinks = [];
 
     window.onload = function () {
       loadData();
@@ -220,53 +240,67 @@
     function loadData() {
       setLoading('資料載入中...');
 
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (!res || !res.success) {
-            showError(res ? res.message : '讀取失敗');
-            return;
-          }
+      loadJsonp(API_URL, function (res) {
+        if (!res || !res.success) {
+          showError(res ? res.message : '讀取失敗');
+          return;
+        }
 
-          allData = res.data || [];
-          renderData(allData);
-        })
-        .withFailureHandler(function (err) {
-          showError(err.message || '系統錯誤，請稍後再試');
-        })
-        .getLinkData();
+        allOwners = res.owners || [];
+        allRelatedLinks = res.relatedLinks || [];
+
+        renderData(allOwners, allRelatedLinks);
+      });
     }
 
-    function renderData(data) {
+    function renderData(owners, relatedLinks) {
       const content = document.getElementById('content');
       const info = document.getElementById('info');
 
-      info.innerHTML = `目前顯示 ${data.length} 筆資料，共 ${allData.length} 筆`;
+      info.innerHTML = `目前顯示 ${owners.length} 個業主，${relatedLinks.length} 個相關連結`;
 
-      if (!data.length) {
+      if (!owners.length && !relatedLinks.length) {
         content.innerHTML = '<div class="empty">查無資料</div>';
         return;
       }
 
-      let html = '<div class="grid">';
+      let html = '';
 
-      data.forEach(function (item, index) {
-        html += `
-          <div class="card">
-            <div class="tag">#${index + 1}</div>
-            <div class="card-title">${escapeHtml(item.name || '未命名')}</div>
+      if (owners.length) {
+        html += `<div class="section-title">業主前後台</div>`;
+        html += `<div class="owner-grid">`;
 
-            <div class="link-group">
-              ${item.frontend ? `<a class="link-btn frontend" href="${safeUrl(item.frontend)}" target="_blank">前台連結</a>` : ''}
-              ${item.backend ? `<a class="link-btn backend" href="${safeUrl(item.backend)}" target="_blank">後台連結</a>` : ''}
-              ${item.related ? `<a class="link-btn related" href="${safeUrl(item.related)}" target="_blank">相關連結</a>` : ''}
+        owners.forEach(item => {
+          html += `
+            <div class="card">
+              <div class="owner-name">${escapeHtml(item.owner || '未命名')}</div>
+              <div class="btn-group">
+                ${item.frontend ? `<a class="link-btn frontend" href="${safeUrl(item.frontend)}" target="_blank">前台</a>` : ''}
+                ${item.backend ? `<a class="link-btn backend" href="${safeUrl(item.backend)}" target="_blank">後台</a>` : ''}
+              </div>
             </div>
+          `;
+        });
 
-            ${item.note ? `<div class="note">備註：${escapeHtml(item.note)}</div>` : ''}
-          </div>
-        `;
-      });
+        html += `</div>`;
+      }
 
-      html += '</div>';
+      if (relatedLinks.length) {
+        html += `<div class="section-title">相關連結</div>`;
+        html += `<div class="link-grid">`;
+
+        relatedLinks.forEach(item => {
+          html += `
+            <div class="related-card">
+              <div class="related-name">${escapeHtml(item.name || '未命名連結')}</div>
+              ${item.url ? `<a class="related-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>` : ''}
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
       content.innerHTML = html;
     }
 
@@ -274,26 +308,31 @@
       const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
 
       if (!keyword) {
-        renderData(allData);
+        renderData(allOwners, allRelatedLinks);
         return;
       }
 
-      const filtered = allData.filter(function (item) {
+      const filteredOwners = allOwners.filter(item => {
         return (
-          String(item.name || '').toLowerCase().includes(keyword) ||
+          String(item.owner || '').toLowerCase().includes(keyword) ||
           String(item.frontend || '').toLowerCase().includes(keyword) ||
-          String(item.backend || '').toLowerCase().includes(keyword) ||
-          String(item.related || '').toLowerCase().includes(keyword) ||
-          String(item.note || '').toLowerCase().includes(keyword)
+          String(item.backend || '').toLowerCase().includes(keyword)
         );
       });
 
-      renderData(filtered);
+      const filteredLinks = allRelatedLinks.filter(item => {
+        return (
+          String(item.name || '').toLowerCase().includes(keyword) ||
+          String(item.url || '').toLowerCase().includes(keyword)
+        );
+      });
+
+      renderData(filteredOwners, filteredLinks);
     }
 
     function clearSearch() {
       document.getElementById('searchInput').value = '';
-      renderData(allData);
+      renderData(allOwners, allRelatedLinks);
     }
 
     document.getElementById('searchInput').addEventListener('keydown', function (e) {
@@ -301,6 +340,24 @@
         searchData();
       }
     });
+
+    function loadJsonp(url, callback) {
+      const callbackName = 'jsonpCallback_' + Date.now();
+
+      window[callbackName] = function (data) {
+        callback(data);
+        delete window[callbackName];
+        script.remove();
+      };
+
+      const script = document.createElement('script');
+      script.src = url + '?callback=' + callbackName;
+      script.onerror = function () {
+        showError('API 連線失敗，請確認 Apps Script 是否已部署為任何人可存取');
+      };
+
+      document.body.appendChild(script);
+    }
 
     function setLoading(text) {
       document.getElementById('content').innerHTML = `<div class="loading">${text}</div>`;
