@@ -2,17 +2,17 @@
   {
     "name": "BNG电子对帐",
     "file": "tool.html",
-    "type": "工具"
+    "type": "对帐"
   },
      {
     "name": "BE(BG)电子对帐",
     "file": "BE (BG) tool.html",
-    "type": "工具"
+    "type": "对帐"
   },
           {
     "name": "前后台链接",
     "file": "Website link.html",
-    "type": "工具"
+    "type": "网址链接"
   },
       {
     "name": "公告模版",
