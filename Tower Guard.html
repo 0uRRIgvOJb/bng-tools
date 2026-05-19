@@ -46,7 +46,19 @@ body{
 .muzzle{position:absolute;left:40px;top:18px;width:7px;height:66px;background:#ffe4a7;border-radius:99px;transform-origin:center}
 
 /* 怪物变成长条形 */
-.enemy{position:absolute;transform:translate(-50%,-50%);z-index:8;filter:drop-shadow(0 4px 10px rgba(0,0,0,.55));width:100px;height:28px;border-radius:0;display:flex;align-items:center;overflow:visible}
+.enemy{
+ position:absolute;
+ z-index:8;
+ filter:drop-shadow(4px 4px 0 rgba(0,0,0,.55));
+ width:128px;
+ height:32px;
+ border-radius:0;
+ display:flex;
+ align-items:center;
+ overflow:visible;
+ will-change:left,top;
+ transform:none;
+}
 .enemyCore{position:absolute;inset:0;width:100%;height:100%;background:linear-gradient(90deg,#e66a5f,#9f262d);border-radius:0;overflow:hidden;z-index:1}
 .enemy.tank .enemyCore{background:linear-gradient(90deg,#7cbf66,#315b38)}
 .enemy.mage .enemyCore{background:linear-gradient(90deg,#66c9ff,#4055d8)}
@@ -57,9 +69,26 @@ body{
 .hpbar i{display:block;height:100%;background:linear-gradient(90deg,#7dff8b,#ffe66a);width:100%}
 .hpNum{position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-size:12px;white-space:nowrap;color:#fff6d9;text-shadow:2px 2px 0 #000;font-weight:900;z-index:6}
 
-.projectile{position:absolute;z-index:18;transform-origin:center;pointer-events:none}
-.arrow{width:28px;height:6px;background:linear-gradient(90deg,#fff3b6,#ffbd56);border-radius:99px;box-shadow:0 0 14px rgba(255,220,130,1);filter:brightness(1.2)}
-.arrow:after{content:"";position:absolute;right:-8px;top:-5px;width:0;height:0;border-left:12px solid #fff3b6;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.projectile{position:absolute;z-index:35;transform-origin:center;pointer-events:none;will-change:left,top,transform}
+.arrow{
+ width:42px;
+ height:8px;
+ background:linear-gradient(90deg,#fffbe0,#ffe56c,#ff9e3d);
+ border-radius:0;
+ box-shadow:0 0 10px #fff6a0,0 0 24px rgba(255,220,80,.9);
+ filter:brightness(1.45);
+}
+.arrow:after{
+ content:"";
+ position:absolute;
+ right:-10px;
+ top:-6px;
+ width:0;
+ height:0;
+ border-left:14px solid #fffbe0;
+ border-top:10px solid transparent;
+ border-bottom:10px solid transparent;
+}
 .bolt{width:36px;height:9px;background:#f7f15b;clip-path:polygon(0 40%,45% 40%,38% 0,100% 55%,52% 55%,60% 100%);filter:drop-shadow(0 0 12px #fff169)}
 
 .effect{position:absolute;border-radius:50%;pointer-events:none;z-index:12}
@@ -68,8 +97,19 @@ body{
 .thunder{background:rgba(255,245,102,.42);border:2px solid rgba(255,255,185,1);box-shadow:0 0 32px rgba(255,240,80,.85)}
 .poison{background:radial-gradient(circle,rgba(118,255,130,.35),rgba(60,255,90,.1));border:2px solid rgba(125,255,145,.78)}
 .bladeFx{background:rgba(180,255,255,.28);border:2px dashed rgba(190,255,255,1)}
-.arrowHit{position:absolute;width:22px;height:22px;background:radial-gradient(circle,#ffdd88,#ffaa33);border-radius:50%;z-index:20;animation:hitPop .3s forwards}
-.bossHit{position:absolute;width:60px;height:60px;background:radial-gradient(circle,rgba(255,180,255,.9),rgba(180,80,255,.5));border-radius:50%;z-index:25;animation:hitPop .35s forwards}
+.arrowHit{position:absolute;width:34px;height:34px;background:radial-gradient(circle,#fffbe0,#ffd35c,#ff7a2c);border-radius:0;z-index:45;box-shadow:0 0 18px #fff49a;animation:hitPop .3s forwards}
+.bossHit{position:absolute;width:60px;height:60px;background:radial-gradient(circle,rgba(255,180,255,.9),rgba(180,80,255,.5));border-radius:0;z-index:45;animation:hitPop .35s forwards}
+.shotTrail{
+ position:absolute;
+ height:4px;
+ background:linear-gradient(90deg,rgba(255,255,190,0),rgba(255,245,105,.95),rgba(255,255,255,.75));
+ box-shadow:0 0 12px #fff36e;
+ transform-origin:left center;
+ z-index:30;
+ pointer-events:none;
+ animation:trailFade .18s steps(3,end) forwards;
+}
+@keyframes trailFade{from{opacity:1}to{opacity:0}}
 
 @keyframes hitPop{0%{transform:scale(0);opacity:1}70%{transform:scale(1.4);opacity:.7}100%{transform:scale(1);opacity:0}}
 @keyframes pulse{from{transform:scale(.97)}to{transform:scale(1.04)}}
@@ -259,9 +299,12 @@ function bossSkill(){
 function updateEnemies(dt){
  const full=40000;
  const baseStep=dt/full*globalSpeedBuff;
+ const len=pathLength();
 
+ // 依目前進度排序，越靠近終點越前面。
  enemies.sort((a,b)=>b.progress-a.progress);
 
+ // 先正常前進。
  for(let i=0;i<enemies.length;i++){
   const e=enemies[i];
 
@@ -271,7 +314,7 @@ function updateEnemies(dt){
   }
 
   if(e.pushBack>0){
-   e.progress=Math.max(0,e.progress-0.0012);
+   e.progress=Math.max(0,e.progress-baseStep*3.2);
    e.pushBack-=dt;
    continue;
   }
@@ -284,16 +327,18 @@ function updateEnemies(dt){
 
  enemies.sort((a,b)=>b.progress-a.progress);
 
- // 怪物變長後，連體距離也跟著變長；中間怪死掉時，前方怪物往後平滑補位。
- const len=pathLength();
+ // 前面的怪物往後補位，但不能瞬間拉回，避免畫面抖動。
+ // 只在距離真的拉太開時才補，保留一點容忍區，避免每幀來回修正。
  for(let i=enemies.length-2;i>=0;i--){
   const front=enemies[i];
   const back=enemies[i+1];
   const gap=Math.max(0.008,((front.bodyW||128)*0.78)/len);
   const desired=back.progress+gap;
+  const tolerance=gap*0.08;
 
-  if(front.progress>desired){
-   front.progress-=Math.min(front.progress-desired,0.0045);
+  if(front.progress>desired+tolerance){
+   const diff=front.progress-desired;
+   front.progress-=Math.min(diff,baseStep*5.5);
   }
  }
 
@@ -315,20 +360,23 @@ function updateEnemies(dt){
 function updateEnemyPosition(e){
  const p=pointAt(e.progress);
 
+ e.x=p.x;
+ e.y=p.y;
+
+ // 只平滑顯示，不改碰撞座標；降低抖動但不造成箭矢判定錯位。
  if(e.drawX===null || e.drawY===null){
   e.drawX=p.x;
   e.drawY=p.y;
  }else{
-  const smooth=0.24;
+  const smooth=0.38;
   e.drawX += (p.x-e.drawX)*smooth;
   e.drawY += (p.y-e.drawY)*smooth;
  }
 
- e.x=p.x;
- e.y=p.y;
-
  const w=e.bodyW||128;
  const h=e.bodyH||32;
+
+ // .enemy 已經取消 transform，所以這裡直接用 top-left 定位
  e.el.style.left=Math.round(e.drawX-w/2)+'px';
  e.el.style.top=Math.round(e.drawY-h/2)+'px';
 
@@ -365,9 +413,19 @@ function shoot(tg,idx,total){
  const c=Math.max(1,total||tower.count);
  const a=tower.angle+(idx-(c-1)/2)*tower.spread;
  const p={x:tower.x,y:tower.y,vx:Math.cos(a)*820,vy:Math.sin(a)*820,damage:tower.damage,pierce:tower.pierce,hit:new Set(),life:0,maxLife:1500,el:document.createElement('div')};
- p.el.className='projectile arrow';game.appendChild(p.el);projectiles.push(p);beep(680,.022,'square');muzzleFlash();
+ p.el.className='projectile arrow';game.appendChild(p.el);projectiles.push(p);createShotTrail(tower.x,tower.y,a,130);beep(680,.022,'square');muzzleFlash();
 }
-function muzzleFlash(){const f=document.createElement('div');f.className='thunder';f.style=`left:${tower.x}px;top:${tower.y-50}px;width:18px;height:18px;border-radius:50%;background:#ff0;z-index:25`;game.appendChild(f);setTimeout(()=>f.remove(),180)}
+function createShotTrail(x,y,a,len){
+ const el=document.createElement('div');
+ el.className='shotTrail';
+ el.style.left=x+'px';
+ el.style.top=y+'px';
+ el.style.width=len+'px';
+ el.style.transform=`rotate(${a}rad)`;
+ game.appendChild(el);
+ setTimeout(()=>el.remove(),190);
+}
+function muzzleFlash(){const f=document.createElement('div');f.className='thunder';f.style=`left:${tower.x}px;top:${tower.y-50}px;width:18px;height:18px;border-radius:0;background:#ff0;z-index:25`;game.appendChild(f);setTimeout(()=>f.remove(),180)}
 
 function hitEnemyBody(px,py,e){
  // 長條怪物碰撞：寬度變長後，箭矢命中範圍也跟著變長。
