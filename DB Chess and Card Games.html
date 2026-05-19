@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DB棋牌對帳</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Microsoft JhengHei",sans-serif;
+    background:radial-gradient(circle at top,#14213d 0%,#020617 55%);
+    color:#fff;
+    min-height:100vh;
+    overflow:hidden;
+}
+
+.container{
+    width:100%;
+    height:100vh;
+    padding:24px;
+}
+
+.title{
+    text-align:center;
+    font-size:42px;
+    font-weight:bold;
+    color:#facc15;
+    letter-spacing:4px;
+    margin-bottom:24px;
+}
+
+.layout{
+    display:grid;
+    grid-template-columns:1fr 140px 1fr;
+    gap:20px;
+    height:calc(100vh - 120px);
+}
+
+.card{
+    background:rgba(15,23,42,.95);
+    border:1px solid rgba(250,204,21,.2);
+    border-radius:24px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 0 25px rgba(0,0,0,.45);
+}
+
+.card-header{
+    padding:18px 22px;
+    background:linear-gradient(90deg,#facc15,#f59e0b);
+    color:#111827;
+    font-size:20px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+textarea{
+    flex:1;
+    width:100%;
+    background:#020617;
+    color:#e5e7eb;
+    border:none;
+    resize:none;
+    padding:22px;
+    font-size:14px;
+    line-height:1.7;
+    outline:none;
+}
+
+.center{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+button{
+    width:110px;
+    height:110px;
+    border:none;
+    border-radius:50%;
+    background:radial-gradient(circle at top,#fde68a,#f59e0b);
+    color:#111827;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 35px rgba(250,204,21,.35);
+}
+
+.result-wrap{
+    flex:1;
+    padding:24px;
+    overflow:auto;
+    background:#020617;
+}
+
+.time-box{
+    background:#111827;
+    border:1px solid rgba(250,204,21,.25);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:18px;
+    color:#facc15;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.result-table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:16px;
+    background:#111827;
+}
+
+.result-table th{
+    background:#facc15;
+    color:#111827;
+    padding:14px;
+    font-size:18px;
+    text-align:left;
+}
+
+.result-table td{
+    padding:16px 14px;
+    border-bottom:1px solid #334155;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.platform{
+    color:#facc15;
+}
+
+.positive{
+    color:#fb7185;
+}
+
+.negative{
+    color:#34d399;
+}
+
+@media(max-width:900px){
+    body{
+        overflow:auto;
+    }
+
+    .container{
+        height:auto;
+    }
+
+    .layout{
+        grid-template-columns:1fr;
+        height:auto;
+    }
+
+    button{
+        width:100%;
+        height:60px;
+        border-radius:16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">🦉 DB棋牌對帳</div>
+
+    <div class="layout">
+
+        <div class="card">
+            <div class="card-header">原始資料</div>
+            <textarea id="inputData" placeholder="請貼上資料..."></textarea>
+        </div>
+
+        <div class="center">
+            <button onclick="generateResult()">生成</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">對帳結果</div>
+            <div class="result-wrap" id="result">尚未生成資料</div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function parseNumber(value){
+    return Number(
+        String(value)
+        .replace(/,/g,"")
+        .replace(/%/g,"")
+    ) || 0;
+}
+
+function formatMoney(value){
+    return value.toLocaleString("en-US",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
+}
+
+function formatDate(dateText){
+    const parts = dateText.split("-");
+    if(parts.length !== 3) return dateText;
+
+    const yy = parts[0];
+    const mm = parts[1];
+    const dd = parts[2];
+
+    return `20${yy}-${mm}-${dd}`;
+}
+
+function generateResult(){
+
+    const text = document.getElementById("inputData").value.trim();
+    const resultBox = document.getElementById("result");
+
+    if(!text){
+        resultBox.innerHTML = "請先貼上資料";
+        return;
+    }
+
+    const lines = text
+        .split(/\n/)
+        .map(v => v.trim())
+        .filter(v => v);
+
+    const platformMap = {};
+    const dateList = [];
+
+    lines.forEach(line => {
+
+        if(
+            line.includes("日期") ||
+            line.includes("平台") ||
+            line.includes("總盈虧")
+        ){
+            return;
+        }
+
+        const parts = line.split(/\s+/);
+
+        if(parts.length < 6) return;
+
+        const date = parts[0];
+        const platform = parts[1];
+        const profitLoss = parseNumber(parts[5]);
+        const amount = profitLoss * 5;
+
+        dateList.push(formatDate(date));
+
+        if(!platformMap[platform]){
+            platformMap[platform] = 0;
+        }
+
+        platformMap[platform] += amount;
+    });
+
+    const sorted = Object.entries(platformMap)
+        .sort((a,b) => b[1] - a[1]);
+
+    if(sorted.length === 0){
+        resultBox.innerHTML = "找不到有效資料";
+        return;
+    }
+
+    const dates = dateList.sort();
+    const startDate = dates[0];
+    const endDate = dates[dates.length - 1];
+
+    let html = `
+        <div class="time-box">
+            時間：${startDate} ~ ${endDate}
+        </div>
+
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>平台</th>
+                    <th>總盈虧</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    sorted.forEach(([platform, amount]) => {
+        const cls = amount >= 0 ? "positive" : "negative";
+
+        html += `
+            <tr>
+                <td class="platform">${platform}</td>
+                <td class="${cls}">${formatMoney(amount)}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
+    resultBox.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
