@@ -24,6 +24,11 @@
     "file": "maintain.html",
     "type": "工具"
   },
+          {
+    "name": "DB棋牌对帐",
+    "file": "Create DB Chess and Card Games.html",
+    "type": "对帐"
+  },
  {
     "name": "卡牌冒险",
     "file": "card-game.html",
