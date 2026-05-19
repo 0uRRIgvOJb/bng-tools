@@ -29,6 +29,11 @@
     "file": "DBC hessCard.html",
     "type": "对帐"
   },
+            {
+    "name": "塔防",
+    "file": "Tower Guard.html",
+    "type": "其他"
+  },
  {
     "name": "卡牌冒险",
     "file": "card-game.html",
