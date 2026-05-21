@@ -4,102 +4,98 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>前後台連結系統</title>
-
 <style>
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:"Microsoft JhengHei",Arial,sans-serif;
   background:#0f172a;
-  color:#e5e7eb;
+  color:#e2e8f0;
 }
-.app{max-width:1280px;margin:auto;padding:24px}
-.header{text-align:center;margin-bottom:20px}
-.header h1{margin:0;font-size:34px;color:#93c5fd}
-.header p{color:#9ca3af}
-
-.toolbar,.login-bar,.admin-bar{
+.app{max-width:1400px;margin:auto;padding:22px}
+.header{
   display:flex;
-  gap:10px;
-  margin-bottom:14px;
-  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
 }
-input,select,textarea{
-  padding:13px;
-  border-radius:12px;
-  border:1px solid #334155;
-  background:#1e293b;
-  color:white;
-  font-size:15px;
-}
-#searchInput{flex:1;min-width:260px}
+.header h1{margin:0;color:#bfdbfe;font-size:30px}
+.header p{margin:6px 0 0;color:#94a3b8}
 button{
   border:0;
   border-radius:12px;
-  padding:13px 18px;
-  font-size:15px;
-  font-weight:bold;
+  padding:11px 16px;
   cursor:pointer;
-  color:white;
-  background:#2563eb;
+  font-weight:bold;
+  color:#e2e8f0;
+  background:#334155;
 }
-button:hover{filter:brightness(1.12)}
-.gray{background:#475569}
-.green{background:#16a34a}
-.red{background:#dc2626}
-.purple{background:#7c3aed}
-.info{color:#cbd5e1;font-size:14px;margin-bottom:10px}
+button:hover{background:#475569}
+.danger{background:#7f1d1d}
+.danger:hover{background:#991b1b}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #334155;
+  background:#1e293b;
+  color:#fff;
+  font-size:15px;
+}
+.toolbar,.category-bar,.admin-bar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+#searchInput{flex:1;min-width:260px}
+.category-btn.active{background:#64748b}
+.info{color:#cbd5e1;margin:10px 0 16px}
 .section-title{
-  font-size:22px;
+  text-align:center;
   color:#bfdbfe;
-  margin:26px 0 14px;
-  border-left:5px solid #3b82f6;
-  padding-left:10px;
+  font-size:26px;
+  margin:24px 0 18px;
 }
-.owner-grid,.link-grid{
+.grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:14px;
+  gap:16px;
 }
-.card,.system-card{
+.card{
   background:#1e293b;
   border:1px solid #334155;
   border-radius:18px;
-  padding:16px;
-  box-shadow:0 10px 24px rgba(0,0,0,.25);
+  padding:18px;
+  box-shadow:0 8px 22px rgba(0,0,0,.22);
 }
-.owner-name{
-  font-size:20px;
+.owner-name,.link-name{
+  font-size:21px;
   font-weight:bold;
   color:#bfdbfe;
-  margin-bottom:12px;
   text-align:center;
+  margin-bottom:14px;
+  word-break:break-word;
 }
-.btn-group{display:flex;gap:10px}
-.link-btn,.system-btn{
+.btn-row{display:flex;gap:10px}
+.link-btn{
+  flex:1;
   display:block;
   text-align:center;
   text-decoration:none;
   padding:11px;
   border-radius:12px;
-  color:white;
+  color:#e2e8f0;
+  background:#334155;
   font-weight:bold;
 }
-.link-btn{flex:1}
-.frontend{background:#16a34a}
-.backend{background:#dc2626}
-.system-btn{background:#7c3aed}
-.system-name{
-  font-weight:bold;
-  font-size:17px;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-.system-url,.system-note{
+.link-btn:hover{background:#475569}
+.url,.note{
   color:#cbd5e1;
   font-size:14px;
   word-break:break-word;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 .admin-actions{
   display:none;
@@ -109,19 +105,18 @@ button:hover{filter:brightness(1.12)}
 body.logged-in .admin-actions{display:flex}
 .empty,.loading{
   text-align:center;
-  padding:50px 10px;
+  padding:50px 0;
   color:#93c5fd;
 }
-.error{color:#fca5a5}
 .modal{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.65);
+  background:rgba(0,0,0,.68);
   z-index:99;
   align-items:center;
   justify-content:center;
-  padding:18px;
+  padding:16px;
 }
 .modal.show{display:flex}
 .modal-box{
@@ -133,28 +128,27 @@ body.logged-in .admin-actions{display:flex}
   padding:20px;
 }
 .modal-box h2{margin-top:0;color:#bfdbfe}
-.form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.form-row input,.form-row textarea,.form-row select{width:100%}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;margin-bottom:6px;color:#cbd5e1}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end}
 .toast{
+  display:none;
   position:fixed;
   right:18px;
   bottom:18px;
   background:#020617;
   border:1px solid #334155;
-  color:#fff;
   padding:14px 18px;
   border-radius:14px;
-  display:none;
   z-index:120;
 }
 .toast.show{display:block}
-
 @media(max-width:700px){
   .app{padding:14px}
-  .header h1{font-size:26px}
-  .toolbar,.login-bar,.admin-bar{flex-direction:column}
-  .btn-group{flex-direction:column}
+  .header{flex-direction:column;align-items:flex-start}
+  .header h1{font-size:25px}
+  .toolbar,.admin-bar{flex-direction:column}
+  .btn-row{flex-direction:column}
 }
 </style>
 </head>
@@ -162,62 +156,104 @@ body.logged-in .admin-actions{display:flex}
 <body>
 <div class="app">
   <div class="header">
-    <h1>前後台連結系統</h1>
-    <p>未登入可檢視，登入後可新增、編輯、刪除連結</p>
+    <div>
+      <h1>前後台連結系統</h1>
+      <p>快速查詢業主、新系統、舊系統與其他網址</p>
+    </div>
+    <button id="loginBtn" onclick="openLoginModal()">登入</button>
   </div>
 
-  <div class="login-bar" id="loginBar">
-    <input id="accountInput" placeholder="帳號">
-    <input id="passwordInput" type="password" placeholder="密碼">
-    <button onclick="login()">登入</button>
-  </div>
-
-  <div class="admin-bar" id="adminBar" style="display:none;">
-    <button class="green" onclick="openAddModal()">新增連結</button>
-    <button class="gray" onclick="logout()">登出</button>
+  <div id="adminBar" class="admin-bar" style="display:none;">
+    <button onclick="openOwnerModal('add')">新增業主</button>
+    <button onclick="openLinkModal('add')">新增連結</button>
+    <button onclick="logout()">登出</button>
     <span id="loginInfo" class="info"></span>
   </div>
 
   <div class="toolbar">
-    <input id="searchInput" placeholder="輸入業主、系統名稱、網址或備註關鍵字">
+    <input id="searchInput" placeholder="搜尋業主、網站名稱、網址或備註">
     <button onclick="searchData()">搜尋</button>
-    <button class="gray" onclick="clearSearch()">清除</button>
+    <button onclick="clearSearch()">清除</button>
+  </div>
+
+  <div class="category-bar">
+    <button class="category-btn active" onclick="setCategory('all',this)">全部</button>
+    <button class="category-btn" onclick="setCategory('owners',this)">業主前後台</button>
+    <button class="category-btn" onclick="setCategory('new',this)">新系統</button>
+    <button class="category-btn" onclick="setCategory('old',this)">舊系統</button>
+    <button class="category-btn" onclick="setCategory('other',this)">其他網址</button>
   </div>
 
   <div id="info" class="info"></div>
   <div id="content" class="loading">資料載入中...</div>
 </div>
 
-<div id="editModal" class="modal">
+<div id="loginModal" class="modal">
   <div class="modal-box">
-    <h2 id="modalTitle">新增連結</h2>
+    <h2>管理登入</h2>
+    <div class="form-row">
+      <label>帳號</label>
+      <input id="accountInput">
+    </div>
+    <div class="form-row">
+      <label>密碼</label>
+      <input id="passwordInput" type="password">
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal('loginModal')">取消</button>
+      <button onclick="login()">登入</button>
+    </div>
+  </div>
+</div>
 
+<div id="ownerModal" class="modal">
+  <div class="modal-box">
+    <h2 id="ownerModalTitle">新增業主</h2>
+    <div class="form-row">
+      <label>業主名稱</label>
+      <input id="ownerName">
+    </div>
+    <div class="form-row">
+      <label>前台網址</label>
+      <input id="ownerFrontend">
+    </div>
+    <div class="form-row">
+      <label>後台網址</label>
+      <input id="ownerBackend">
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal('ownerModal')">取消</button>
+      <button onclick="submitOwner()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div id="linkModal" class="modal">
+  <div class="modal-box">
+    <h2 id="linkModalTitle">新增連結</h2>
     <div class="form-row">
       <label>分類</label>
-      <select id="formType">
+      <select id="linkType">
         <option value="new">新系統</option>
         <option value="old">舊系統</option>
+        <option value="other">其他網址</option>
       </select>
     </div>
-
     <div class="form-row">
       <label>網站名稱</label>
-      <input id="formName" placeholder="請輸入網站名稱">
+      <input id="linkName">
     </div>
-
     <div class="form-row">
       <label>網址</label>
-      <input id="formUrl" placeholder="https://example.com">
+      <input id="linkUrl">
     </div>
-
     <div class="form-row">
       <label>備註</label>
-      <textarea id="formNote" rows="3" placeholder="選填"></textarea>
+      <textarea id="linkNote" rows="3"></textarea>
     </div>
-
     <div class="modal-actions">
-      <button class="gray" onclick="closeModal()">取消</button>
-      <button onclick="submitForm()">儲存</button>
+      <button onclick="closeModal('linkModal')">取消</button>
+      <button onclick="submitLink()">儲存</button>
     </div>
   </div>
 </div>
@@ -225,41 +261,36 @@ body.logged-in .admin-actions{display:flex}
 <div id="toast" class="toast"></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwPlm3BWLVSH2p8tiyAJ_TVc97TqTpQi23Pqo_imYyKQ8z81rTeXv6W-IvKxWXhP6d_/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyDdWpCa3YQNm9ocJN4mSOsNgOo5udmaxb9GbgI6P3NZ95kteaOjojkOcAIIYsQybfc/exec';
 
-let allOwners = [];
-let allNewSystems = [];
-let allOldSystems = [];
-let token = localStorage.getItem('linkSystemToken') || '';
-let account = localStorage.getItem('linkSystemAccount') || '';
-let editMode = 'add';
-let editRow = '';
-let editType = '';
+let owners=[],newSystems=[],oldSystems=[],otherLinks=[];
+let token=localStorage.getItem('linkToken')||'';
+let account=localStorage.getItem('linkAccount')||'';
+let currentCategory='all';
+let ownerMode='add',ownerRow='';
+let linkMode='add',linkRow='',linkEditType='';
 
-window.onload = function(){
+window.onload=function(){
   updateLoginUI();
   loadData();
 };
 
-function api(params, callback){
-  const cb = 'jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
-  params.callback = cb;
+function api(params,cb){
+  const callback='jsonp_'+Date.now()+Math.floor(Math.random()*9999);
+  params.callback=callback;
+  const query=Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')).join('&');
 
-  const query = Object.keys(params).map(k =>
-    encodeURIComponent(k) + '=' + encodeURIComponent(params[k] ?? '')
-  ).join('&');
-
-  window[cb] = function(res){
-    callback(res);
-    delete window[cb];
+  window[callback]=function(res){
+    cb(res);
+    delete window[callback];
     script.remove();
   };
 
-  const script = document.createElement('script');
-  script.src = API_URL + '?' + query;
-  script.onerror = function(){
-    showToast('API 連線失敗');
-    delete window[cb];
+  const script=document.createElement('script');
+  script.src=API_URL+'?'+query;
+  script.onerror=function(){
+    showToast('API連線失敗');
+    delete window[callback];
     script.remove();
   };
   document.body.appendChild(script);
@@ -267,300 +298,263 @@ function api(params, callback){
 
 function loadData(){
   setLoading('資料載入中...');
-  api({action:'list'}, function(res){
-    if(!res || !res.success){
-      showError(res ? res.message : '讀取失敗');
+  api({action:'list'},function(res){
+    if(!res||!res.success){
+      showError(res?res.message:'讀取失敗');
       return;
     }
-    allOwners = res.owners || [];
-    allNewSystems = res.newSystems || [];
-    allOldSystems = res.oldSystems || [];
-    renderData(allOwners, allNewSystems, allOldSystems);
+    owners=res.owners||[];
+    newSystems=res.newSystems||[];
+    oldSystems=res.oldSystems||[];
+    otherLinks=res.otherLinks||[];
+    render();
   });
 }
 
+function render(){
+  const kw=document.getElementById('searchInput').value.trim().toLowerCase();
+
+  let o=filterOwners(owners,kw);
+  let n=filterLinks(newSystems,kw);
+  let old=filterLinks(oldSystems,kw);
+  let other=filterLinks(otherLinks,kw);
+
+  document.getElementById('info').innerHTML=
+    `目前顯示 ${o.length} 個業主，${n.length} 個新系統，${old.length} 個舊系統，${other.length} 個其他網址`;
+
+  let html='';
+
+  if(currentCategory==='all'||currentCategory==='owners') html+=renderOwners(o);
+  if(currentCategory==='all'||currentCategory==='new') html+=renderLinks('新系統',n);
+  if(currentCategory==='all'||currentCategory==='old') html+=renderLinks('舊系統',old);
+  if(currentCategory==='all'||currentCategory==='other') html+=renderLinks('其他網址',other);
+
+  document.getElementById('content').innerHTML=html||'<div class="empty">查無資料</div>';
+}
+
+function renderOwners(list){
+  if(!list.length)return '';
+  let html='<div class="section-title">業主前後台</div><div class="grid">';
+  list.forEach(item=>{
+    html+=`
+    <div class="card">
+      <div class="owner-name">${esc(item.owner||'未命名')}</div>
+      <div class="btn-row">
+        ${item.frontend?`<a class="link-btn" href="${safeUrl(item.frontend)}" target="_blank">前台</a>`:''}
+        ${item.backend?`<a class="link-btn" href="${safeUrl(item.backend)}" target="_blank">後台</a>`:''}
+      </div>
+      <div class="admin-actions">
+        <button onclick='openOwnerModal("edit",${JSON.stringify(item)})'>編輯</button>
+        <button class="danger" onclick="deleteOwner('${item.row}')">刪除</button>
+      </div>
+    </div>`;
+  });
+  return html+'</div>';
+}
+
+function renderLinks(title,list){
+  if(!list.length)return '';
+  let html=`<div class="section-title">${title}</div><div class="grid">`;
+  list.forEach(item=>{
+    html+=`
+    <div class="card">
+      <div class="link-name">${esc(item.name||'未命名')}</div>
+      <div class="url">${esc(item.url||'')}</div>
+      ${item.note?`<div class="note">備註：${esc(item.note)}</div>`:''}
+      ${item.url?`<a class="link-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>`:''}
+      <div class="admin-actions">
+        <button onclick='openLinkModal("edit",${JSON.stringify(item)})'>編輯</button>
+        <button class="danger" onclick="deleteLink('${item.type}','${item.row}')">刪除</button>
+      </div>
+    </div>`;
+  });
+  return html+'</div>';
+}
+
+function filterOwners(list,kw){
+  if(!kw)return list;
+  return list.filter(x=>
+    String(x.owner||'').toLowerCase().includes(kw)||
+    String(x.frontend||'').toLowerCase().includes(kw)||
+    String(x.backend||'').toLowerCase().includes(kw)
+  );
+}
+
+function filterLinks(list,kw){
+  if(!kw)return list;
+  return list.filter(x=>
+    String(x.name||'').toLowerCase().includes(kw)||
+    String(x.url||'').toLowerCase().includes(kw)||
+    String(x.note||'').toLowerCase().includes(kw)
+  );
+}
+
+function setCategory(cat,btn){
+  currentCategory=cat;
+  document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function searchData(){render()}
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  render();
+}
+document.getElementById('searchInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter')searchData();
+});
+
+function openLoginModal(){document.getElementById('loginModal').classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
 function login(){
-  const acc = document.getElementById('accountInput').value.trim();
-  const pwd = document.getElementById('passwordInput').value.trim();
+  const acc=document.getElementById('accountInput').value.trim();
+  const pwd=document.getElementById('passwordInput').value.trim();
+  if(!acc||!pwd){showToast('請輸入帳號與密碼');return}
 
-  if(!acc || !pwd){
-    showToast('請輸入帳號與密碼');
-    return;
-  }
-
-  api({action:'login', account:acc, password:pwd}, function(res){
-    if(!res.success){
-      showToast(res.message || '登入失敗');
-      return;
-    }
-
-    token = res.token;
-    account = res.account;
-
-    localStorage.setItem('linkSystemToken', token);
-    localStorage.setItem('linkSystemAccount', account);
-
+  api({action:'login',account:acc,password:pwd},function(res){
+    if(!res.success){showToast(res.message||'登入失敗');return}
+    token=res.token;
+    account=res.account;
+    localStorage.setItem('linkToken',token);
+    localStorage.setItem('linkAccount',account);
+    closeModal('loginModal');
     updateLoginUI();
+    render();
     showToast('登入成功');
-    renderData(allOwners, allNewSystems, allOldSystems);
   });
 }
 
 function logout(){
-  token = '';
-  account = '';
-  localStorage.removeItem('linkSystemToken');
-  localStorage.removeItem('linkSystemAccount');
+  token='';
+  account='';
+  localStorage.removeItem('linkToken');
+  localStorage.removeItem('linkAccount');
   updateLoginUI();
-  showToast('已登出');
-  renderData(allOwners, allNewSystems, allOldSystems);
+  render();
 }
 
 function updateLoginUI(){
   if(token){
     document.body.classList.add('logged-in');
-    document.getElementById('loginBar').style.display = 'none';
-    document.getElementById('adminBar').style.display = 'flex';
-    document.getElementById('loginInfo').innerText = '目前登入：' + account;
+    document.getElementById('loginBtn').style.display='none';
+    document.getElementById('adminBar').style.display='flex';
+    document.getElementById('loginInfo').innerText='目前登入：'+account;
   }else{
     document.body.classList.remove('logged-in');
-    document.getElementById('loginBar').style.display = 'flex';
-    document.getElementById('adminBar').style.display = 'none';
+    document.getElementById('loginBtn').style.display='block';
+    document.getElementById('adminBar').style.display='none';
   }
 }
 
-function renderData(owners, newSystems, oldSystems){
-  const content = document.getElementById('content');
-  document.getElementById('info').innerHTML =
-    `目前顯示 ${owners.length} 個業主，${newSystems.length} 個新系統，${oldSystems.length} 個舊系統`;
-
-  if(!owners.length && !newSystems.length && !oldSystems.length){
-    content.innerHTML = '<div class="empty">查無資料</div>';
-    return;
-  }
-
-  let html = '';
-
-  if(owners.length){
-    html += `<div class="section-title">業主前後台</div><div class="owner-grid">`;
-    owners.forEach(item=>{
-      html += `
-      <div class="card">
-        <div class="owner-name">${escapeHtml(item.owner || '未命名')}</div>
-        <div class="btn-group">
-          ${item.frontend ? `<a class="link-btn frontend" href="${safeUrl(item.frontend)}" target="_blank">前台</a>` : ''}
-          ${item.backend ? `<a class="link-btn backend" href="${safeUrl(item.backend)}" target="_blank">後台</a>` : ''}
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  html += renderSystemSection('新系統', newSystems);
-  html += renderSystemSection('舊系統', oldSystems);
-
-  content.innerHTML = html;
+function openOwnerModal(mode,item){
+  ownerMode=mode;
+  ownerRow=item?item.row:'';
+  document.getElementById('ownerModalTitle').innerText=mode==='add'?'新增業主':'編輯業主';
+  document.getElementById('ownerName').value=item?item.owner:'';
+  document.getElementById('ownerFrontend').value=item?item.frontend:'';
+  document.getElementById('ownerBackend').value=item?item.backend:'';
+  document.getElementById('ownerModal').classList.add('show');
 }
 
-function renderSystemSection(title, list){
-  if(!list.length) return '';
-
-  let html = `<div class="section-title">${title}</div><div class="link-grid">`;
-
-  list.forEach(item=>{
-    html += `
-    <div class="system-card">
-      <div class="system-name">${escapeHtml(item.name || '未命名連結')}</div>
-      <div class="system-url">${escapeHtml(item.url || '')}</div>
-      ${item.note ? `<div class="system-note">備註：${escapeHtml(item.note)}</div>` : ''}
-      ${item.url ? `<a class="system-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>` : ''}
-      <div class="admin-actions">
-        <button class="purple" onclick='openEditModal(${JSON.stringify(item)})'>編輯</button>
-        <button class="red" onclick="deleteLink('${item.type}', '${item.row}')">刪除</button>
-      </div>
-    </div>`;
-  });
-
-  html += `</div>`;
-  return html;
-}
-
-function searchData(){
-  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
-
-  if(!kw){
-    renderData(allOwners, allNewSystems, allOldSystems);
-    return;
-  }
-
-  const owners = allOwners.filter(item =>
-    String(item.owner || '').toLowerCase().includes(kw) ||
-    String(item.frontend || '').toLowerCase().includes(kw) ||
-    String(item.backend || '').toLowerCase().includes(kw)
-  );
-
-  const newSystems = allNewSystems.filter(item =>
-    String(item.name || '').toLowerCase().includes(kw) ||
-    String(item.url || '').toLowerCase().includes(kw) ||
-    String(item.note || '').toLowerCase().includes(kw)
-  );
-
-  const oldSystems = allOldSystems.filter(item =>
-    String(item.name || '').toLowerCase().includes(kw) ||
-    String(item.url || '').toLowerCase().includes(kw) ||
-    String(item.note || '').toLowerCase().includes(kw)
-  );
-
-  renderData(owners, newSystems, oldSystems);
-}
-
-function clearSearch(){
-  document.getElementById('searchInput').value = '';
-  renderData(allOwners, allNewSystems, allOldSystems);
-}
-
-document.getElementById('searchInput').addEventListener('keydown', e=>{
-  if(e.key === 'Enter') searchData();
-});
-
-function openAddModal(){
-  editMode = 'add';
-  editRow = '';
-  editType = '';
-
-  document.getElementById('modalTitle').innerText = '新增連結';
-  document.getElementById('formType').disabled = false;
-  document.getElementById('formType').value = 'new';
-  document.getElementById('formName').value = '';
-  document.getElementById('formUrl').value = '';
-  document.getElementById('formNote').value = '';
-  document.getElementById('editModal').classList.add('show');
-}
-
-function openEditModal(item){
-  editMode = 'update';
-  editRow = item.row;
-  editType = item.type;
-
-  document.getElementById('modalTitle').innerText = '編輯連結';
-  document.getElementById('formType').disabled = true;
-  document.getElementById('formType').value = item.type;
-  document.getElementById('formName').value = item.name || '';
-  document.getElementById('formUrl').value = item.url || '';
-  document.getElementById('formNote').value = item.note || '';
-  document.getElementById('editModal').classList.add('show');
-}
-
-function closeModal(){
-  document.getElementById('editModal').classList.remove('show');
-}
-
-function submitForm(){
-  const type = document.getElementById('formType').value;
-  const name = document.getElementById('formName').value.trim();
-  const url = document.getElementById('formUrl').value.trim();
-  const note = document.getElementById('formNote').value.trim();
-
-  if(!name){
-    showToast('請填寫網站名稱');
-    return;
-  }
-
-  if(!url){
-    showToast('請填寫網址');
-    return;
-  }
-
-  const params = {
-    action: editMode,
+function submitOwner(){
+  const params={
+    action:ownerMode==='add'?'addOwner':'updateOwner',
     token,
-    type,
-    name,
-    url,
-    note
+    owner:document.getElementById('ownerName').value.trim(),
+    frontend:document.getElementById('ownerFrontend').value.trim(),
+    backend:document.getElementById('ownerBackend').value.trim()
   };
+  if(ownerMode==='edit')params.row=ownerRow;
 
-  if(editMode === 'update'){
-    params.row = editRow;
-    params.type = editType;
-  }
-
-  api(params, function(res){
-    if(!res.success){
-      showToast(res.message || '操作失敗');
-      return;
-    }
-
-    closeModal();
-    showToast(res.message || '操作成功');
-
-    if(res.data){
-      allOwners = res.data.owners || [];
-      allNewSystems = res.data.newSystems || [];
-      allOldSystems = res.data.oldSystems || [];
-      renderData(allOwners, allNewSystems, allOldSystems);
-    }else{
-      loadData();
-    }
+  api(params,function(res){
+    if(!res.success){showToast(res.message);return}
+    closeModal('ownerModal');
+    updateData(res);
   });
 }
 
-function deleteLink(type, row){
-  if(!confirm('確定要刪除這個連結嗎？')) return;
+function deleteOwner(row){
+  if(!confirm('確定刪除這個業主嗎？'))return;
+  api({action:'deleteOwner',token,row},function(res){
+    if(!res.success){showToast(res.message);return}
+    updateData(res);
+  });
+}
 
-  api({
-    action:'delete',
+function openLinkModal(mode,item){
+  linkMode=mode;
+  linkRow=item?item.row:'';
+  linkEditType=item?item.type:'';
+
+  document.getElementById('linkModalTitle').innerText=mode==='add'?'新增連結':'編輯連結';
+  document.getElementById('linkType').disabled=mode==='edit';
+  document.getElementById('linkType').value=item?item.type:'new';
+  document.getElementById('linkName').value=item?item.name:'';
+  document.getElementById('linkUrl').value=item?item.url:'';
+  document.getElementById('linkNote').value=item?item.note:'';
+  document.getElementById('linkModal').classList.add('show');
+}
+
+function submitLink(){
+  const params={
+    action:linkMode==='add'?'addLink':'updateLink',
     token,
-    type,
-    row
-  }, function(res){
-    if(!res.success){
-      showToast(res.message || '刪除失敗');
-      return;
-    }
+    type:linkMode==='edit'?linkEditType:document.getElementById('linkType').value,
+    name:document.getElementById('linkName').value.trim(),
+    url:document.getElementById('linkUrl').value.trim(),
+    note:document.getElementById('linkNote').value.trim()
+  };
+  if(linkMode==='edit')params.row=linkRow;
 
-    showToast(res.message || '刪除成功');
-
-    if(res.data){
-      allOwners = res.data.owners || [];
-      allNewSystems = res.data.newSystems || [];
-      allOldSystems = res.data.oldSystems || [];
-      renderData(allOwners, allNewSystems, allOldSystems);
-    }else{
-      loadData();
-    }
+  api(params,function(res){
+    if(!res.success){showToast(res.message);return}
+    closeModal('linkModal');
+    updateData(res);
   });
 }
 
-function setLoading(text){
-  document.getElementById('content').innerHTML = `<div class="loading">${text}</div>`;
-  document.getElementById('info').innerHTML = '';
+function deleteLink(type,row){
+  if(!confirm('確定刪除這個連結嗎？'))return;
+  api({action:'deleteLink',token,type,row},function(res){
+    if(!res.success){showToast(res.message);return}
+    updateData(res);
+  });
 }
 
-function showError(msg){
-  document.getElementById('content').innerHTML = `<div class="empty error">${escapeHtml(msg)}</div>`;
+function updateData(res){
+  if(res.data){
+    owners=res.data.owners||[];
+    newSystems=res.data.newSystems||[];
+    oldSystems=res.data.oldSystems||[];
+    otherLinks=res.data.otherLinks||[];
+    render();
+  }else{
+    loadData();
+  }
+  showToast(res.message||'操作成功');
 }
 
-function showToast(msg){
-  const toast = document.getElementById('toast');
-  toast.innerText = msg;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 2600);
+function setLoading(t){
+  document.getElementById('content').innerHTML='<div class="loading">'+t+'</div>';
 }
-
-function escapeHtml(text){
-  return String(text || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
+function showError(t){
+  document.getElementById('content').innerHTML='<div class="empty">'+esc(t)+'</div>';
 }
-
+function showToast(t){
+  const el=document.getElementById('toast');
+  el.innerText=t;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2400);
+}
+function esc(t){
+  return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
 function safeUrl(url){
-  url = String(url || '').trim();
-  if(!url) return '#';
-  if(!/^https?:\/\//i.test(url)) return 'https://' + url;
+  url=String(url||'').trim();
+  if(!url)return '#';
+  if(!/^https?:\/\//i.test(url))return 'https://'+url;
   return url;
 }
 </script>
