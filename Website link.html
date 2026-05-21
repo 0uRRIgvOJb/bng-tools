@@ -89,9 +89,10 @@
     .section-title {
       font-size: 22px;
       color: #bfdbfe;
-      margin: 24px 0 14px;
+      margin: 28px 0 14px;
       border-left: 5px solid #3b82f6;
       padding-left: 10px;
+      text-align: left;
     }
 
     .owner-grid {
@@ -120,6 +121,7 @@
       color: #bfdbfe;
       margin-bottom: 12px;
       word-break: break-word;
+      text-align: center;
     }
 
     .btn-group {
@@ -147,7 +149,7 @@
       background: #dc2626;
     }
 
-    .related-card {
+    .system-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -158,13 +160,14 @@
       padding: 14px;
     }
 
-    .related-name {
+    .system-name {
       color: #e5e7eb;
       font-weight: bold;
       word-break: break-word;
+      line-height: 1.4;
     }
 
-    .related-btn {
+    .system-btn {
       white-space: nowrap;
       text-decoration: none;
       padding: 9px 13px;
@@ -172,6 +175,11 @@
       background: #7c3aed;
       color: white;
       font-weight: bold;
+    }
+
+    .system-btn:hover,
+    .link-btn:hover {
+      filter: brightness(1.12);
     }
 
     .empty,
@@ -214,11 +222,11 @@
   <div class="app">
     <div class="header">
       <h1>前後台連結系統</h1>
-      <p>快速查詢前台、後台與相關連結</p>
+      <p>快速查詢前台、後台、新系統與舊系統連結</p>
     </div>
 
     <div class="toolbar">
-      <input id="searchInput" type="text" placeholder="輸入業主、友善名稱或連結關鍵字">
+      <input id="searchInput" type="text" placeholder="輸入業主、新系統、舊系統或連結關鍵字">
       <button onclick="searchData()">搜尋</button>
       <button class="clear-btn" onclick="clearSearch()">清除</button>
     </div>
@@ -231,7 +239,8 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbzAOaT4xbmlqdsJMG4apfDWV9Xu2nCZxnaj16734hHVxZ6SAfvQTMPrmfMowDkwtgBQ/exec';
 
     let allOwners = [];
-    let allRelatedLinks = [];
+    let allNewSystems = [];
+    let allOldSystems = [];
 
     window.onload = function () {
       loadData();
@@ -247,19 +256,21 @@
         }
 
         allOwners = res.owners || [];
-        allRelatedLinks = res.relatedLinks || [];
+        allNewSystems = res.newSystems || [];
+        allOldSystems = res.oldSystems || [];
 
-        renderData(allOwners, allRelatedLinks);
+        renderData(allOwners, allNewSystems, allOldSystems);
       });
     }
 
-    function renderData(owners, relatedLinks) {
+    function renderData(owners, newSystems, oldSystems) {
       const content = document.getElementById('content');
       const info = document.getElementById('info');
 
-      info.innerHTML = `目前顯示 ${owners.length} 個業主，${relatedLinks.length} 個相關連結`;
+      info.innerHTML =
+        `目前顯示 ${owners.length} 個業主，${newSystems.length} 個新系統，${oldSystems.length} 個舊系統`;
 
-      if (!owners.length && !relatedLinks.length) {
+      if (!owners.length && !newSystems.length && !oldSystems.length) {
         content.innerHTML = '<div class="empty">查無資料</div>';
         return;
       }
@@ -270,7 +281,7 @@
         html += `<div class="section-title">業主前後台</div>`;
         html += `<div class="owner-grid">`;
 
-        owners.forEach(item => {
+        owners.forEach(function(item) {
           html += `
             <div class="card">
               <div class="owner-name">${escapeHtml(item.owner || '未命名')}</div>
@@ -285,15 +296,31 @@
         html += `</div>`;
       }
 
-      if (relatedLinks.length) {
-        html += `<div class="section-title">相關連結</div>`;
+      if (newSystems.length) {
+        html += `<div class="section-title">新系統</div>`;
         html += `<div class="link-grid">`;
 
-        relatedLinks.forEach(item => {
+        newSystems.forEach(function(item) {
           html += `
-            <div class="related-card">
-              <div class="related-name">${escapeHtml(item.name || '未命名連結')}</div>
-              ${item.url ? `<a class="related-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>` : ''}
+            <div class="system-card">
+              <div class="system-name">${escapeHtml(item.name || '未命名連結')}</div>
+              ${item.url ? `<a class="system-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>` : ''}
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      if (oldSystems.length) {
+        html += `<div class="section-title">舊系統</div>`;
+        html += `<div class="link-grid">`;
+
+        oldSystems.forEach(function(item) {
+          html += `
+            <div class="system-card">
+              <div class="system-name">${escapeHtml(item.name || '未命名連結')}</div>
+              ${item.url ? `<a class="system-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>` : ''}
             </div>
           `;
         });
@@ -308,11 +335,11 @@
       const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
 
       if (!keyword) {
-        renderData(allOwners, allRelatedLinks);
+        renderData(allOwners, allNewSystems, allOldSystems);
         return;
       }
 
-      const filteredOwners = allOwners.filter(item => {
+      const filteredOwners = allOwners.filter(function(item) {
         return (
           String(item.owner || '').toLowerCase().includes(keyword) ||
           String(item.frontend || '').toLowerCase().includes(keyword) ||
@@ -320,19 +347,26 @@
         );
       });
 
-      const filteredLinks = allRelatedLinks.filter(item => {
+      const filteredNewSystems = allNewSystems.filter(function(item) {
         return (
           String(item.name || '').toLowerCase().includes(keyword) ||
           String(item.url || '').toLowerCase().includes(keyword)
         );
       });
 
-      renderData(filteredOwners, filteredLinks);
+      const filteredOldSystems = allOldSystems.filter(function(item) {
+        return (
+          String(item.name || '').toLowerCase().includes(keyword) ||
+          String(item.url || '').toLowerCase().includes(keyword)
+        );
+      });
+
+      renderData(filteredOwners, filteredNewSystems, filteredOldSystems);
     }
 
     function clearSearch() {
       document.getElementById('searchInput').value = '';
-      renderData(allOwners, allRelatedLinks);
+      renderData(allOwners, allNewSystems, allOldSystems);
     }
 
     document.getElementById('searchInput').addEventListener('keydown', function (e) {
