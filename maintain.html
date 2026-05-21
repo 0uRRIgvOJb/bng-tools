@@ -1,279 +1,441 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遊戲維護公告日曆</title>
-    <style>
-        * {box-sizing: border-box;font-family: "微軟正黑體", sans-serif;margin:0;padding:0;}
-        :root{
-            --main-color:#3b82f6;
-            --warn-color:#f59e0b;
-            --today-color:#22c55e;
-            --gray-color:#6b7280;
-            --bg-color:#1f2937;
-            --card-bg:#374151;
-            --text-color:#f3f4f6;
-            --border-color:#4b5563;
-            --hover-bg:#4b5563;
-        }
-        body {background:var(--bg-color);padding:16px;max-width:1300px;margin:0 auto;color:var(--text-color);}
-        h1 {text-align:center;color:var(--main-color);margin-bottom:16px;font-size:24px;letter-spacing:2px;}
-        .top-bar{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:16px;flex-wrap:wrap;position:relative;}
-        .home-btn{position:absolute;right:0;background:var(--main-color);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;transition:0.3s;font-size:14px;}
-        .home-btn:hover{background:#2563eb;transform:scale(1.03);}
-        #searchInput{padding:10px 14px;width:300px;border:1px solid var(--border-color);border-radius:8px;font-size:14px;outline:none;transition:0.3s;background:var(--card-bg);color:var(--text-color);}
-        #searchInput:focus{border-color:var(--main-color);box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
-        .refresh-btn{background:var(--main-color);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;transition:0.3s;}
-        .refresh-btn:hover{background:#2563eb;transform:scale(1.03);}
-        .calendar-container{background:var(--card-bg);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:16px;}
-        .calendar-header{text-align:center;margin-bottom:16px;}
-        .calendar-header h2{font-size:20px;color:var(--text-color);}
-        .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-        .calendar-day-header{text-align:center;font-weight:bold;color:var(--text-color);padding:8px;background:#4b5563;border-radius:6px;font-size:13px;}
-        .calendar-day{min-height:100px;border:1px solid var(--border-color);border-radius:8px;padding:8px;position:relative;transition:0.3s;background:var(--card-bg);}
-        .calendar-day:hover:not(.past-day){border-color:var(--main-color);background:var(--hover-bg);transform:translateY(-1px);}
-        .calendar-day.has-notice{background:#453c24;border-color:var(--warn-color);}
-        /* 過去日期灰色 */
-        .calendar-day.past-day{background:#1f2937;border-color:#374151;opacity:0.7;}
-        .calendar-day.past-day .day-number{color:#9ca3af;}
-        /* 今日高亮樣式 */
-        .calendar-day.today-day{
-            border:2px solid var(--today-color);
-            background:#1e3a2d;
-        }
-        .calendar-day.today-day .day-number{
-            color:var(--today-color);
-            font-weight:bold;
-        }
-        .day-number{font-weight:bold;color:var(--text-color);font-size:15px;margin-bottom:4px;}
-        .notice-badge{position:absolute;top:6px;right:6px;background:#ef4444;color:white;border-radius:999px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
-        .modal-content{background:var(--card-bg);border-radius:16px;padding:24px;width:92%;max-width:720px;max-height:82vh;overflow-y:auto;box-shadow:0 8px 30px rgba(0,0,0,0.3);border:1px solid var(--border-color);}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);padding-bottom:12px;margin-bottom:16px;}
-        .modal-header h3{font-size:18px;color:var(--text-color);}
-        .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-color);transition:0.2s;}
-        .modal-close:hover{color:#ef4444;}
-        .notice-item{border-left:5px solid var(--main-color);padding:12px 16px;margin-bottom:14px;background:#4b5563;border-radius:8px;}
-        .notice-title{font-weight:bold;margin-bottom:6px;font-size:15px;color:var(--text-color);}
-        .notice-content{
-            line-height:1.6;
-            white-space:pre-line;
-            font-size:14px;
-            color:#d1d5db;
-        }
-        .category-tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:12px;color:#fff;margin-right:6px;}
-        .category-真人{background:#db2777;}
-        .category-電子{background:#7c3aed;}
-        .category-體育{background:#16a34a;}
-        .category-電競{background:#ea580c;}
-        .category-其他{background:#64748b;}
-        .loading{text-align:center;padding:30px;color:var(--gray-color);font-size:14px;}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遊戲維護公告日曆</title>
+
+<style>
+*{box-sizing:border-box;font-family:"微軟正黑體",sans-serif;margin:0;padding:0}
+:root{
+  --bg:#111827;
+  --card:#1f2937;
+  --card2:#374151;
+  --text:#f9fafb;
+  --muted:#9ca3af;
+  --main:#f59e0b;
+  --border:#4b5563;
+  --today:#22c55e;
+  --danger:#ef4444;
+}
+body{
+  background:radial-gradient(circle at top,#334155,#111827 55%);
+  color:var(--text);
+  padding:16px;
+  max-width:1300px;
+  margin:auto;
+}
+h1{
+  text-align:center;
+  color:var(--main);
+  margin-bottom:16px;
+  letter-spacing:2px;
+}
+.top-bar{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+input,button{
+  border:none;
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:14px;
+}
+input{
+  width:280px;
+  background:var(--card2);
+  color:var(--text);
+  outline:1px solid var(--border);
+}
+button{
+  background:var(--main);
+  color:#111827;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{filter:brightness(1.1)}
+.calendar-container{
+  background:rgba(31,41,55,.95);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 10px 35px rgba(0,0,0,.35);
+}
+.calendar-header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+.calendar-header h2{
+  min-width:180px;
+  text-align:center;
+}
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.day-head{
+  text-align:center;
+  background:#475569;
+  padding:8px;
+  border-radius:8px;
+  font-weight:bold;
+}
+.day{
+  min-height:105px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:12px;
+  padding:8px;
+  position:relative;
+  cursor:pointer;
+  transition:.2s;
+}
+.day:hover{
+  transform:translateY(-2px);
+  border-color:var(--main);
+}
+.empty{
+  opacity:.25;
+  cursor:default;
+}
+.day-num{
+  font-weight:bold;
+  font-size:15px;
+}
+.has{
+  background:#3b2f18;
+  border-color:var(--main);
+}
+.badge{
+  position:absolute;
+  top:7px;
+  right:7px;
+  background:var(--danger);
+  color:white;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+}
+.today{
+  border:2px solid var(--today);
+}
+.today .day-num{
+  color:var(--today);
+}
+.past{
+  opacity:.55;
+}
+.small-title{
+  margin-top:8px;
+  font-size:12px;
+  color:#fcd34d;
+  line-height:1.35;
+}
+.loading{
+  text-align:center;
+  color:var(--muted);
+  padding:24px;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+.modal-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  width:92%;
+  max-width:760px;
+  max-height:84vh;
+  overflow:auto;
+  border-radius:18px;
+  padding:20px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+  margin-bottom:14px;
+}
+.close{
+  background:none;
+  color:white;
+  font-size:26px;
+  cursor:pointer;
+}
+.notice{
+  background:#374151;
+  border-left:5px solid var(--main);
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.tag{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:6px;
+  margin-right:6px;
+  color:white;
+  font-size:12px;
+}
+.真人{background:#db2777}
+.電子{background:#7c3aed}
+.體育{background:#16a34a}
+.電競{background:#ea580c}
+.棋牌{background:#2563eb}
+.捕魚{background:#0891b2}
+.其他{background:#64748b}
+.notice-text{
+  white-space:pre-line;
+  line-height:1.6;
+  color:#e5e7eb;
+  margin-top:8px;
+}
+@media(max-width:700px){
+  .calendar-grid{gap:4px}
+  .day{min-height:82px;padding:6px}
+  .small-title{display:none}
+}
+</style>
 </head>
+
 <body>
-    <h1>遊戲維護公告專屬日曆</h1>
-    <div class="top-bar">
-        <a href="https://0urrigvojb.github.io/bng-tools/" class="home-btn">回首頁</a>
-        <input type="text" id="searchInput" placeholder="關鍵字快速搜尋公告">
-        <button class="refresh-btn" id="refreshBtn">重新載入資料</button>
+
+<h1>🦉 遊戲維護公告日曆</h1>
+
+<div class="top-bar">
+  <input id="searchInput" placeholder="搜尋平台 / 遊戲 / 公告內容">
+  <button onclick="searchNotice()">搜尋</button>
+  <button onclick="clearSearch()">清除</button>
+  <button onclick="loadData()">重新載入</button>
+  <button onclick="location.href='https://0urrigvojb.github.io/bng-tools/'">回首頁</button>
+</div>
+
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button onclick="changeMonth(-1)">上一月</button>
+    <h2 id="monthTitle"></h2>
+    <button onclick="changeMonth(1)">下一月</button>
+  </div>
+
+  <div class="calendar-grid" id="calendarGrid">
+    <div class="day-head">一</div>
+    <div class="day-head">二</div>
+    <div class="day-head">三</div>
+    <div class="day-head">四</div>
+    <div class="day-head">五</div>
+    <div class="day-head">六</div>
+    <div class="day-head">日</div>
+  </div>
+
+  <div class="loading" id="loading">資料載入中...</div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle"></h3>
+      <button class="close" onclick="closeModal()">×</button>
     </div>
-    <div class="calendar-container">
-        <div class="calendar-header"><h2 id="currentMonth"></h2></div>
-        <div class="calendar-grid" id="calendarGrid">
-            <div class="calendar-day-header">一</div>
-            <div class="calendar-day-header">二</div>
-            <div class="calendar-day-header">三</div>
-            <div class="calendar-day-header">四</div>
-            <div class="calendar-day-header">五</div>
-            <div class="calendar-day-header">六</div>
-            <div class="calendar-day-header">日</div>
-        </div>
-        <div class="loading" id="loading">載入維護公告資料中...</div>
-    </div>
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle"></h3>
-                <button class="modal-close" id="modalClose">&times;</button>
-            </div>
-            <div id="modalContent"></div>
-        </div>
-    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
 <script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSXcz88U7v6PZaF3CE4L7TcoYOPGVnXsfi4mymmIBD5xhGQK_raNEeb_BRqX39-ApOIJOvP2wH66Z2p/pub?gid=0&single=true&output=csv";
+const API_URL = "https://script.google.com/macros/s/AKfycbwKs1mB1-P5Yk0mQyyU2eHlWytuT6jdiPuPJOS1taGorETcqPqnI0vHLEVMvAoycstjHA/exec";
 
 const YEAR = 2026;
-const SHOW_MONTH = 4;
-let dateData = {};
-let allList = [];
-const nowDate = new Date();
-// 获取今日年月日
-const todayY = nowDate.getFullYear();
-const todayM = nowDate.getMonth();
-const todayD = nowDate.getDate();
+let currentMonth = new Date().getMonth();
+let allData = [];
+let dateMap = {};
 
-modalClose.onclick = () => modalOverlay.style.display = "none";
-modalOverlay.onclick = e => e.target === modalOverlay && (modalOverlay.style.display = "none");
-refreshBtn.onclick = loadSheetData;
-searchInput.addEventListener('input', function() {
-    let key = this.value.trim();
-    if (!key) return;
-    let res = allList.filter(x => x.text.includes(key));
-    res.length && showSearchPop(res, key);
-});
-
-function cleanNoticeText(text) {
-    return String(text || "")
-        .replace(/^"+|"+$/g, "")
-        .replace(/"{2,}/g, "")
-        .replace(/,+$/g, "")
-        .replace(/\n\s*,+\s*\n/g, "\n")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-}
-
-function loadSheetData(){
-    loading.style.display = "block";
-    loading.innerText = "載入維護公告資料中...";
-    dateData = {};
-    allList = [];
-
-    fetch(CSV_URL)
-    .then(res => res.text())
-    .then(csv => {
-        let text = csv.replace(/""/g, '"').replace(/\r/g, "\n");
-        let notices = text.match(/(?:\d{1,2}\/\d{1,2}\s*)?【[^】]+】[\s\S]*?若維護時間有任何異動[\s\S]*?謝謝\s*！?/g) || [];
-
-        notices.forEach(noticeText => {
-            let item = parseSingleCellNotice(noticeText);
-            if (item) {
-                if (!dateData[item.dateKey]) dateData[item.dateKey] = [];
-                dateData[item.dateKey].push(item);
-                allList.push(item);
-            }
-        });
-
-        loading.style.display = "none";
-        drawCalendar();
-    })
-    .catch(err => {
-        console.error(err);
-        loading.innerText = "讀取失敗：" + err.message;
-    });
-}
-
-function parseSingleCellNotice(text){
-    text = cleanNoticeText(text);
-
-    let titleReg = /【([^】]+)】/;
-    let titleMatch = text.match(titleReg);
-    let title = titleMatch ? titleMatch[1] : "未知公告";
-
-    let type = "其他";
-    if (title.includes("真人")) type = "真人";
-    else if (title.includes("電子")) type = "電子";
-    else if (title.includes("體育")) type = "體育";
-    else if (title.includes("電競")) type = "電競";
-
-    let dateMatch = null;
-    dateMatch = text.match(/^\s*0?(\d{1,2})\/0?(\d{1,2})/);
-
-    if (!dateMatch) {
-        let fullDate = text.match(/維護開始時間\s*[:：]\s*\d{4}\/0?(\d{1,2})\/0?(\d{1,2})/);
-        if (fullDate) dateMatch = fullDate;
-    }
-    if (!dateMatch) {
-        let normalDate = text.match(/維護開始時間\s*[:：]\s*0?(\d{1,2})\/0?(\d{1,2})/);
-        if (normalDate) dateMatch = normalDate;
-    }
-    if (!dateMatch) {
-        return null;
-    }
-
-    let m = parseInt(dateMatch[1], 10);
-    let d = parseInt(dateMatch[2], 10);
-    let dateKey = `${YEAR}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-    return {
-        dateKey: dateKey,
-        fullTitle: `【${title}】`,
-        type: type,
-        text: text
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb = 'jsonp_cb_' + Date.now();
+    window[cb] = data => {
+      resolve(data);
+      delete window[cb];
+      script.remove();
     };
+    const script = document.createElement('script');
+    script.src = url + '?callback=' + cb;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
+async function loadData(){
+  loading.style.display = 'block';
+  loading.innerText = '資料載入中...';
+
+  try{
+    const res = await jsonp(API_URL);
+    if(!res.success) throw new Error(res.message);
+
+    allData = res.data || [];
+    buildMap();
+    drawCalendar();
+
+    loading.style.display = 'none';
+  }catch(err){
+    loading.innerText = '讀取失敗：' + err.message;
+  }
+}
+
+function buildMap(){
+  dateMap = {};
+  allData.forEach(item=>{
+    if(!dateMap[item.dateKey]) dateMap[item.dateKey] = [];
+    dateMap[item.dateKey].push(item);
+  });
 }
 
 function drawCalendar(){
-    let grid = calendarGrid;
-    while (grid.children.length > 7) grid.removeChild(grid.lastChild);
-    currentMonth.innerText = `${YEAR}年${SHOW_MONTH + 1}月 維護行事曆`;
+  while(calendarGrid.children.length > 7){
+    calendarGrid.removeChild(calendarGrid.lastChild);
+  }
 
-    let firstDayOfMonth = new Date(YEAR, SHOW_MONTH, 1).getDay();
-    const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-    let totalDay = new Date(YEAR, SHOW_MONTH + 1, 0).getDate();
+  monthTitle.innerText = `${YEAR}年 ${currentMonth + 1}月`;
 
-    for (let i = 0; i < firstDay; i++) {
-        let empty = document.createElement("div");
-        empty.className = "calendar-day";
-        grid.appendChild(empty);
+  const first = new Date(YEAR,currentMonth,1).getDay();
+  const firstIndex = first === 0 ? 6 : first - 1;
+  const total = new Date(YEAR,currentMonth + 1,0).getDate();
+
+  for(let i=0;i<firstIndex;i++){
+    const div = document.createElement('div');
+    div.className = 'day empty';
+    calendarGrid.appendChild(div);
+  }
+
+  const now = new Date();
+
+  for(let d=1; d<=total; d++){
+    const key = `${YEAR}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const list = dateMap[key] || [];
+
+    const div = document.createElement('div');
+    div.className = 'day';
+
+    const thisDate = new Date(YEAR,currentMonth,d);
+    if(thisDate < new Date(now.getFullYear(),now.getMonth(),now.getDate())) div.classList.add('past');
+    if(YEAR === now.getFullYear() && currentMonth === now.getMonth() && d === now.getDate()) div.classList.add('today');
+    if(list.length) div.classList.add('has');
+
+    let html = `<div class="day-num">${d}</div>`;
+
+    if(list.length){
+      html += `<div class="badge">${list.length}</div>`;
+      html += `<div class="small-title">${list[0].title}</div>`;
     }
 
-    for (let d = 1; d <= totalDay; d++) {
-        let dayBox = document.createElement("div");
-        dayBox.className = "calendar-day";
-        let monthNum = SHOW_MONTH + 1;
-        let dayKey = `${YEAR}-${String(monthNum).padStart(2, '0')}-${String(d).padStart(2, 0)}`;
-        
-        let currDayObj = new Date(YEAR, SHOW_MONTH, d);
-        // 過去日期
-        if(currDayObj < nowDate){
-            dayBox.classList.add("past-day");
-        }
-        // 判斷是否是今天
-        if(YEAR === todayY && SHOW_MONTH === todayM && d === todayD){
-            dayBox.classList.add("today-day");
-        }
+    div.innerHTML = html;
 
-        dayBox.innerHTML = `<div class="day-number">${d}</div>`;
-        if (dateData[dayKey]) {
-            dayBox.classList.add("has-notice");
-            dayBox.innerHTML += `<div class="notice-badge">${dateData[dayKey].length}</div>`;
-        }
-        dayBox.onclick = () => {
-            dateData[dayKey] ? openDayPop(dayKey) : alert(`${monthNum}月${d}日暫無維護公告`);
-        };
-        grid.appendChild(dayBox);
-    }
+    div.onclick = ()=>{
+      if(list.length) openDay(key,list);
+      else openEmpty(d);
+    };
+
+    calendarGrid.appendChild(div);
+  }
 }
 
-function openDayPop(key){
-    let arr = key.split("-");
-    modalTitle.innerText = `${parseInt(arr[1])}月${parseInt(arr[2])}日 維護詳細公告`;
-    let html = "";
-    dateData[key].forEach(item => {
-        html += `<div class="notice-item">
-        <div class="notice-title"><span class="category-tag category-${item.type}">${item.type}</span>${item.fullTitle}</div>
-        <div class="notice-content">${item.text}</div></div>`;
-    });
-    modalContent.innerHTML = html;
-    modalOverlay.style.display = "flex";
+function openDay(key,list){
+  const [,m,d] = key.split('-');
+  modalTitle.innerText = `${parseInt(m)}月${parseInt(d)}日 維護公告`;
+
+  modalContent.innerHTML = list.map(item=>`
+    <div class="notice">
+      <div><span class="tag ${item.type}">${item.type}</span><b>${item.title}</b></div>
+      <div class="notice-text">${escapeHtml(item.text)}</div>
+    </div>
+  `).join('');
+
+  modal.style.display = 'flex';
 }
 
-function showSearchPop(list, kw){
-    modalTitle.innerText = `搜尋結果：${kw} 共${list.length}則`;
-    let html = "";
-    list.forEach(item => {
-        let d = item.dateKey.split("-");
-        html += `<div class="notice-item">
-        <div class="notice-title"><span class="category-tag category-${item.type}">${item.type}</span>${d[1]}月${d[2]}日 ${item.fullTitle}</div>
-        <div class="notice-content">${item.text}</div></div>`;
-    });
-    modalContent.innerHTML = html;
-    modalOverlay.style.display = "flex";
+function openEmpty(day){
+  modalTitle.innerText = `${currentMonth + 1}月${day}日`;
+  modalContent.innerHTML = `<div class="notice">暫無維護公告</div>`;
+  modal.style.display = 'flex';
 }
 
-loadSheetData();
+function searchNotice(){
+  const kw = searchInput.value.trim();
+  if(!kw) return;
+
+  const list = allData.filter(item =>
+    item.text.includes(kw) ||
+    item.title.includes(kw) ||
+    item.type.includes(kw)
+  );
+
+  modalTitle.innerText = `搜尋結果：${kw}，共 ${list.length} 則`;
+
+  modalContent.innerHTML = list.length
+    ? list.map(item=>`
+      <div class="notice">
+        <div><span class="tag ${item.type}">${item.type}</span><b>${item.dateKey} ${item.title}</b></div>
+        <div class="notice-text">${escapeHtml(item.text)}</div>
+      </div>
+    `).join('')
+    : `<div class="notice">找不到相關公告</div>`;
+
+  modal.style.display = 'flex';
+}
+
+function clearSearch(){
+  searchInput.value = '';
+}
+
+function changeMonth(num){
+  currentMonth += num;
+  if(currentMonth < 0) currentMonth = 11;
+  if(currentMonth > 11) currentMonth = 0;
+  drawCalendar();
+}
+
+function closeModal(){
+  modal.style.display = 'none';
+}
+
+modal.onclick = e=>{
+  if(e.target === modal) closeModal();
+};
+
+searchInput.addEventListener('keydown',e=>{
+  if(e.key === 'Enter') searchNotice();
+});
+
+function escapeHtml(str){
+  return String(str || '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+loadData();
 </script>
+
 </body>
 </html>
