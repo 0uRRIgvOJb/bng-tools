@@ -4,52 +4,295 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>維護公告日曆</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft JhengHei",Arial,sans-serif}
-body{background:#0b111b;color:#e5e7eb;padding:18px}
-.wrap{max-width:1450px;margin:auto}
-h1{text-align:center;color:#fbbf24;margin-bottom:18px;font-size:30px;letter-spacing:2px}
-.top{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-input,button{border:0;border-radius:10px;padding:11px 15px;font-size:15px}
-input{width:320px;background:#1f2937;color:#fff;border:1px solid #374151}
-button{background:#f59e0b;color:#111827;font-weight:bold;cursor:pointer}
-button:hover{filter:brightness(1.1)}
-.info{text-align:center;color:#9ca3af;margin-bottom:12px}
-.calendar{background:#111827;border:1px solid #374151;border-radius:18px;padding:16px;box-shadow:0 10px 35px rgba(0,0,0,.35)}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.head{background:#334155;color:#f9fafb;text-align:center;padding:10px;border-radius:10px;font-weight:bold}
-.day{min-height:145px;background:#1f2937;border:1px solid #374151;border-radius:14px;padding:10px;cursor:pointer;position:relative;transition:.2s}
-.day:hover{border-color:#f59e0b;transform:translateY(-2px)}
-.empty{opacity:.25;cursor:default}
-.date{font-size:18px;font-weight:bold;color:#fbbf24;margin-bottom:8px}
-.badge{position:absolute;top:9px;right:9px;background:#ef4444;color:#fff;width:25px;height:25px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold}
-.tagline{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.tag{font-size:12px;color:#fff;border-radius:999px;padding:3px 8px}
-.真人{background:#db2777}.電子{background:#7c3aed}.體育{background:#16a34a}.電競{background:#ea580c}.捕魚{background:#0891b2}.棋牌{background:#2563eb}.其他{background:#64748b}
-.preview{font-size:13px;line-height:1.45;color:#d1d5db;margin-top:8px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-.loading{text-align:center;padding:35px;color:#9ca3af}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9999;padding:15px}
-.box{background:#1f2937;border:1px solid #475569;width:95%;max-width:900px;max-height:86vh;overflow:auto;border-radius:18px;padding:22px}
-.box-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #475569;padding-bottom:14px;margin-bottom:16px}
-.box-head h2{font-size:24px}
-.close{font-size:34px;background:none;color:#fff;padding:0 8px}
-.item{background:#334155;border-left:6px solid #f59e0b;border-radius:12px;padding:16px;margin-bottom:14px}
-.item-title{font-size:19px;font-weight:bold;margin-bottom:12px}
-.content{white-space:pre-line;line-height:1.7;font-size:16px;color:#e5e7eb}
-.footer{text-align:center;color:#6b7280;margin-top:14px;font-size:13px}
-@media(max-width:900px){
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .head{display:none}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:"Microsoft JhengHei",Arial,sans-serif;
 }
+
+body{
+  background:#0b111b;
+  color:#e5e7eb;
+  padding:18px;
+}
+
+.wrap{
+  max-width:1500px;
+  margin:auto;
+}
+
+h1{
+  text-align:center;
+  color:#fbbf24;
+  margin-bottom:18px;
+  font-size:30px;
+  letter-spacing:2px;
+}
+
+.top{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+input,button{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  font-size:15px;
+}
+
+input{
+  width:330px;
+  background:#1f2937;
+  color:#fff;
+  border:1px solid #374151;
+  outline:none;
+}
+
+input:focus{
+  border-color:#f59e0b;
+}
+
+button{
+  background:#f59e0b;
+  color:#111827;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  filter:brightness(1.1);
+}
+
+.info{
+  text-align:center;
+  color:#9ca3af;
+  margin-bottom:12px;
+}
+
+.calendar{
+  background:#111827;
+  border:1px solid #374151;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 10px 35px rgba(0,0,0,.35);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.head{
+  background:#334155;
+  color:#f9fafb;
+  text-align:center;
+  padding:13px 10px;
+  border-radius:10px;
+  font-weight:bold;
+  font-size:16px;
+}
+
+.day{
+  min-height:150px;
+  background:#1f2937;
+  border:1px solid #374151;
+  border-radius:14px;
+  padding:12px;
+  cursor:pointer;
+  position:relative;
+  transition:.2s;
+}
+
+.day:hover{
+  border-color:#f59e0b;
+  transform:translateY(-2px);
+}
+
+.empty{
+  opacity:.18;
+  cursor:default;
+  pointer-events:none;
+}
+
+.date{
+  font-size:21px;
+  font-weight:bold;
+  color:#fbbf24;
+  margin-bottom:8px;
+}
+
+.badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#ef4444;
+  color:#fff;
+  width:27px;
+  height:27px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.tagline{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+}
+
+.tag{
+  font-size:13px;
+  color:#fff;
+  border-radius:999px;
+  padding:4px 9px;
+  display:inline-block;
+}
+
+.真人{background:#db2777}
+.電子{background:#7c3aed}
+.體育{background:#16a34a}
+.電競{background:#ea580c}
+.捕魚{background:#0891b2}
+.棋牌{background:#2563eb}
+.其他{background:#64748b}
+
+.preview{
+  font-size:14px;
+  line-height:1.45;
+  color:#d1d5db;
+  margin-top:10px;
+  display:-webkit-box;
+  -webkit-line-clamp:4;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.loading{
+  text-align:center;
+  padding:35px;
+  color:#9ca3af;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:15px;
+}
+
+.box{
+  background:#1f2937;
+  border:1px solid #475569;
+  width:96%;
+  max-width:980px;
+  max-height:86vh;
+  overflow:auto;
+  border-radius:18px;
+  padding:22px;
+}
+
+.box-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #475569;
+  padding-bottom:14px;
+  margin-bottom:16px;
+}
+
+.box-head h2{
+  font-size:26px;
+}
+
+.close{
+  font-size:34px;
+  background:none;
+  color:#fff;
+  padding:0 8px;
+}
+
+.item{
+  background:#334155;
+  border-left:6px solid #f59e0b;
+  border-radius:12px;
+  padding:17px;
+  margin-bottom:14px;
+}
+
+.item-title{
+  font-size:21px;
+  font-weight:bold;
+  margin-bottom:12px;
+  color:#f9fafb;
+}
+
+.content{
+  white-space:pre-line;
+  line-height:1.75;
+  font-size:17px;
+  color:#e5e7eb;
+}
+
+.footer{
+  text-align:center;
+  color:#6b7280;
+  margin-top:14px;
+  font-size:13px;
+}
+
+@media(max-width:1100px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+  .head{
+    display:none;
+  }
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
 @media(max-width:520px){
-  body{padding:10px}
-  .grid{grid-template-columns:1fr}
-  input{width:100%}
+  body{
+    padding:10px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  input{
+    width:100%;
+  }
+
+  h1{
+    font-size:24px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
   <h1>🦉 維護公告日曆</h1>
 
@@ -73,6 +316,7 @@ button:hover{filter:brightness(1.1)}
       <div class="head">星期六</div>
       <div class="head">星期日</div>
     </div>
+
     <div class="loading" id="loading">讀取維護公告中...</div>
   </div>
 
@@ -99,11 +343,13 @@ let allItems = [];
 function jsonp(url){
   return new Promise((resolve,reject)=>{
     const cb = "cb_" + Date.now();
+
     window[cb] = data => {
       resolve(data);
       delete window[cb];
       script.remove();
     };
+
     const script = document.createElement("script");
     script.src = url + "?callback=" + cb + "&t=" + Date.now();
     script.onerror = reject;
@@ -116,9 +362,7 @@ async function loadData(){
   loading.innerText = "讀取維護公告中...";
   info.innerText = "資料載入中...";
 
-  while(grid.children.length > 7){
-    grid.removeChild(grid.lastChild);
-  }
+  clearGridDays();
 
   try{
     const res = await jsonp(API_URL);
@@ -143,10 +387,14 @@ async function loadData(){
   }
 }
 
-function drawCalendarByApi(){
+function clearGridDays(){
   while(grid.children.length > 7){
     grid.removeChild(grid.lastChild);
   }
+}
+
+function drawCalendarByApi(){
+  clearGridDays();
 
   if(!dateList.length){
     loading.style.display = "block";
@@ -154,35 +402,74 @@ function drawCalendarByApi(){
     return;
   }
 
+  const map = {};
+
   dateList.forEach(day=>{
-    const div = document.createElement("div");
-    div.className = "day";
-
-    const dateText = formatDate(day.dateKey);
-    const items = day.items || [];
-
-    const typeCount = {};
-    items.forEach(item=>{
-      const type = item.type || "其他";
-      typeCount[type] = (typeCount[type] || 0) + 1;
-    });
-
-    const tags = Object.keys(typeCount).map(type=>{
-      return `<span class="tag ${type}">${type} ${typeCount[type]}</span>`;
-    }).join("");
-
-    const firstTitle = items[0] ? escapeHtml(items[0].title || "") : "";
-
-    div.innerHTML = `
-      <div class="date">${dateText}</div>
-      <div class="badge">${items.length}</div>
-      <div class="tagline">${tags}</div>
-      <div class="preview">${firstTitle}${items.length > 1 ? "..." : ""}</div>
-    `;
-
-    div.onclick = ()=>openDay(day.dateKey, items);
-    grid.appendChild(div);
+    map[day.dateKey] = day;
   });
+
+  const sortedKeys = Object.keys(map).sort();
+
+  const startDate = new Date(sortedKeys[0] + "T00:00:00");
+  const endDate = new Date(sortedKeys[sortedKeys.length - 1] + "T00:00:00");
+
+  let current = new Date(startDate);
+
+  const firstWeekIndex = getMondayWeekIndex(current);
+
+  for(let i = 0; i < firstWeekIndex; i++){
+    addEmptyDay();
+  }
+
+  while(current <= endDate){
+    const key = formatDateKey(current);
+    const day = map[key];
+
+    if(day){
+      addNoticeDay(day);
+    }else{
+      addEmptyDay();
+    }
+
+    current.setDate(current.getDate() + 1);
+  }
+}
+
+function addNoticeDay(day){
+  const div = document.createElement("div");
+  div.className = "day";
+
+  const dateText = formatDate(day.dateKey);
+  const items = day.items || [];
+
+  const typeCount = {};
+  items.forEach(item=>{
+    const type = item.type || "其他";
+    typeCount[type] = (typeCount[type] || 0) + 1;
+  });
+
+  const tags = Object.keys(typeCount).map(type=>{
+    return `<span class="tag ${type}">${type} ${typeCount[type]}</span>`;
+  }).join("");
+
+  const firstTitle = items[0] ? escapeHtml(items[0].title || "") : "";
+
+  div.innerHTML = `
+    <div class="date">${dateText}</div>
+    <div class="badge">${items.length}</div>
+    <div class="tagline">${tags}</div>
+    <div class="preview">${firstTitle}${items.length > 1 ? "..." : ""}</div>
+  `;
+
+  div.onclick = ()=>openDay(day.dateKey, items);
+  grid.appendChild(div);
+}
+
+function addEmptyDay(){
+  const div = document.createElement("div");
+  div.className = "day empty";
+  div.innerHTML = "";
+  grid.appendChild(div);
 }
 
 function openDay(dateKey, items){
@@ -247,6 +534,18 @@ searchInput.addEventListener("keydown",e=>{
   if(e.key === "Enter") searchNotice();
 });
 
+function getMondayWeekIndex(date){
+  const day = date.getDay();
+  return day === 0 ? 6 : day - 1;
+}
+
+function formatDateKey(date){
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function formatDate(dateKey){
   if(!dateKey) return "";
   const parts = dateKey.split("-");
@@ -264,5 +563,6 @@ function escapeHtml(str){
 
 loadData();
 </script>
+
 </body>
 </html>
