@@ -3,257 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>遊戲維護公告日曆</title>
-
+<title>維護公告日曆</title>
 <style>
-*{box-sizing:border-box;font-family:"微軟正黑體",sans-serif;margin:0;padding:0}
-:root{
-  --bg:#111827;
-  --card:#1f2937;
-  --card2:#374151;
-  --text:#f9fafb;
-  --muted:#9ca3af;
-  --main:#f59e0b;
-  --border:#4b5563;
-  --today:#22c55e;
-  --danger:#ef4444;
-}
-body{
-  background:radial-gradient(circle at top,#334155,#111827 55%);
-  color:var(--text);
-  padding:16px;
-  max-width:1300px;
-  margin:auto;
-}
-h1{
-  text-align:center;
-  color:var(--main);
-  margin-bottom:16px;
-  letter-spacing:2px;
-}
-.top-bar{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
-input,button{
-  border:none;
-  border-radius:10px;
-  padding:10px 14px;
-  font-size:14px;
-}
-input{
-  width:280px;
-  background:var(--card2);
-  color:var(--text);
-  outline:1px solid var(--border);
-}
-button{
-  background:var(--main);
-  color:#111827;
-  font-weight:bold;
-  cursor:pointer;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft JhengHei",Arial,sans-serif}
+body{background:#0b111b;color:#e5e7eb;padding:18px}
+.wrap{max-width:1450px;margin:auto}
+h1{text-align:center;color:#fbbf24;margin-bottom:18px;font-size:30px;letter-spacing:2px}
+.top{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+input,button{border:0;border-radius:10px;padding:11px 15px;font-size:15px}
+input{width:320px;background:#1f2937;color:#fff;border:1px solid #374151}
+button{background:#f59e0b;color:#111827;font-weight:bold;cursor:pointer}
 button:hover{filter:brightness(1.1)}
-.calendar-container{
-  background:rgba(31,41,55,.95);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-  box-shadow:0 10px 35px rgba(0,0,0,.35);
+.info{text-align:center;color:#9ca3af;margin-bottom:12px}
+.calendar{background:#111827;border:1px solid #374151;border-radius:18px;padding:16px;box-shadow:0 10px 35px rgba(0,0,0,.35)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.head{background:#334155;color:#f9fafb;text-align:center;padding:10px;border-radius:10px;font-weight:bold}
+.day{min-height:145px;background:#1f2937;border:1px solid #374151;border-radius:14px;padding:10px;cursor:pointer;position:relative;transition:.2s}
+.day:hover{border-color:#f59e0b;transform:translateY(-2px)}
+.empty{opacity:.25;cursor:default}
+.date{font-size:18px;font-weight:bold;color:#fbbf24;margin-bottom:8px}
+.badge{position:absolute;top:9px;right:9px;background:#ef4444;color:#fff;width:25px;height:25px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold}
+.tagline{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tag{font-size:12px;color:#fff;border-radius:999px;padding:3px 8px}
+.真人{background:#db2777}.電子{background:#7c3aed}.體育{background:#16a34a}.電競{background:#ea580c}.捕魚{background:#0891b2}.棋牌{background:#2563eb}.其他{background:#64748b}
+.preview{font-size:13px;line-height:1.45;color:#d1d5db;margin-top:8px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.loading{text-align:center;padding:35px;color:#9ca3af}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9999;padding:15px}
+.box{background:#1f2937;border:1px solid #475569;width:95%;max-width:900px;max-height:86vh;overflow:auto;border-radius:18px;padding:22px}
+.box-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #475569;padding-bottom:14px;margin-bottom:16px}
+.box-head h2{font-size:24px}
+.close{font-size:34px;background:none;color:#fff;padding:0 8px}
+.item{background:#334155;border-left:6px solid #f59e0b;border-radius:12px;padding:16px;margin-bottom:14px}
+.item-title{font-size:19px;font-weight:bold;margin-bottom:12px}
+.content{white-space:pre-line;line-height:1.7;font-size:16px;color:#e5e7eb}
+.footer{text-align:center;color:#6b7280;margin-top:14px;font-size:13px}
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .head{display:none}
 }
-.calendar-header{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  margin-bottom:16px;
-}
-.calendar-header h2{
-  min-width:180px;
-  text-align:center;
-}
-.calendar-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-}
-.day-head{
-  text-align:center;
-  background:#475569;
-  padding:8px;
-  border-radius:8px;
-  font-weight:bold;
-}
-.day{
-  min-height:105px;
-  border:1px solid var(--border);
-  background:var(--card);
-  border-radius:12px;
-  padding:8px;
-  position:relative;
-  cursor:pointer;
-  transition:.2s;
-}
-.day:hover{
-  transform:translateY(-2px);
-  border-color:var(--main);
-}
-.empty{
-  opacity:.25;
-  cursor:default;
-}
-.day-num{
-  font-weight:bold;
-  font-size:15px;
-}
-.has{
-  background:#3b2f18;
-  border-color:var(--main);
-}
-.badge{
-  position:absolute;
-  top:7px;
-  right:7px;
-  background:var(--danger);
-  color:white;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:bold;
-}
-.today{
-  border:2px solid var(--today);
-}
-.today .day-num{
-  color:var(--today);
-}
-.past{
-  opacity:.55;
-}
-.small-title{
-  margin-top:8px;
-  font-size:12px;
-  color:#fcd34d;
-  line-height:1.35;
-}
-.loading{
-  text-align:center;
-  color:var(--muted);
-  padding:24px;
-}
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.78);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-}
-.modal-box{
-  background:var(--card);
-  border:1px solid var(--border);
-  width:92%;
-  max-width:760px;
-  max-height:84vh;
-  overflow:auto;
-  border-radius:18px;
-  padding:20px;
-}
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--border);
-  padding-bottom:12px;
-  margin-bottom:14px;
-}
-.close{
-  background:none;
-  color:white;
-  font-size:26px;
-  cursor:pointer;
-}
-.notice{
-  background:#374151;
-  border-left:5px solid var(--main);
-  border-radius:10px;
-  padding:12px;
-  margin-bottom:12px;
-}
-.tag{
-  display:inline-block;
-  padding:3px 8px;
-  border-radius:6px;
-  margin-right:6px;
-  color:white;
-  font-size:12px;
-}
-.真人{background:#db2777}
-.電子{background:#7c3aed}
-.體育{background:#16a34a}
-.電競{background:#ea580c}
-.棋牌{background:#2563eb}
-.捕魚{background:#0891b2}
-.其他{background:#64748b}
-.notice-text{
-  white-space:pre-line;
-  line-height:1.6;
-  color:#e5e7eb;
-  margin-top:8px;
-}
-@media(max-width:700px){
-  .calendar-grid{gap:4px}
-  .day{min-height:82px;padding:6px}
-  .small-title{display:none}
+@media(max-width:520px){
+  body{padding:10px}
+  .grid{grid-template-columns:1fr}
+  input{width:100%}
 }
 </style>
 </head>
 
 <body>
+<div class="wrap">
+  <h1>🦉 維護公告日曆</h1>
 
-<h1>🦉 遊戲維護公告日曆</h1>
-
-<div class="top-bar">
-  <input id="searchInput" placeholder="搜尋平台 / 遊戲 / 公告內容">
-  <button onclick="searchNotice()">搜尋</button>
-  <button onclick="clearSearch()">清除</button>
-  <button onclick="loadData()">重新載入</button>
-  <button onclick="location.href='https://0urrigvojb.github.io/bng-tools/'">回首頁</button>
-</div>
-
-<div class="calendar-container">
-  <div class="calendar-header">
-    <button onclick="changeMonth(-1)">上一月</button>
-    <h2 id="monthTitle"></h2>
-    <button onclick="changeMonth(1)">下一月</button>
+  <div class="top">
+    <input id="searchInput" placeholder="搜尋平台 / 遊戲 / 公告內容">
+    <button onclick="searchNotice()">搜尋</button>
+    <button onclick="clearSearch()">清除</button>
+    <button onclick="loadData()">重新載入</button>
+    <button onclick="location.href='https://0urrigvojb.github.io/bng-tools/'">回首頁</button>
   </div>
 
-  <div class="calendar-grid" id="calendarGrid">
-    <div class="day-head">一</div>
-    <div class="day-head">二</div>
-    <div class="day-head">三</div>
-    <div class="day-head">四</div>
-    <div class="day-head">五</div>
-    <div class="day-head">六</div>
-    <div class="day-head">日</div>
+  <div class="info" id="info">資料載入中...</div>
+
+  <div class="calendar">
+    <div class="grid" id="grid">
+      <div class="head">星期一</div>
+      <div class="head">星期二</div>
+      <div class="head">星期三</div>
+      <div class="head">星期四</div>
+      <div class="head">星期五</div>
+      <div class="head">星期六</div>
+      <div class="head">星期日</div>
+    </div>
+    <div class="loading" id="loading">讀取維護公告中...</div>
   </div>
 
-  <div class="loading" id="loading">資料載入中...</div>
+  <div class="footer" id="footer"></div>
 </div>
 
 <div class="modal" id="modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="modalTitle"></h3>
+  <div class="box">
+    <div class="box-head">
+      <h2 id="modalTitle"></h2>
       <button class="close" onclick="closeModal()">×</button>
     </div>
     <div id="modalContent"></div>
@@ -261,181 +90,179 @@ button:hover{filter:brightness(1.1)}
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwKs1mB1-P5Yk0mQyyU2eHlWytuT6jdiPuPJOS1taGorETcqPqnI0vHLEVMvAoycstjHA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzKMtlYLZgX8Swch_EyC5PGWk1WlGdAXHaxAO5xTLNHzk-YXve3XxY04Q7FKNfOrZXRVA/exec";
 
-const YEAR = 2026;
-let currentMonth = new Date().getMonth();
-let allData = [];
-let dateMap = {};
+let rawData = null;
+let dateList = [];
+let allItems = [];
 
 function jsonp(url){
   return new Promise((resolve,reject)=>{
-    const cb = 'jsonp_cb_' + Date.now();
+    const cb = "cb_" + Date.now();
     window[cb] = data => {
       resolve(data);
       delete window[cb];
       script.remove();
     };
-    const script = document.createElement('script');
-    script.src = url + '?callback=' + cb;
+    const script = document.createElement("script");
+    script.src = url + "?callback=" + cb + "&t=" + Date.now();
     script.onerror = reject;
     document.body.appendChild(script);
   });
 }
 
 async function loadData(){
-  loading.style.display = 'block';
-  loading.innerText = '資料載入中...';
+  loading.style.display = "block";
+  loading.innerText = "讀取維護公告中...";
+  info.innerText = "資料載入中...";
+
+  while(grid.children.length > 7){
+    grid.removeChild(grid.lastChild);
+  }
 
   try{
     const res = await jsonp(API_URL);
-    if(!res.success) throw new Error(res.message);
 
-    allData = res.data || [];
-    buildMap();
-    drawCalendar();
+    if(!res.success){
+      throw new Error(res.message || "API 回傳失敗");
+    }
 
-    loading.style.display = 'none';
+    rawData = res;
+    dateList = res.dates || [];
+    allItems = res.allItems || [];
+
+    drawCalendarByApi();
+
+    loading.style.display = "none";
+    info.innerText = `共 ${dateList.length} 天，${allItems.length} 則維護公告`;
+    footer.innerText = `最後更新：${res.updatedAt || ""}`;
+
   }catch(err){
-    loading.innerText = '讀取失敗：' + err.message;
+    loading.innerText = "讀取失敗：" + err.message;
+    info.innerText = "API 讀取失敗";
   }
 }
 
-function buildMap(){
-  dateMap = {};
-  allData.forEach(item=>{
-    if(!dateMap[item.dateKey]) dateMap[item.dateKey] = [];
-    dateMap[item.dateKey].push(item);
+function drawCalendarByApi(){
+  while(grid.children.length > 7){
+    grid.removeChild(grid.lastChild);
+  }
+
+  if(!dateList.length){
+    loading.style.display = "block";
+    loading.innerText = "目前沒有維護公告";
+    return;
+  }
+
+  dateList.forEach(day=>{
+    const div = document.createElement("div");
+    div.className = "day";
+
+    const dateText = formatDate(day.dateKey);
+    const items = day.items || [];
+
+    const typeCount = {};
+    items.forEach(item=>{
+      const type = item.type || "其他";
+      typeCount[type] = (typeCount[type] || 0) + 1;
+    });
+
+    const tags = Object.keys(typeCount).map(type=>{
+      return `<span class="tag ${type}">${type} ${typeCount[type]}</span>`;
+    }).join("");
+
+    const firstTitle = items[0] ? escapeHtml(items[0].title || "") : "";
+
+    div.innerHTML = `
+      <div class="date">${dateText}</div>
+      <div class="badge">${items.length}</div>
+      <div class="tagline">${tags}</div>
+      <div class="preview">${firstTitle}${items.length > 1 ? "..." : ""}</div>
+    `;
+
+    div.onclick = ()=>openDay(day.dateKey, items);
+    grid.appendChild(div);
   });
 }
 
-function drawCalendar(){
-  while(calendarGrid.children.length > 7){
-    calendarGrid.removeChild(calendarGrid.lastChild);
-  }
+function openDay(dateKey, items){
+  modalTitle.innerText = `${formatDate(dateKey)} 維護公告`;
 
-  monthTitle.innerText = `${YEAR}年 ${currentMonth + 1}月`;
-
-  const first = new Date(YEAR,currentMonth,1).getDay();
-  const firstIndex = first === 0 ? 6 : first - 1;
-  const total = new Date(YEAR,currentMonth + 1,0).getDate();
-
-  for(let i=0;i<firstIndex;i++){
-    const div = document.createElement('div');
-    div.className = 'day empty';
-    calendarGrid.appendChild(div);
-  }
-
-  const now = new Date();
-
-  for(let d=1; d<=total; d++){
-    const key = `${YEAR}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const list = dateMap[key] || [];
-
-    const div = document.createElement('div');
-    div.className = 'day';
-
-    const thisDate = new Date(YEAR,currentMonth,d);
-    if(thisDate < new Date(now.getFullYear(),now.getMonth(),now.getDate())) div.classList.add('past');
-    if(YEAR === now.getFullYear() && currentMonth === now.getMonth() && d === now.getDate()) div.classList.add('today');
-    if(list.length) div.classList.add('has');
-
-    let html = `<div class="day-num">${d}</div>`;
-
-    if(list.length){
-      html += `<div class="badge">${list.length}</div>`;
-      html += `<div class="small-title">${list[0].title}</div>`;
-    }
-
-    div.innerHTML = html;
-
-    div.onclick = ()=>{
-      if(list.length) openDay(key,list);
-      else openEmpty(d);
-    };
-
-    calendarGrid.appendChild(div);
-  }
-}
-
-function openDay(key,list){
-  const [,m,d] = key.split('-');
-  modalTitle.innerText = `${parseInt(m)}月${parseInt(d)}日 維護公告`;
-
-  modalContent.innerHTML = list.map(item=>`
-    <div class="notice">
-      <div><span class="tag ${item.type}">${item.type}</span><b>${item.title}</b></div>
-      <div class="notice-text">${escapeHtml(item.text)}</div>
+  modalContent.innerHTML = items.map(item=>`
+    <div class="item">
+      <div class="item-title">
+        <span class="tag ${item.type || '其他'}">${item.type || '其他'}</span>
+        ${escapeHtml(item.title || "維護公告")}
+      </div>
+      <div class="content">${escapeHtml(item.content || "")}</div>
     </div>
-  `).join('');
+  `).join("");
 
-  modal.style.display = 'flex';
-}
-
-function openEmpty(day){
-  modalTitle.innerText = `${currentMonth + 1}月${day}日`;
-  modalContent.innerHTML = `<div class="notice">暫無維護公告</div>`;
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
 }
 
 function searchNotice(){
   const kw = searchInput.value.trim();
-  if(!kw) return;
 
-  const list = allData.filter(item =>
-    item.text.includes(kw) ||
-    item.title.includes(kw) ||
-    item.type.includes(kw)
-  );
+  if(!kw){
+    alert("請輸入搜尋關鍵字");
+    return;
+  }
 
-  modalTitle.innerText = `搜尋結果：${kw}，共 ${list.length} 則`;
+  const list = allItems.filter(item=>{
+    return String(item.title || "").includes(kw) ||
+           String(item.type || "").includes(kw) ||
+           String(item.content || "").includes(kw) ||
+           String(item.dateKey || "").includes(kw);
+  });
 
-  modalContent.innerHTML = list.length
-    ? list.map(item=>`
-      <div class="notice">
-        <div><span class="tag ${item.type}">${item.type}</span><b>${item.dateKey} ${item.title}</b></div>
-        <div class="notice-text">${escapeHtml(item.text)}</div>
+  modalTitle.innerText = `搜尋：${kw}，共 ${list.length} 則`;
+
+  modalContent.innerHTML = list.length ? list.map(item=>`
+    <div class="item">
+      <div class="item-title">
+        <span class="tag ${item.type || '其他'}">${item.type || '其他'}</span>
+        ${formatDate(item.dateKey)} ${escapeHtml(item.title || "維護公告")}
       </div>
-    `).join('')
-    : `<div class="notice">找不到相關公告</div>`;
+      <div class="content">${escapeHtml(item.content || "")}</div>
+    </div>
+  `).join("") : `<div class="item">找不到相關公告</div>`;
 
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
 }
 
 function clearSearch(){
-  searchInput.value = '';
-}
-
-function changeMonth(num){
-  currentMonth += num;
-  if(currentMonth < 0) currentMonth = 11;
-  if(currentMonth > 11) currentMonth = 0;
-  drawCalendar();
+  searchInput.value = "";
 }
 
 function closeModal(){
-  modal.style.display = 'none';
+  modal.style.display = "none";
 }
 
 modal.onclick = e=>{
   if(e.target === modal) closeModal();
 };
 
-searchInput.addEventListener('keydown',e=>{
-  if(e.key === 'Enter') searchNotice();
+searchInput.addEventListener("keydown",e=>{
+  if(e.key === "Enter") searchNotice();
 });
 
+function formatDate(dateKey){
+  if(!dateKey) return "";
+  const parts = dateKey.split("-");
+  return `${parseInt(parts[1],10)}/${parseInt(parts[2],10)}`;
+}
+
 function escapeHtml(str){
-  return String(str || '')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
+  return String(str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
 
 loadData();
 </script>
-
 </body>
 </html>
