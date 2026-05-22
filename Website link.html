@@ -4,15 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>前後台連結系統</title>
+
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:"Microsoft JhengHei",Arial,sans-serif;
   background:#0f172a;
   color:#e2e8f0;
 }
-.app{max-width:1400px;margin:auto;padding:22px}
+
+.app{
+  max-width:1400px;
+  margin:auto;
+  padding:22px;
+}
+
 .header{
   display:flex;
   justify-content:space-between;
@@ -20,8 +28,18 @@ body{
   gap:12px;
   margin-bottom:16px;
 }
-.header h1{margin:0;color:#bfdbfe;font-size:30px}
-.header p{margin:6px 0 0;color:#94a3b8}
+
+.header h1{
+  margin:0;
+  color:#bfdbfe;
+  font-size:30px;
+}
+
+.header p{
+  margin:6px 0 0;
+  color:#94a3b8;
+}
+
 button{
   border:0;
   border-radius:12px;
@@ -31,9 +49,19 @@ button{
   color:#e2e8f0;
   background:#334155;
 }
-button:hover{background:#475569}
-.danger{background:#7f1d1d}
-.danger:hover{background:#991b1b}
+
+button:hover{
+  background:#475569;
+}
+
+.danger{
+  background:#7f1d1d;
+}
+
+.danger:hover{
+  background:#991b1b;
+}
+
 input,select,textarea{
   width:100%;
   padding:12px;
@@ -43,26 +71,41 @@ input,select,textarea{
   color:#fff;
   font-size:15px;
 }
+
 .toolbar,.category-bar,.admin-bar{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   margin-bottom:14px;
 }
-#searchInput{flex:1;min-width:260px}
-.category-btn.active{background:#64748b}
-.info{color:#cbd5e1;margin:10px 0 16px}
+
+#searchInput{
+  flex:1;
+  min-width:260px;
+}
+
+.category-btn.active{
+  background:#64748b;
+}
+
+.info{
+  color:#cbd5e1;
+  margin:10px 0 16px;
+}
+
 .section-title{
   text-align:center;
   color:#bfdbfe;
   font-size:26px;
   margin:24px 0 18px;
 }
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:16px;
 }
+
 .card{
   background:#1e293b;
   border:1px solid #334155;
@@ -70,6 +113,7 @@ input,select,textarea{
   padding:18px;
   box-shadow:0 8px 22px rgba(0,0,0,.22);
 }
+
 .owner-name,.link-name{
   font-size:21px;
   font-weight:bold;
@@ -78,7 +122,12 @@ input,select,textarea{
   margin-bottom:14px;
   word-break:break-word;
 }
-.btn-row{display:flex;gap:10px}
+
+.btn-row{
+  display:flex;
+  gap:10px;
+}
+
 .link-btn{
   flex:1;
   display:block;
@@ -90,24 +139,34 @@ input,select,textarea{
   background:#334155;
   font-weight:bold;
 }
-.link-btn:hover{background:#475569}
+
+.link-btn:hover{
+  background:#475569;
+}
+
 .url,.note{
   color:#cbd5e1;
   font-size:14px;
   word-break:break-word;
   margin-bottom:10px;
 }
+
 .admin-actions{
   display:none;
   gap:8px;
   margin-top:12px;
 }
-body.logged-in .admin-actions{display:flex}
+
+body.logged-in .admin-actions{
+  display:flex;
+}
+
 .empty,.loading{
   text-align:center;
   padding:50px 0;
   color:#93c5fd;
 }
+
 .modal{
   display:none;
   position:fixed;
@@ -118,7 +177,11 @@ body.logged-in .admin-actions{display:flex}
   justify-content:center;
   padding:16px;
 }
-.modal.show{display:flex}
+
+.modal.show{
+  display:flex;
+}
+
 .modal-box{
   width:100%;
   max-width:460px;
@@ -127,10 +190,28 @@ body.logged-in .admin-actions{display:flex}
   border-radius:18px;
   padding:20px;
 }
-.modal-box h2{margin-top:0;color:#bfdbfe}
-.form-row{margin-bottom:12px}
-.form-row label{display:block;margin-bottom:6px;color:#cbd5e1}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+.modal-box h2{
+  margin-top:0;
+  color:#bfdbfe;
+}
+
+.form-row{
+  margin-bottom:12px;
+}
+
+.form-row label{
+  display:block;
+  margin-bottom:6px;
+  color:#cbd5e1;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}
+
 .toast{
   display:none;
   position:fixed;
@@ -142,7 +223,66 @@ body.logged-in .admin-actions{display:flex}
   border-radius:14px;
   z-index:120;
 }
-.toast.show{display:block}
+
+.toast.show{
+  display:block;
+}
+
+/* 讀取特效 */
+#loadingOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.92);
+  backdrop-filter:blur(4px);
+  z-index:99999;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+#loadingOverlay.show{
+  display:flex;
+}
+
+.owl-loader{
+  font-size:56px;
+  animation:owlFloat 1.4s ease-in-out infinite;
+}
+
+.loader-ring{
+  width:72px;
+  height:72px;
+  border:5px solid rgba(255,255,255,.12);
+  border-top:5px solid #94a3b8;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin-top:14px;
+}
+
+.loadingText{
+  margin-top:18px;
+  font-size:18px;
+  color:#cbd5e1;
+  letter-spacing:2px;
+}
+
+.loadingSub{
+  margin-top:6px;
+  font-size:13px;
+  color:#94a3b8;
+}
+
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@keyframes owlFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
 @media(max-width:700px){
   .app{padding:14px}
   .header{flex-direction:column;align-items:flex-start}
@@ -154,6 +294,7 @@ body.logged-in .admin-actions{display:flex}
 </head>
 
 <body>
+
 <div class="app">
   <div class="header">
     <div>
@@ -260,6 +401,13 @@ body.logged-in .admin-actions{display:flex}
 
 <div id="toast" class="toast"></div>
 
+<div id="loadingOverlay">
+  <div class="owl-loader">🦉</div>
+  <div class="loader-ring"></div>
+  <div class="loadingText">資料載入中...</div>
+  <div class="loadingSub">請稍候</div>
+</div>
+
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbyDdWpCa3YQNm9ocJN4mSOsNgOo5udmaxb9GbgI6P3NZ95kteaOjojkOcAIIYsQybfc/exec';
 
@@ -275,12 +423,21 @@ window.onload=function(){
   loadData();
 };
 
-function api(params,cb){
+function api(params,cb,loadingText){
+  showLoading(loadingText || '資料處理中...');
+
   const callback='jsonp_'+Date.now()+Math.floor(Math.random()*9999);
   params.callback=callback;
-  const query=Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k]??'')).join('&');
+
+  const query=Object.keys(params)
+    .map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k]??''))
+    .join('&');
+
+  let finished=false;
 
   window[callback]=function(res){
+    finished=true;
+    hideLoading();
     cb(res);
     delete window[callback];
     script.remove();
@@ -288,27 +445,35 @@ function api(params,cb){
 
   const script=document.createElement('script');
   script.src=API_URL+'?'+query;
+
   script.onerror=function(){
+    if(finished)return;
+    finished=true;
+    hideLoading();
     showToast('API連線失敗');
     delete window[callback];
     script.remove();
   };
+
   document.body.appendChild(script);
 }
 
 function loadData(){
-  setLoading('資料載入中...');
+  document.getElementById('content').innerHTML='<div class="loading">資料載入中...</div>';
+
   api({action:'list'},function(res){
     if(!res||!res.success){
       showError(res?res.message:'讀取失敗');
       return;
     }
+
     owners=res.owners||[];
     newSystems=res.newSystems||[];
     oldSystems=res.oldSystems||[];
     otherLinks=res.otherLinks||[];
+
     render();
-  });
+  },'正在讀取資料...');
 }
 
 function render(){
@@ -334,7 +499,9 @@ function render(){
 
 function renderOwners(list){
   if(!list.length)return '';
+
   let html='<div class="section-title">業主前後台</div><div class="grid">';
+
   list.forEach(item=>{
     html+=`
     <div class="card">
@@ -349,12 +516,15 @@ function renderOwners(list){
       </div>
     </div>`;
   });
+
   return html+'</div>';
 }
 
 function renderLinks(title,list){
   if(!list.length)return '';
+
   let html=`<div class="section-title">${title}</div><div class="grid">`;
+
   list.forEach(item=>{
     html+=`
     <div class="card">
@@ -368,11 +538,13 @@ function renderLinks(title,list){
       </div>
     </div>`;
   });
+
   return html+'</div>';
 }
 
 function filterOwners(list,kw){
   if(!kw)return list;
+
   return list.filter(x=>
     String(x.owner||'').toLowerCase().includes(kw)||
     String(x.frontend||'').toLowerCase().includes(kw)||
@@ -382,6 +554,7 @@ function filterOwners(list,kw){
 
 function filterLinks(list,kw){
   if(!kw)return list;
+
   return list.filter(x=>
     String(x.name||'').toLowerCase().includes(kw)||
     String(x.url||'').toLowerCase().includes(kw)||
@@ -396,43 +569,77 @@ function setCategory(cat,btn){
   render();
 }
 
-function searchData(){render()}
+function searchData(){
+  showLoading('正在搜尋資料...');
+  setTimeout(()=>{
+    render();
+    hideLoading();
+  },250);
+}
+
 function clearSearch(){
   document.getElementById('searchInput').value='';
-  render();
+  showLoading('正在重整資料...');
+  setTimeout(()=>{
+    render();
+    hideLoading();
+  },250);
 }
+
 document.getElementById('searchInput').addEventListener('keydown',e=>{
   if(e.key==='Enter')searchData();
 });
 
-function openLoginModal(){document.getElementById('loginModal').classList.add('show')}
-function closeModal(id){document.getElementById(id).classList.remove('show')}
+function openLoginModal(){
+  document.getElementById('loginModal').classList.add('show');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
 
 function login(){
   const acc=document.getElementById('accountInput').value.trim();
   const pwd=document.getElementById('passwordInput').value.trim();
-  if(!acc||!pwd){showToast('請輸入帳號與密碼');return}
 
-  api({action:'login',account:acc,password:pwd},function(res){
-    if(!res.success){showToast(res.message||'登入失敗');return}
+  if(!acc||!pwd){
+    showToast('請輸入帳號與密碼');
+    return;
+  }
+
+  api({
+    action:'login',
+    account:acc,
+    password:pwd
+  },function(res){
+    if(!res.success){
+      showToast(res.message||'登入失敗');
+      return;
+    }
+
     token=res.token;
     account=res.account;
+
     localStorage.setItem('linkToken',token);
     localStorage.setItem('linkAccount',account);
+
     closeModal('loginModal');
     updateLoginUI();
     render();
     showToast('登入成功');
-  });
+  },'登入驗證中...');
 }
 
 function logout(){
   token='';
   account='';
+
   localStorage.removeItem('linkToken');
   localStorage.removeItem('linkAccount');
+
   updateLoginUI();
   render();
+  showToast('已登出');
 }
 
 function updateLoginUI(){
@@ -451,6 +658,7 @@ function updateLoginUI(){
 function openOwnerModal(mode,item){
   ownerMode=mode;
   ownerRow=item?item.row:'';
+
   document.getElementById('ownerModalTitle').innerText=mode==='add'?'新增業主':'編輯業主';
   document.getElementById('ownerName').value=item?item.owner:'';
   document.getElementById('ownerFrontend').value=item?item.frontend:'';
@@ -466,21 +674,37 @@ function submitOwner(){
     frontend:document.getElementById('ownerFrontend').value.trim(),
     backend:document.getElementById('ownerBackend').value.trim()
   };
-  if(ownerMode==='edit')params.row=ownerRow;
+
+  if(ownerMode==='edit'){
+    params.row=ownerRow;
+  }
 
   api(params,function(res){
-    if(!res.success){showToast(res.message);return}
+    if(!res.success){
+      showToast(res.message);
+      return;
+    }
+
     closeModal('ownerModal');
     updateData(res);
-  });
+  },ownerMode==='add'?'新增業主中...':'更新業主中...');
 }
 
 function deleteOwner(row){
   if(!confirm('確定刪除這個業主嗎？'))return;
-  api({action:'deleteOwner',token,row},function(res){
-    if(!res.success){showToast(res.message);return}
+
+  api({
+    action:'deleteOwner',
+    token,
+    row
+  },function(res){
+    if(!res.success){
+      showToast(res.message);
+      return;
+    }
+
     updateData(res);
-  });
+  },'刪除業主中...');
 }
 
 function openLinkModal(mode,item){
@@ -506,21 +730,38 @@ function submitLink(){
     url:document.getElementById('linkUrl').value.trim(),
     note:document.getElementById('linkNote').value.trim()
   };
-  if(linkMode==='edit')params.row=linkRow;
+
+  if(linkMode==='edit'){
+    params.row=linkRow;
+  }
 
   api(params,function(res){
-    if(!res.success){showToast(res.message);return}
+    if(!res.success){
+      showToast(res.message);
+      return;
+    }
+
     closeModal('linkModal');
     updateData(res);
-  });
+  },linkMode==='add'?'新增連結中...':'更新連結中...');
 }
 
 function deleteLink(type,row){
   if(!confirm('確定刪除這個連結嗎？'))return;
-  api({action:'deleteLink',token,type,row},function(res){
-    if(!res.success){showToast(res.message);return}
+
+  api({
+    action:'deleteLink',
+    token,
+    type,
+    row
+  },function(res){
+    if(!res.success){
+      showToast(res.message);
+      return;
+    }
+
     updateData(res);
-  });
+  },'刪除連結中...');
 }
 
 function updateData(res){
@@ -533,28 +774,55 @@ function updateData(res){
   }else{
     loadData();
   }
+
   showToast(res.message||'操作成功');
 }
 
 function setLoading(t){
   document.getElementById('content').innerHTML='<div class="loading">'+t+'</div>';
 }
+
 function showError(t){
   document.getElementById('content').innerHTML='<div class="empty">'+esc(t)+'</div>';
 }
+
 function showToast(t){
   const el=document.getElementById('toast');
   el.innerText=t;
   el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2400);
+
+  setTimeout(()=>{
+    el.classList.remove('show');
+  },2400);
 }
+
+function showLoading(text){
+  document.querySelector('.loadingText').innerText=text || '資料處理中...';
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+
+function hideLoading(){
+  document.getElementById('loadingOverlay').classList.remove('show');
+}
+
 function esc(t){
-  return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  return String(t||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
 }
+
 function safeUrl(url){
   url=String(url||'').trim();
+
   if(!url)return '#';
-  if(!/^https?:\/\//i.test(url))return 'https://'+url;
+
+  if(!/^https?:\/\//i.test(url)){
+    return 'https://'+url;
+  }
+
   return url;
 }
 </script>
