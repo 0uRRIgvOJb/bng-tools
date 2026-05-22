@@ -112,6 +112,10 @@ input,select,textarea{
   border-radius:18px;
   padding:18px;
   box-shadow:0 8px 22px rgba(0,0,0,.22);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:220px;
 }
 
 .owner-name,.link-name{
@@ -144,11 +148,13 @@ input,select,textarea{
   background:#475569;
 }
 
-.url,.note{
-  color:#cbd5e1;
+.note{
+  color:#94a3b8;
   font-size:14px;
+  text-align:center;
+  margin-bottom:12px;
+  line-height:1.6;
   word-break:break-word;
-  margin-bottom:10px;
 }
 
 .admin-actions{
@@ -228,7 +234,6 @@ body.logged-in .admin-actions{
   display:block;
 }
 
-/* 讀取特效 */
 #loadingOverlay{
   position:fixed;
   inset:0;
@@ -528,13 +533,17 @@ function renderLinks(title,list){
   list.forEach(item=>{
     html+=`
     <div class="card">
-      <div class="link-name">${esc(item.name||'未命名')}</div>
-      <div class="url">${esc(item.url||'')}</div>
-      ${item.note?`<div class="note">備註：${esc(item.note)}</div>`:''}
-      ${item.url?`<a class="link-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>`:''}
-      <div class="admin-actions">
-        <button onclick='openLinkModal("edit",${JSON.stringify(item)})'>編輯</button>
-        <button class="danger" onclick="deleteLink('${item.type}','${item.row}')">刪除</button>
+      <div>
+        <div class="link-name">${esc(item.name||'未命名')}</div>
+        ${item.note?`<div class="note">${esc(item.note)}</div>`:''}
+      </div>
+
+      <div>
+        ${item.url?`<a class="link-btn" href="${safeUrl(item.url)}" target="_blank">開啟</a>`:''}
+        <div class="admin-actions">
+          <button onclick='openLinkModal("edit",${JSON.stringify(item)})'>編輯</button>
+          <button class="danger" onclick="deleteLink('${item.type}','${item.row}')">刪除</button>
+        </div>
       </div>
     </div>`;
   });
@@ -776,10 +785,6 @@ function updateData(res){
   }
 
   showToast(res.message||'操作成功');
-}
-
-function setLoading(t){
-  document.getElementById('content').innerHTML='<div class="loading">'+t+'</div>';
 }
 
 function showError(t){
