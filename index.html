@@ -227,6 +227,140 @@
       overflow-wrap: anywhere;
       word-break: break-word;
     }
+
+    .notice-board {
+      background:
+        linear-gradient(135deg, rgba(250, 204, 21, 0.10), rgba(56, 189, 248, 0.05)),
+        rgba(13, 20, 36, 0.88);
+      border: 1px solid rgba(250, 204, 21, 0.22);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.38), 0 0 28px rgba(250,204,21,0.10);
+    }
+
+    .notice-toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .notice-toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .notice-table-wrap {
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(17, 27, 46, 0.82);
+    }
+
+    .notice-table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    .notice-table th {
+      background: rgba(250, 204, 21, 0.13);
+      color: #facc15;
+      font-weight: 900;
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      white-space: nowrap;
+    }
+
+    .notice-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: #f8fafc;
+      vertical-align: top;
+      line-height: 1.65;
+    }
+
+    .notice-table tr:hover td {
+      background: rgba(250, 204, 21, 0.06);
+    }
+
+    .notice-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .notice-date {
+      width: 135px;
+      color: #38bdf8 !important;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .notice-content {
+      min-width: 360px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .notice-remark {
+      min-width: 240px;
+      color: #cbd5e1 !important;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .notice-actions {
+      width: 155px;
+      white-space: nowrap;
+    }
+
+    .notice-admin-only {
+      display: none;
+    }
+
+    .is-admin .notice-admin-only {
+      display: inline-flex;
+    }
+
+    .notice-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    .notice-modal.show {
+      display: flex;
+    }
+
+    .notice-modal-card {
+      width: min(560px, 100%);
+      border-radius: 24px;
+      background: #0d1424;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+      overflow: hidden;
+    }
+
+    .notice-form-input {
+      width: 100%;
+      border-radius: 14px;
+      background: #111b2e;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      outline: none;
+      padding: 12px 14px;
+    }
+
+    .notice-form-input:focus {
+      border-color: rgba(250,204,21,0.65);
+      box-shadow: 0 0 0 2px rgba(250,204,21,0.16);
+    }
+
   </style>
 </head>
 
@@ -287,6 +421,125 @@
       <div
         id="time"
         class="text-owl-blue font-mono text-base md:text-lg"
+      ></div>
+    </section>
+
+    <section id="important-notice-board" class="notice-board rounded-[26px] p-5 md:p-6 mb-10">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+        <div>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-400/15 text-yellow-300 border border-yellow-300/20 text-sm font-black mb-3">
+            <i class="fa fa-bullhorn"></i>
+            重要公告
+          </div>
+
+          <h3 class="text-3xl md:text-4xl font-black text-white leading-tight">
+            公告看板
+          </h3>
+
+          <p class="text-owl-muted mt-2">
+            最新公告會直接顯示在首頁，支援搜尋、登入後新增、編輯、刪除。
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button
+            id="notice-refresh-button"
+            class="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-owl-text border border-white/10 font-bold transition"
+          >
+            <i class="fa fa-refresh mr-2"></i>
+            重新整理
+          </button>
+
+          <button
+            id="notice-login-button"
+            class="px-4 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black transition"
+          >
+            <i class="fa fa-lock mr-2"></i>
+            登入管理
+          </button>
+
+          <button
+            id="notice-logout-button"
+            class="hidden px-4 py-3 rounded-xl bg-rose-400/15 hover:bg-rose-400/25 text-rose-300 border border-rose-300/20 font-bold transition"
+          >
+            <i class="fa fa-sign-out mr-2"></i>
+            登出
+          </button>
+        </div>
+      </div>
+
+      <div class="notice-toolbar mb-4">
+        <div class="relative">
+          <input
+            id="notice-search-input"
+            type="text"
+            placeholder="搜尋公告日期、內容、備註..."
+            class="w-full h-12 rounded-2xl bg-owl-card border border-white/10 px-5 pr-12 text-base text-white placeholder:text-owl-muted outline-none focus:ring-2 focus:ring-owl-gold focus:border-owl-gold/60 transition"
+          />
+          <i class="fa fa-search absolute right-4 top-1/2 -translate-y-1/2 text-owl-muted"></i>
+        </div>
+
+        <button
+          id="notice-add-button"
+          class="notice-admin-only justify-center px-5 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black transition"
+        >
+          <i class="fa fa-plus mr-2"></i>
+          新增公告
+        </button>
+
+        <div
+          id="notice-login-status"
+          class="flex items-center justify-center px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-owl-muted text-sm"
+        >
+          未登入
+        </div>
+      </div>
+
+      <div
+        id="notice-loading"
+        class="notice-table-wrap p-4"
+      >
+        <div class="skeleton h-10 rounded-xl mb-3"></div>
+        <div class="skeleton h-10 rounded-xl mb-3"></div>
+        <div class="skeleton h-10 rounded-xl"></div>
+      </div>
+
+      <div
+        id="notice-error"
+        class="hidden rounded-2xl border border-yellow-300/20 bg-yellow-400/10 p-5 text-yellow-200"
+      >
+        <i class="fa fa-exclamation-triangle mr-2"></i>
+        公告 API 讀取失敗，請確認 API 網址與部署權限。
+      </div>
+
+      <div
+        id="notice-empty"
+        class="hidden rounded-2xl border border-white/10 bg-white/5 p-5 text-owl-muted text-center"
+      >
+        目前沒有公告資料
+      </div>
+
+      <div
+        id="notice-table-wrap"
+        class="notice-table-wrap hidden"
+      >
+        <table class="notice-table">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>內容</th>
+              <th>備註</th>
+              <th class="notice-admin-only">管理</th>
+            </tr>
+          </thead>
+
+          <tbody id="notice-table-body"></tbody>
+        </table>
+      </div>
+
+      <div
+        id="notice-results-info"
+        class="hidden mt-3 text-sm text-owl-muted"
       ></div>
     </section>
 
@@ -380,6 +633,85 @@
 
   </main>
 
+  <div id="notice-login-modal" class="notice-modal">
+    <div class="notice-modal-card">
+      <div class="p-5 border-b border-white/10 flex items-center justify-between">
+        <h3 class="text-xl font-black text-white">
+          <i class="fa fa-lock text-yellow-300 mr-2"></i>
+          公告管理登入
+        </h3>
+
+        <button class="notice-modal-close text-owl-muted hover:text-white transition">
+          <i class="fa fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div>
+          <label class="block text-sm text-owl-muted mb-2">帳號</label>
+          <input id="notice-login-account" class="notice-form-input" type="text" placeholder="請輸入帳號" />
+        </div>
+
+        <div>
+          <label class="block text-sm text-owl-muted mb-2">密碼</label>
+          <input id="notice-login-password" class="notice-form-input" type="password" placeholder="請輸入密碼" />
+        </div>
+
+        <div id="notice-login-message" class="hidden text-sm text-rose-300"></div>
+
+        <button
+          id="notice-login-submit"
+          class="w-full h-12 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black transition"
+        >
+          登入
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notice-edit-modal" class="notice-modal">
+    <div class="notice-modal-card">
+      <div class="p-5 border-b border-white/10 flex items-center justify-between">
+        <h3 id="notice-edit-title" class="text-xl font-black text-white">
+          <i class="fa fa-pencil text-yellow-300 mr-2"></i>
+          新增公告
+        </h3>
+
+        <button class="notice-modal-close text-owl-muted hover:text-white transition">
+          <i class="fa fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <input id="notice-edit-row" type="hidden" />
+
+        <div>
+          <label class="block text-sm text-owl-muted mb-2">日期</label>
+          <input id="notice-edit-date" class="notice-form-input" type="text" placeholder="例如：5/1 或 2026/05/01" />
+        </div>
+
+        <div>
+          <label class="block text-sm text-owl-muted mb-2">內容</label>
+          <textarea id="notice-edit-content" class="notice-form-input min-h-[120px]" placeholder="請輸入公告內容"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm text-owl-muted mb-2">備註</label>
+          <textarea id="notice-edit-remark" class="notice-form-input min-h-[90px]" placeholder="請輸入備註，可留空"></textarea>
+        </div>
+
+        <div id="notice-edit-message" class="hidden text-sm text-rose-300"></div>
+
+        <button
+          id="notice-edit-submit"
+          class="w-full h-12 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black transition"
+        >
+          儲存公告
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-white/10 mt-16 py-5 glass">
     <div class="max-w-7xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-3">
 
@@ -425,10 +757,51 @@
     const retryButton = document.getElementById('retry-button');
     const themeToggle = document.getElementById('theme-toggle');
 
+    /*
+      重要公告 API：
+      請換成你部署後的 Google Apps Script Web App URL。
+      此首頁會使用 JSONP 方式讀取，避免前端跨網域 CORS 問題。
+    */
+    const IMPORTANT_NOTICE_API = 'https://script.google.com/macros/s/AKfycbxH9LH0iAMx1xaBb2MxR9FwLx-vO-L1DxgEFa0Y0GsQFZy2_jF3yZdgw7wMAz3NmN5k3Q/exec';
+
+    const noticeBoard = document.getElementById('important-notice-board');
+    const noticeSearchInput = document.getElementById('notice-search-input');
+    const noticeRefreshButton = document.getElementById('notice-refresh-button');
+    const noticeLoginButton = document.getElementById('notice-login-button');
+    const noticeLogoutButton = document.getElementById('notice-logout-button');
+    const noticeAddButton = document.getElementById('notice-add-button');
+    const noticeLoginStatus = document.getElementById('notice-login-status');
+    const noticeLoading = document.getElementById('notice-loading');
+    const noticeError = document.getElementById('notice-error');
+    const noticeEmpty = document.getElementById('notice-empty');
+    const noticeTableWrap = document.getElementById('notice-table-wrap');
+    const noticeTableBody = document.getElementById('notice-table-body');
+    const noticeResultsInfo = document.getElementById('notice-results-info');
+
+    const noticeLoginModal = document.getElementById('notice-login-modal');
+    const noticeLoginAccount = document.getElementById('notice-login-account');
+    const noticeLoginPassword = document.getElementById('notice-login-password');
+    const noticeLoginSubmit = document.getElementById('notice-login-submit');
+    const noticeLoginMessage = document.getElementById('notice-login-message');
+
+    const noticeEditModal = document.getElementById('notice-edit-modal');
+    const noticeEditTitle = document.getElementById('notice-edit-title');
+    const noticeEditRow = document.getElementById('notice-edit-row');
+    const noticeEditDate = document.getElementById('notice-edit-date');
+    const noticeEditContent = document.getElementById('notice-edit-content');
+    const noticeEditRemark = document.getElementById('notice-edit-remark');
+    const noticeEditSubmit = document.getElementById('notice-edit-submit');
+    const noticeEditMessage = document.getElementById('notice-edit-message');
+
     let pagesData = [];
     let filteredData = [];
     let currentCategory = 'all';
     let currentSearch = '';
+
+    let noticeData = [];
+    let filteredNoticeData = [];
+    let currentNoticeSearch = '';
+    let noticeToken = localStorage.getItem('noticeAdminToken') || '';
 
     const TYPE_COLORS = [
       'gold',
@@ -747,6 +1120,356 @@
         .replaceAll("'", '&#039;');
     }
 
+
+    function jsonpRequest(url, params = {}) {
+      return new Promise((resolve, reject) => {
+        const callbackName =
+          'jsonpCallback_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+
+        const query = new URLSearchParams({
+          ...params,
+          callback: callbackName,
+          v: Date.now()
+        });
+
+        const separator = url.includes('?') ? '&' : '?';
+        const script = document.createElement('script');
+
+        script.src = url + separator + query.toString();
+
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error('API 回應逾時'));
+        }, 15000);
+
+        window[callbackName] = data => {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('API 載入失敗'));
+        };
+
+        function cleanup() {
+          clearTimeout(timer);
+          delete window[callbackName];
+          script.remove();
+        }
+
+        document.body.appendChild(script);
+      });
+    }
+
+    function showNoticeState(state) {
+      noticeLoading.classList.toggle('hidden', state !== 'loading');
+      noticeError.classList.toggle('hidden', state !== 'error');
+      noticeEmpty.classList.toggle('hidden', state !== 'empty');
+      noticeTableWrap.classList.toggle('hidden', state !== 'table');
+    }
+
+    function setNoticeAdminState(isAdmin) {
+      if (isAdmin) {
+        noticeBoard.classList.add('is-admin');
+        noticeLoginButton.classList.add('hidden');
+        noticeLogoutButton.classList.remove('hidden');
+        noticeLoginStatus.textContent = '已登入公告管理';
+        noticeLoginStatus.className =
+          'flex items-center justify-center px-4 py-3 rounded-xl bg-emerald-400/15 border border-emerald-300/20 text-emerald-300 text-sm font-bold';
+      } else {
+        noticeBoard.classList.remove('is-admin');
+        noticeLoginButton.classList.remove('hidden');
+        noticeLogoutButton.classList.add('hidden');
+        noticeLoginStatus.textContent = '未登入';
+        noticeLoginStatus.className =
+          'flex items-center justify-center px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-owl-muted text-sm';
+      }
+
+      renderImportantNotices();
+    }
+
+    function openNoticeModal(modal) {
+      modal.classList.add('show');
+    }
+
+    function closeNoticeModals() {
+      noticeLoginModal.classList.remove('show');
+      noticeEditModal.classList.remove('show');
+    }
+
+    function normalizeNoticeResponse(data) {
+      const list =
+        Array.isArray(data)
+          ? data
+          : Array.isArray(data.data)
+            ? data.data
+            : Array.isArray(data.notices)
+              ? data.notices
+              : [];
+
+      return list.map(item => ({
+        row: item.row ?? item.Row ?? item['row'] ?? '',
+        date: item.date ?? item.Date ?? item['日期'] ?? '',
+        content: item.content ?? item.Content ?? item['內容'] ?? item['内容'] ?? '',
+        remark: item.remark ?? item.Remark ?? item['備註'] ?? item['备注'] ?? ''
+      }));
+    }
+
+    async function loadImportantNotices() {
+      try {
+        showNoticeState('loading');
+        noticeResultsInfo.classList.add('hidden');
+
+        if (
+          !IMPORTANT_NOTICE_API
+          || IMPORTANT_NOTICE_API === '請貼上你的重要公告API網址'
+        ) {
+          throw new Error('尚未設定 IMPORTANT_NOTICE_API');
+        }
+
+        const result = await jsonpRequest(IMPORTANT_NOTICE_API, {
+          action: 'list'
+        });
+
+        if (result && result.success === false) {
+          throw new Error(result.message || '公告讀取失敗');
+        }
+
+        noticeData = normalizeNoticeResponse(result);
+        filteredNoticeData = [...noticeData];
+
+        filterImportantNotices();
+      } catch (error) {
+        console.error(error);
+        showNoticeState('error');
+      }
+    }
+
+    function renderImportantNotices() {
+      noticeTableBody.innerHTML = '';
+
+      if (filteredNoticeData.length === 0) {
+        showNoticeState('empty');
+
+        if (currentNoticeSearch) {
+          noticeResultsInfo.textContent =
+            `找不到與「${currentNoticeSearch}」相關的公告`;
+          noticeResultsInfo.classList.remove('hidden');
+        } else {
+          noticeResultsInfo.classList.add('hidden');
+        }
+
+        return;
+      }
+
+      filteredNoticeData.forEach(item => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td class="notice-date">${escapeHtml(item.date)}</td>
+          <td class="notice-content">${escapeHtml(item.content)}</td>
+          <td class="notice-remark">${escapeHtml(item.remark)}</td>
+          <td class="notice-actions notice-admin-only">
+            <button
+              class="notice-edit-btn px-3 py-2 rounded-lg bg-sky-400/15 hover:bg-sky-400/25 text-sky-300 border border-sky-300/20 font-bold transition mr-2"
+              data-row="${escapeHtml(item.row)}"
+            >
+              編輯
+            </button>
+            <button
+              class="notice-delete-btn px-3 py-2 rounded-lg bg-rose-400/15 hover:bg-rose-400/25 text-rose-300 border border-rose-300/20 font-bold transition"
+              data-row="${escapeHtml(item.row)}"
+            >
+              刪除
+            </button>
+          </td>
+        `;
+
+        row.querySelector('.notice-edit-btn')?.addEventListener('click', () => {
+          openNoticeEditModal(item);
+        });
+
+        row.querySelector('.notice-delete-btn')?.addEventListener('click', () => {
+          deleteImportantNotice(item.row);
+        });
+
+        noticeTableBody.appendChild(row);
+      });
+
+      showNoticeState('table');
+
+      if (currentNoticeSearch) {
+        noticeResultsInfo.textContent =
+          `找到 ${filteredNoticeData.length} 筆與「${currentNoticeSearch}」相關的公告`;
+        noticeResultsInfo.classList.remove('hidden');
+      } else {
+        noticeResultsInfo.classList.add('hidden');
+      }
+    }
+
+    function filterImportantNotices() {
+      const keyword = currentNoticeSearch.toLowerCase();
+
+      filteredNoticeData = noticeData.filter(item => {
+        if (!keyword) return true;
+
+        return (
+          String(item.date || '').toLowerCase().includes(keyword)
+          || String(item.content || '').toLowerCase().includes(keyword)
+          || String(item.remark || '').toLowerCase().includes(keyword)
+        );
+      });
+
+      renderImportantNotices();
+    }
+
+    function handleNoticeSearch() {
+      currentNoticeSearch = noticeSearchInput.value.trim();
+      filterImportantNotices();
+    }
+
+    async function loginImportantNotice() {
+      try {
+        noticeLoginMessage.classList.add('hidden');
+
+        const account = noticeLoginAccount.value.trim();
+        const password = noticeLoginPassword.value.trim();
+
+        if (!account || !password) {
+          noticeLoginMessage.textContent = '請輸入帳號與密碼';
+          noticeLoginMessage.classList.remove('hidden');
+          return;
+        }
+
+        noticeLoginSubmit.disabled = true;
+        noticeLoginSubmit.textContent = '登入中...';
+
+        const result = await jsonpRequest(IMPORTANT_NOTICE_API, {
+          action: 'login',
+          account,
+          password
+        });
+
+        if (!result.success) {
+          throw new Error(result.message || '帳號或密碼錯誤');
+        }
+
+        noticeToken = result.token;
+        localStorage.setItem('noticeAdminToken', noticeToken);
+
+        noticeLoginAccount.value = '';
+        noticeLoginPassword.value = '';
+
+        closeNoticeModals();
+        setNoticeAdminState(true);
+      } catch (error) {
+        noticeLoginMessage.textContent = error.message || '登入失敗';
+        noticeLoginMessage.classList.remove('hidden');
+      } finally {
+        noticeLoginSubmit.disabled = false;
+        noticeLoginSubmit.textContent = '登入';
+      }
+    }
+
+    function logoutImportantNotice() {
+      noticeToken = '';
+      localStorage.removeItem('noticeAdminToken');
+      setNoticeAdminState(false);
+    }
+
+    function openNoticeEditModal(item = null) {
+      noticeEditMessage.classList.add('hidden');
+
+      if (item) {
+        noticeEditTitle.innerHTML =
+          '<i class="fa fa-pencil text-yellow-300 mr-2"></i>編輯公告';
+
+        noticeEditRow.value = item.row || '';
+        noticeEditDate.value = item.date || '';
+        noticeEditContent.value = item.content || '';
+        noticeEditRemark.value = item.remark || '';
+      } else {
+        noticeEditTitle.innerHTML =
+          '<i class="fa fa-plus text-yellow-300 mr-2"></i>新增公告';
+
+        noticeEditRow.value = '';
+        noticeEditDate.value = '';
+        noticeEditContent.value = '';
+        noticeEditRemark.value = '';
+      }
+
+      openNoticeModal(noticeEditModal);
+    }
+
+    async function saveImportantNotice() {
+      try {
+        noticeEditMessage.classList.add('hidden');
+
+        const row = noticeEditRow.value.trim();
+        const date = noticeEditDate.value.trim();
+        const content = noticeEditContent.value.trim();
+        const remark = noticeEditRemark.value.trim();
+
+        if (!date || !content) {
+          noticeEditMessage.textContent = '日期與內容不能空白';
+          noticeEditMessage.classList.remove('hidden');
+          return;
+        }
+
+        noticeEditSubmit.disabled = true;
+        noticeEditSubmit.textContent = '儲存中...';
+
+        const action = row ? 'update' : 'add';
+
+        const result = await jsonpRequest(IMPORTANT_NOTICE_API, {
+          action,
+          token: noticeToken,
+          row,
+          date,
+          content,
+          remark
+        });
+
+        if (!result.success) {
+          throw new Error(result.message || '儲存失敗');
+        }
+
+        closeNoticeModals();
+        await loadImportantNotices();
+      } catch (error) {
+        noticeEditMessage.textContent = error.message || '儲存失敗';
+        noticeEditMessage.classList.remove('hidden');
+      } finally {
+        noticeEditSubmit.disabled = false;
+        noticeEditSubmit.textContent = '儲存公告';
+      }
+    }
+
+    async function deleteImportantNotice(row) {
+      if (!row) return;
+
+      if (!confirm('確定要刪除這筆公告嗎？')) {
+        return;
+      }
+
+      try {
+        const result = await jsonpRequest(IMPORTANT_NOTICE_API, {
+          action: 'delete',
+          token: noticeToken,
+          row
+        });
+
+        if (!result.success) {
+          throw new Error(result.message || '刪除失敗');
+        }
+
+        await loadImportantNotices();
+      } catch (error) {
+        alert(error.message || '刪除失敗');
+      }
+    }
+
     function setupTheme() {
       localStorage.setItem('theme', 'owl-night');
     }
@@ -762,6 +1485,7 @@
       setInterval(updateTime, 1000);
 
       loadPages();
+      loadImportantNotices();
 
       searchButton.addEventListener('click', handleSearch);
 
@@ -776,6 +1500,36 @@
       retryButton.addEventListener('click', loadPages);
 
       themeToggle.addEventListener('click', toggleTheme);
+
+      setNoticeAdminState(Boolean(noticeToken));
+
+      noticeRefreshButton.addEventListener('click', loadImportantNotices);
+      noticeSearchInput.addEventListener('input', handleNoticeSearch);
+
+      noticeLoginButton.addEventListener('click', () => {
+        noticeLoginMessage.classList.add('hidden');
+        openNoticeModal(noticeLoginModal);
+      });
+
+      noticeLogoutButton.addEventListener('click', logoutImportantNotice);
+      noticeAddButton.addEventListener('click', () => openNoticeEditModal());
+
+      noticeLoginSubmit.addEventListener('click', loginImportantNotice);
+      noticeEditSubmit.addEventListener('click', saveImportantNotice);
+
+      noticeLoginPassword.addEventListener('keydown', event => {
+        if (event.key === 'Enter') loginImportantNotice();
+      });
+
+      document.querySelectorAll('.notice-modal-close').forEach(button => {
+        button.addEventListener('click', closeNoticeModals);
+      });
+
+      document.querySelectorAll('.notice-modal').forEach(modal => {
+        modal.addEventListener('click', event => {
+          if (event.target === modal) closeNoticeModals();
+        });
+      });
     }
 
     document.addEventListener('DOMContentLoaded', init);
