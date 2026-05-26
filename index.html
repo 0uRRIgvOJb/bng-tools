@@ -580,6 +580,46 @@
       }
     }
 
+
+    /* 更新：左側卡片固定直向排列，一張一張往下顯示 */
+    .tool-panel #cards-container,
+    .tool-panel #loading-state {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+
+    .tool-panel .card a {
+      min-height: 118px;
+    }
+
+    /* 更新：公告管理欄位預設完全隱藏，只有登入後才顯示 */
+    #notice-table-wrap th.notice-admin-only,
+    #notice-table-wrap td.notice-admin-only {
+      display: none !important;
+    }
+
+    #important-notice-board.is-admin #notice-table-wrap th.notice-admin-only {
+      display: table-cell !important;
+    }
+
+    #important-notice-board.is-admin #notice-table-wrap td.notice-admin-only {
+      display: block !important;
+    }
+
+    #notice-add-button.notice-admin-only {
+      display: none !important;
+    }
+
+    #important-notice-board.is-admin #notice-add-button.notice-admin-only {
+      display: inline-flex !important;
+    }
+
+    @media (min-width: 1101px) {
+      .dashboard-layout {
+        grid-template-columns: minmax(0, 1.25fr) minmax(440px, 0.85fr);
+      }
+    }
+
   </style>
 </head>
 
@@ -999,7 +1039,7 @@
       請換成你部署後的 Google Apps Script Web App URL。
       此首頁會使用 JSONP 方式讀取，避免前端跨網域 CORS 問題。
     */
-    const IMPORTANT_NOTICE_API = 'https://script.google.com/macros/s/AKfycbxH9LH0iAMx1xaBb2MxR9FwLx-vO-L1DxgEFa0Y0GsQFZy2_jF3yZdgw7wMAz3NmN5k3Q/exec';
+    const IMPORTANT_NOTICE_API = 'https://script.google.com/macros/s/AKfycbyWtUIqeAF5VabxzzzOE-VoztASiIXixpJrB9w-ON5JrNxghav8MCDFi5AnVEf6mbdT_Q/exec';
 
     const noticeBoard = document.getElementById('important-notice-board');
     const noticeSearchInput = document.getElementById('notice-search-input');
@@ -1738,7 +1778,7 @@
 
       themeToggle.addEventListener('click', toggleTheme);
 
-      setNoticeAdminState(Boolean(noticeToken));
+      setNoticeAdminState(false);
 
       noticeRefreshButton.addEventListener('click', loadImportantNotices);
       noticeSearchInput.addEventListener('input', handleNoticeSearch);
