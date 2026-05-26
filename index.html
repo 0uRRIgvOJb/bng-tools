@@ -620,6 +620,82 @@
       }
     }
 
+
+    /* 最終版：工具卡片板塊縮小，像左側紅框一樣 */
+    @media (min-width: 1101px) {
+      .dashboard-layout {
+        grid-template-columns: 560px minmax(520px, 1fr) !important;
+        gap: 28px !important;
+        align-items: start;
+      }
+
+      .dashboard-left {
+        width: 560px !important;
+        max-width: 560px !important;
+      }
+
+      .dashboard-right {
+        min-width: 0;
+      }
+
+      .tool-panel {
+        width: 560px !important;
+        max-width: 560px !important;
+        padding: 24px !important;
+      }
+
+      .tool-panel #search-input {
+        height: 52px;
+        font-size: 16px;
+      }
+
+      .tool-panel .category-scroll {
+        overflow-x: auto;
+      }
+
+      .tool-panel #category-container {
+        flex-wrap: nowrap;
+      }
+
+      .tool-panel #category-container button {
+        padding: 10px 18px;
+        font-size: 15px;
+      }
+
+      .tool-panel .card a {
+        min-height: 118px;
+        padding: 18px 20px;
+      }
+
+      .tool-panel .card h3 {
+        font-size: 22px;
+      }
+    }
+
+    @media (min-width: 1400px) {
+      .dashboard-layout {
+        grid-template-columns: 590px minmax(560px, 1fr) !important;
+      }
+
+      .dashboard-left,
+      .tool-panel {
+        width: 590px !important;
+        max-width: 590px !important;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr !important;
+      }
+
+      .dashboard-left,
+      .tool-panel {
+        width: 100% !important;
+        max-width: none !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -800,7 +876,7 @@
           </h3>
 
           <p class="text-owl-muted mt-2">
-            最新公告會直接顯示在首頁，支援搜尋、登入後新增、編輯、刪除。
+            最新公告
           </p>
         </div>
 
@@ -1039,7 +1115,7 @@
       請換成你部署後的 Google Apps Script Web App URL。
       此首頁會使用 JSONP 方式讀取，避免前端跨網域 CORS 問題。
     */
-    const IMPORTANT_NOTICE_API = 'https://script.google.com/macros/s/AKfycbyWtUIqeAF5VabxzzzOE-VoztASiIXixpJrB9w-ON5JrNxghav8MCDFi5AnVEf6mbdT_Q/exec';
+    const IMPORTANT_NOTICE_API = 'https://script.google.com/macros/s/AKfycbxH9LH0iAMx1xaBb2MxR9FwLx-vO-L1DxgEFa0Y0GsQFZy2_jF3yZdgw7wMAz3NmN5k3Q/exec';
 
     const noticeBoard = document.getElementById('important-notice-board');
     const noticeSearchInput = document.getElementById('notice-search-input');
