@@ -361,6 +361,225 @@
       box-shadow: 0 0 0 2px rgba(250,204,21,0.16);
     }
 
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(420px, 0.9fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .dashboard-left,
+    .dashboard-right {
+      min-width: 0;
+    }
+
+    .dashboard-right {
+      position: sticky;
+      top: 86px;
+      max-height: calc(100vh - 105px);
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+    }
+
+    .tool-panel {
+      border-radius: 26px;
+      background: rgba(13, 20, 36, 0.72);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.30);
+      padding: 24px;
+    }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .panel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.20);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 30px;
+      line-height: 1.15;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .tool-panel > .max-w-2xl {
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom: 18px;
+    }
+
+    .tool-panel .category-scroll {
+      margin-bottom: 20px;
+    }
+
+    .tool-panel #cards-container,
+    .tool-panel #loading-state {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 900px) {
+      .tool-panel #cards-container,
+      .tool-panel #loading-state {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .tool-panel #cards-container,
+      .tool-panel #loading-state {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .tool-panel .card a {
+      min-height: 120px;
+      padding: 20px;
+    }
+
+    .dashboard-right .notice-board {
+      margin-bottom: 0;
+      padding: 24px;
+    }
+
+    .dashboard-right #important-notice-board > .flex:first-child {
+      gap: 16px;
+    }
+
+    .dashboard-right #important-notice-board > .flex:first-child h3 {
+      font-size: 34px;
+    }
+
+    .dashboard-right #important-notice-board > .flex:first-child p {
+      font-size: 14px;
+    }
+
+    .dashboard-right #important-notice-board > .flex:first-child > .flex {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .dashboard-right #notice-refresh-button,
+    .dashboard-right #notice-login-button,
+    .dashboard-right #notice-logout-button {
+      padding: 11px 14px;
+      font-size: 14px;
+    }
+
+    .dashboard-right .notice-toolbar {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-right .notice-table {
+      min-width: 0;
+    }
+
+    .dashboard-right .notice-table thead {
+      display: none;
+    }
+
+    .dashboard-right .notice-table,
+    .dashboard-right .notice-table tbody,
+    .dashboard-right .notice-table tr,
+    .dashboard-right .notice-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .dashboard-right .notice-table tr {
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      padding: 14px;
+    }
+
+    .dashboard-right .notice-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .dashboard-right .notice-table td {
+      border-bottom: none;
+      padding: 5px 0;
+    }
+
+    .dashboard-right .notice-date {
+      color: #38bdf8 !important;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .dashboard-right .notice-content {
+      min-width: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff !important;
+    }
+
+    .dashboard-right .notice-remark {
+      min-width: 0;
+      font-size: 13px;
+      color: #cbd5e1 !important;
+    }
+
+    .dashboard-right .notice-actions {
+      display: none;
+      padding-top: 10px;
+    }
+
+    .dashboard-right .is-admin .notice-actions {
+      display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-right {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+        order: -1;
+      }
+
+      .tool-panel #cards-container,
+      .tool-panel #loading-state {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .tool-panel {
+        padding: 18px;
+      }
+
+      .panel-title {
+        font-size: 26px;
+      }
+
+      .tool-panel #cards-container,
+      .tool-panel #loading-state {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 
@@ -402,7 +621,7 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-5 py-10 relative z-10">
+  <main class="max-w-[1600px] mx-auto px-5 py-10 relative z-10">
 
     <section class="text-center mb-12">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-owl-card border border-white/10 text-owl-gold text-sm font-semibold mb-5 shadow-owlGlow">
@@ -424,6 +643,110 @@
       ></div>
     </section>
 
+    <section class="dashboard-layout">
+      <div class="dashboard-left">
+        <div class="tool-panel">
+          <div class="panel-title-row">
+            <div>
+              <div class="panel-badge">
+                <i class="fa fa-th-large"></i>
+                工具連結
+              </div>
+              <h3 class="panel-title">工具卡片</h3>
+            </div>
+          </div>
+
+    <section class="max-w-2xl mx-auto mb-10">
+      <div class="relative">
+
+        <input
+          id="search-input"
+          type="text"
+          placeholder="搜尋工具、分類、檔名..."
+          class="w-full h-14 rounded-2xl bg-owl-panel border border-white/10 px-5 pr-14 text-lg text-white placeholder:text-owl-muted outline-none focus:ring-2 focus:ring-owl-gold focus:border-owl-gold/60 transition shadow-owlCard"
+        />
+
+        <button
+          id="search-button"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-owl-muted hover:text-owl-gold transition"
+        >
+          <i class="fa fa-search text-xl"></i>
+        </button>
+
+      </div>
+
+      <div
+        id="search-results-info"
+        class="hidden mt-3 text-center text-owl-muted text-sm"
+      ></div>
+    </section>
+
+    <section class="mb-10 overflow-x-auto category-scroll">
+      <div
+        id="category-container"
+        class="flex gap-3 pb-2"
+      ></div>
+    </section>
+
+    <section>
+
+      <div
+        id="cards-container"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      ></div>
+
+      <div
+        id="loading-state"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <div class="skeleton h-36 rounded-2xl"></div>
+        <div class="skeleton h-36 rounded-2xl"></div>
+        <div class="skeleton h-36 rounded-2xl"></div>
+        <div class="skeleton h-36 rounded-2xl"></div>
+      </div>
+
+      <div
+        id="error-state"
+        class="hidden text-center py-16"
+      >
+        <i class="fa fa-exclamation-triangle text-owl-gold text-6xl mb-5"></i>
+
+        <h3 class="text-2xl font-bold mb-2">
+          載入失敗
+        </h3>
+
+        <p class="text-owl-muted mb-6">
+          無法讀取 pages.json，請確認檔案是否存在，且格式為 JSON 陣列
+        </p>
+
+        <button
+          id="retry-button"
+          class="px-6 py-3 rounded-xl bg-owl-gold hover:bg-yellow-400 text-slate-950 font-bold transition"
+        >
+          重新載入
+        </button>
+      </div>
+
+      <div
+        id="empty-state"
+        class="hidden text-center py-16"
+      >
+        <i class="fa fa-search text-owl-muted text-6xl mb-5"></i>
+
+        <h3 class="text-2xl font-bold mb-2">
+          沒有找到結果
+        </h3>
+
+        <p class="text-owl-muted">
+          請換個關鍵字或分類試試
+        </p>
+      </div>
+
+    </section>
+        </div>
+      </div>
+
+      <aside class="dashboard-right">
     <section id="important-notice-board" class="notice-board rounded-[26px] p-5 md:p-6 mb-10">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
         <div>
@@ -542,93 +865,7 @@
         class="hidden mt-3 text-sm text-owl-muted"
       ></div>
     </section>
-
-    <section class="max-w-2xl mx-auto mb-10">
-      <div class="relative">
-
-        <input
-          id="search-input"
-          type="text"
-          placeholder="搜尋工具、分類、檔名..."
-          class="w-full h-14 rounded-2xl bg-owl-panel border border-white/10 px-5 pr-14 text-lg text-white placeholder:text-owl-muted outline-none focus:ring-2 focus:ring-owl-gold focus:border-owl-gold/60 transition shadow-owlCard"
-        />
-
-        <button
-          id="search-button"
-          class="absolute right-4 top-1/2 -translate-y-1/2 text-owl-muted hover:text-owl-gold transition"
-        >
-          <i class="fa fa-search text-xl"></i>
-        </button>
-
-      </div>
-
-      <div
-        id="search-results-info"
-        class="hidden mt-3 text-center text-owl-muted text-sm"
-      ></div>
-    </section>
-
-    <section class="mb-10 overflow-x-auto category-scroll">
-      <div
-        id="category-container"
-        class="flex gap-3 pb-2"
-      ></div>
-    </section>
-
-    <section>
-
-      <div
-        id="cards-container"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      ></div>
-
-      <div
-        id="loading-state"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      >
-        <div class="skeleton h-36 rounded-2xl"></div>
-        <div class="skeleton h-36 rounded-2xl"></div>
-        <div class="skeleton h-36 rounded-2xl"></div>
-        <div class="skeleton h-36 rounded-2xl"></div>
-      </div>
-
-      <div
-        id="error-state"
-        class="hidden text-center py-16"
-      >
-        <i class="fa fa-exclamation-triangle text-owl-gold text-6xl mb-5"></i>
-
-        <h3 class="text-2xl font-bold mb-2">
-          載入失敗
-        </h3>
-
-        <p class="text-owl-muted mb-6">
-          無法讀取 pages.json，請確認檔案是否存在，且格式為 JSON 陣列
-        </p>
-
-        <button
-          id="retry-button"
-          class="px-6 py-3 rounded-xl bg-owl-gold hover:bg-yellow-400 text-slate-950 font-bold transition"
-        >
-          重新載入
-        </button>
-      </div>
-
-      <div
-        id="empty-state"
-        class="hidden text-center py-16"
-      >
-        <i class="fa fa-search text-owl-muted text-6xl mb-5"></i>
-
-        <h3 class="text-2xl font-bold mb-2">
-          沒有找到結果
-        </h3>
-
-        <p class="text-owl-muted">
-          請換個關鍵字或分類試試
-        </p>
-      </div>
-
+      </aside>
     </section>
 
   </main>
