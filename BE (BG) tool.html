@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BE(BG)对帐工具</title>
+  <title>BE(BG)對帳工具</title>
   <style>
     * {
       box-sizing: border-box;
@@ -30,7 +30,7 @@
       min-height: 100vh;
       font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
       color: var(--text);
-      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
     .page {
@@ -46,9 +46,6 @@
     }
 
     .home-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       text-decoration: none;
       padding: 10px 16px;
       border-radius: 14px;
@@ -58,13 +55,6 @@
       font-weight: 700;
       font-size: 14px;
       box-shadow: var(--shadow);
-      transition: 0.2s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    .home-btn:hover {
-      transform: translateY(-1px);
-      background: #ffffff;
     }
 
     .header-card {
@@ -74,17 +64,14 @@
       box-shadow: var(--shadow);
       padding: 24px 20px;
       margin-bottom: 18px;
-      backdrop-filter: blur(8px);
     }
 
     .title {
       margin: 0;
       text-align: center;
       font-size: 34px;
-      line-height: 1.2;
       color: var(--title);
       font-weight: 800;
-      letter-spacing: 1px;
     }
 
     .desc {
@@ -110,7 +97,6 @@
       min-height: 640px;
       display: flex;
       flex-direction: column;
-      backdrop-filter: blur(8px);
     }
 
     .panel h2 {
@@ -133,12 +119,6 @@
       color: var(--text);
       background: #fcfeff;
       outline: none;
-      box-shadow: inset 0 2px 8px rgba(126, 170, 206, 0.08);
-    }
-
-    textarea:focus {
-      border-color: #a9d0ee;
-      box-shadow: 0 0 0 4px rgba(150, 205, 241, 0.18), inset 0 2px 8px rgba(126, 170, 206, 0.08);
     }
 
     .button-area {
@@ -183,10 +163,10 @@
       background: #fcfeff;
       padding: 16px;
       overflow: auto;
-      box-shadow: inset 0 2px 8px rgba(126, 170, 206, 0.08);
     }
 
-    .placeholder {
+    .placeholder,
+    .empty-state {
       height: 100%;
       min-height: 500px;
       display: flex;
@@ -202,26 +182,17 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
       justify-content: space-between;
       margin-bottom: 14px;
     }
 
-    .date-range {
+    .date-range,
+    .summary-badge {
       font-size: 15px;
       color: #486988;
       font-weight: 700;
       background: #eef7ff;
       border: 1px solid #d8eaf8;
-      padding: 8px 12px;
-      border-radius: 12px;
-    }
-
-    .summary-badge {
-      font-size: 14px;
-      color: #5d7b97;
-      background: #f5fbff;
-      border: 1px solid #e0eef9;
       padding: 8px 12px;
       border-radius: 12px;
     }
@@ -248,16 +219,12 @@
       text-align: left;
       padding: 14px 16px;
       border-bottom: 1px solid #dcecf7;
-      position: sticky;
-      top: 0;
-      z-index: 1;
     }
 
     tbody td {
       padding: 14px 16px;
       border-bottom: 1px solid #edf3f8;
       font-size: 15px;
-      color: #314355;
     }
 
     tbody tr:hover {
@@ -267,13 +234,6 @@
     .text-right {
       text-align: right;
       font-variant-numeric: tabular-nums;
-    }
-
-    .empty-state {
-      padding: 28px 12px;
-      text-align: center;
-      color: #90a5b6;
-      font-size: 15px;
     }
 
     .negative {
@@ -293,8 +253,6 @@
 
       .button-area {
         flex-direction: row;
-        justify-content: center;
-        padding: 6px 0 2px;
       }
 
       .panel {
@@ -309,89 +267,35 @@
         min-height: 320px;
       }
     }
-
-    @media (max-width: 640px) {
-      .page {
-        padding: 12px;
-      }
-
-      .header-card,
-      .panel {
-        border-radius: 18px;
-      }
-
-      .title {
-        font-size: 26px;
-      }
-
-      .desc {
-        font-size: 14px;
-        line-height: 1.7;
-      }
-
-      .panel h2 {
-        font-size: 18px;
-      }
-
-      button {
-        width: 128px;
-        padding: 14px 12px;
-        font-size: 15px;
-        border-radius: 16px;
-      }
-
-      textarea {
-        font-size: 14px;
-        padding: 14px;
-      }
-
-      .result-wrap {
-        padding: 12px;
-      }
-
-      thead th,
-      tbody td {
-        padding: 12px 12px;
-        font-size: 14px;
-      }
-
-      .date-range,
-      .summary-badge {
-        width: 100%;
-      }
-
-      .result-header {
-        align-items: stretch;
-      }
-    }
   </style>
 </head>
+
 <body>
   <div class="page">
     <div class="topbar">
-      <a class="home-btn" href="https://0urrigvojb.github.io/bng-tools/" target="_blank">回首页</a>
+      <a class="home-btn" href="https://0urrigvojb.github.io/bng-tools/" target="_blank">回首頁</a>
     </div>
 
     <div class="header-card">
-      <h1 class="title">BE(BG)对帐工具</h1>
-      <p class="desc">贴上原始资料后，自动抓取「日期 / 代理帐号 / 代理损益金额」，并汇总代理帐号金额</p>
+      <h1 class="title">BE(BG)對帳工具</h1>
+      <p class="desc">貼上原始資料後，自動抓取「日期 / 代理帳號 / 代理損益金額」，並匯總代理帳號金額</p>
     </div>
 
     <div class="main">
       <div class="panel">
-        <h2>原始资料</h2>
-        <textarea id="inputData" placeholder="请把原始资料贴在这里..."></textarea>
+        <h2>原始資料</h2>
+        <textarea id="inputData" placeholder="請把原始資料貼在這裡..."></textarea>
       </div>
 
       <div class="button-area">
-        <button class="show-btn" onclick="processData()">显示结果</button>
+        <button class="show-btn" onclick="processData()">顯示結果</button>
         <button class="clear-btn" onclick="clearAll()">清除</button>
       </div>
 
       <div class="panel">
-        <h2>整理结果</h2>
+        <h2>整理結果</h2>
         <div id="resultBox" class="result-wrap">
-          <div class="placeholder">整理后的表格结果会显示在这里</div>
+          <div class="placeholder">整理後的表格結果會顯示在這裡</div>
         </div>
       </div>
     </div>
@@ -401,7 +305,7 @@
     function clearAll() {
       document.getElementById("inputData").value = "";
       document.getElementById("resultBox").innerHTML = `
-        <div class="placeholder">整理后的表格结果会显示在这里</div>
+        <div class="placeholder">整理後的表格結果會顯示在這裡</div>
       `;
     }
 
@@ -410,41 +314,85 @@
       const resultBox = document.getElementById("resultBox");
 
       if (!input) {
-        resultBox.innerHTML = `<div class="empty-state">请输入资料。</div>`;
+        resultBox.innerHTML = `<div class="empty-state">請輸入資料。</div>`;
         return;
       }
 
-      const tokens = input.split(/\s+/).filter(Boolean);
+      const lines = input
+        .split(/\n+/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      if (lines.length < 2) {
+        resultBox.innerHTML = `<div class="empty-state">資料不足，請確認是否有標題列與資料列。</div>`;
+        return;
+      }
+
+      const headerIndex = lines.findIndex(line =>
+        line.includes("日期") &&
+        line.includes("代理") &&
+        line.includes("損益")
+      );
+
+      if (headerIndex === -1) {
+        resultBox.innerHTML = `
+          <div class="empty-state">
+            找不到標題列，請確認資料內有「日期 / 代理帳號 / 代理損益金額」
+          </div>
+        `;
+        return;
+      }
+
+      const header = lines[headerIndex].split(/\s+/);
+
+      const dateIndex = findHeaderIndex(header, ["日期"]);
+      const agentIndex = findHeaderIndex(header, ["代理帐号", "代理帳號", "代理账号", "代理"]);
+      const profitIndex = findHeaderIndex(header, ["代理损益金额", "代理損益金額", "代理损益", "代理損益"]);
+
+      if (dateIndex === -1 || agentIndex === -1 || profitIndex === -1) {
+        resultBox.innerHTML = `
+          <div class="empty-state">
+            找不到必要欄位：日期 / 代理帳號 / 代理損益金額
+          </div>
+        `;
+        return;
+      }
 
       const dataMap = {};
       const dateSet = new Set();
 
-      for (let i = 0; i < tokens.length; i++) {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(tokens[i])) {
-          const row = tokens.slice(i, i + 12);
-          if (row.length < 12) continue;
+      for (let i = headerIndex + 1; i < lines.length; i++) {
+        const row = lines[i].split(/\s+/);
 
-          const date = row[0];
-          const agent = row[1];
-          const profitRaw = row[7]; // 正确栏位：代理损益金额
-          const profit = parseFloat(profitRaw.replace(/,/g, ""));
+        const date = row[dateIndex];
+        const agent = row[agentIndex];
+        const profitRaw = row[profitIndex];
 
-          if (!date || !agent || isNaN(profit)) continue;
+        if (!date || !agent || !profitRaw) continue;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
 
-          dateSet.add(date);
+        const profit = parseNumber(profitRaw);
 
-          if (!dataMap[agent]) {
-            dataMap[agent] = 0;
-          }
-          dataMap[agent] += profit;
+        if (isNaN(profit)) continue;
+
+        dateSet.add(date);
+
+        if (!dataMap[agent]) {
+          dataMap[agent] = 0;
         }
+
+        dataMap[agent] += profit;
       }
 
       const dates = Array.from(dateSet).sort();
       const agents = Object.keys(dataMap).sort();
 
       if (dates.length === 0 || agents.length === 0) {
-        resultBox.innerHTML = `<div class="empty-state">未抓取到有效资料，请确认贴上的内容格式是否正确。</div>`;
+        resultBox.innerHTML = `
+          <div class="empty-state">
+            未抓取到有效資料，請確認貼上的資料格式是否正確。
+          </div>
+        `;
         return;
       }
 
@@ -454,6 +402,7 @@
       const rowsHtml = agents.map(agent => {
         const value = dataMap[agent];
         const cls = value < 0 ? "negative" : "positive";
+
         return `
           <tr>
             <td>${escapeHtml(agent)}</td>
@@ -465,15 +414,15 @@
       resultBox.innerHTML = `
         <div class="result-header">
           <div class="date-range">日期 ${startDate} ~ ${endDate}</div>
-          <div class="summary-badge">共 ${agents.length} 个代理帐号</div>
+          <div class="summary-badge">共 ${agents.length} 個代理帳號</div>
         </div>
 
         <div class="table-scroll">
           <table>
             <thead>
               <tr>
-                <th>代理帐号</th>
-                <th class="text-right">代理损益金额</th>
+                <th>代理帳號</th>
+                <th class="text-right">代理損益金額</th>
               </tr>
             </thead>
             <tbody>
@@ -482,6 +431,31 @@
           </table>
         </div>
       `;
+    }
+
+    function findHeaderIndex(header, names) {
+      return header.findIndex(item => {
+        const cleanItem = normalizeText(item);
+        return names.some(name => cleanItem === normalizeText(name));
+      });
+    }
+
+    function normalizeText(text) {
+      return String(text)
+        .replace(/\s+/g, "")
+        .replace(/帳/g, "账")
+        .replace(/損/g, "损")
+        .replace(/額/g, "额")
+        .trim();
+    }
+
+    function parseNumber(value) {
+      return parseFloat(
+        String(value)
+          .replace(/,/g, "")
+          .replace(/％/g, "%")
+          .trim()
+      );
     }
 
     function formatNumber(num) {
