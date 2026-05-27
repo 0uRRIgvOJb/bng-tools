@@ -1,478 +1,542 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BE(BG)對帳工具</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BE(BG) 貓頭鷹對帳工具</title>
 
-    :root {
-      --bg1: #eef7ff;
-      --bg2: #f8fcff;
-      --bg3: #f3fff8;
-      --card: rgba(255, 255, 255, 0.84);
-      --border: #d8e9f7;
-      --text: #2d3f50;
-      --title: #234f7d;
-      --sub: #7590a9;
-      --blue1: #6fc6ff;
-      --blue2: #5fd5bf;
-      --pink1: #ffd9df;
-      --pink2: #ffeac8;
-      --shadow: 0 10px 30px rgba(98, 145, 186, 0.12);
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
-      color: var(--text);
-      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
-    }
+:root {
+  --bg: #0b1018;
+  --card: #121a26;
+  --line: #243246;
+  --text: #d8e6f5;
+  --sub: #89a2bb;
+  --gold: #ffcc73;
+  --green: #65e0b8;
+  --red: #ff7d96;
+  --blue1: #4eb5ff;
+  --blue2: #52f1c4;
+  --shadow: 0 12px 32px rgba(0,0,0,.38);
+}
 
-    .page {
-      max-width: 1480px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1d2c42 0%, #0b1018 58%);
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  color: var(--text);
+}
 
-    .topbar {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
-    }
+.page {
+  max-width: 1500px;
+  margin: auto;
+  padding: 20px;
+}
 
-    .home-btn {
-      text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.9);
-      color: var(--title);
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: var(--shadow);
-    }
+.header {
+  position: relative;
+  background: rgba(18,26,38,.96);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 30px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
 
-    .header-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 24px 20px;
-      margin-bottom: 18px;
-    }
+.owl-bg {
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  font-size: 220px;
+  opacity: .06;
+}
 
-    .title {
-      margin: 0;
-      text-align: center;
-      font-size: 34px;
-      color: var(--title);
-      font-weight: 800;
-    }
+.title {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
 
-    .desc {
-      margin: 10px 0 0;
-      text-align: center;
-      color: var(--sub);
-      font-size: 15px;
-    }
+.desc {
+  margin-top: 12px;
+  color: var(--sub);
+  line-height: 1.8;
+}
 
-    .main {
-      display: grid;
-      grid-template-columns: minmax(320px, 1fr) 160px minmax(320px, 1fr);
-      gap: 18px;
-      align-items: stretch;
-    }
+.main {
+  display: grid;
+  grid-template-columns: minmax(320px,1fr) 150px minmax(320px,1fr);
+  gap: 20px;
+}
 
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      min-height: 640px;
-      display: flex;
-      flex-direction: column;
-    }
+.panel {
+  background: rgba(18,26,38,.96);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 20px;
+  min-height: 720px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
 
-    .panel h2 {
-      margin: 0 0 14px;
-      font-size: 20px;
-      color: var(--title);
-      font-weight: 800;
-    }
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
 
-    textarea {
-      width: 100%;
-      height: 100%;
-      min-height: 540px;
-      resize: none;
-      border: 1px solid #d7e7f4;
-      border-radius: 18px;
-      padding: 18px;
-      font-size: 15px;
-      line-height: 1.75;
-      color: var(--text);
-      background: #fcfeff;
-      outline: none;
-    }
+.panel-title h2 {
+  font-size: 24px;
+  color: var(--gold);
+}
 
-    .button-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-    }
+textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 600px;
+  resize: none;
+  border-radius: 22px;
+  padding: 20px;
+  background: #0f1723;
+  color: #dce9f7;
+  font-size: 15px;
+  line-height: 1.8;
+  border: 1px solid #223044;
+  outline: none;
+}
 
-    button {
-      width: 140px;
-      border: none;
-      border-radius: 18px;
-      padding: 16px 14px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.22s ease;
-      box-shadow: 0 12px 24px rgba(108, 158, 199, 0.18);
-    }
+textarea::placeholder {
+  color: #6e87a0;
+}
 
-    button:hover {
-      transform: translateY(-2px) scale(1.02);
-    }
+.button-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
 
-    .show-btn {
-      color: #fff;
-      background: linear-gradient(135deg, var(--blue1), var(--blue2));
-    }
+button {
+  width: 140px;
+  border: none;
+  border-radius: 20px;
+  padding: 18px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
+  transition: .25s;
+  color: #fff;
+}
 
-    .clear-btn {
-      color: #8b5260;
-      background: linear-gradient(135deg, var(--pink1), var(--pink2));
-    }
+button:hover {
+  transform: translateY(-3px) scale(1.03);
+}
 
-    .result-wrap {
-      flex: 1;
-      min-height: 540px;
-      border: 1px solid #d7e7f4;
-      border-radius: 18px;
-      background: #fcfeff;
-      padding: 16px;
-      overflow: auto;
-    }
+.show-btn {
+  background: linear-gradient(135deg, var(--blue1), var(--blue2));
+  box-shadow: 0 10px 25px rgba(82,241,196,.25);
+}
 
-    .placeholder,
-    .empty-state {
-      height: 100%;
-      min-height: 500px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #93a8ba;
-      font-size: 15px;
-      line-height: 1.8;
-    }
+.clear-btn {
+  background: linear-gradient(135deg, #ff8ba5, #ffc488);
+  box-shadow: 0 10px 25px rgba(255,139,165,.25);
+}
 
-    .result-header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
+.result-wrap {
+  flex: 1;
+  border-radius: 22px;
+  background: #0f1723;
+  border: 1px solid #223044;
+  overflow: auto;
+  padding: 16px;
+}
 
-    .date-range,
-    .summary-badge {
-      font-size: 15px;
-      color: #486988;
-      font-weight: 700;
-      background: #eef7ff;
-      border: 1px solid #d8eaf8;
-      padding: 8px 12px;
-      border-radius: 12px;
-    }
+.placeholder,
+.empty-state {
+  min-height: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #7189a1;
+  line-height: 2;
+}
 
-    .table-scroll {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 14px;
-    }
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 420px;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-    }
+.badge {
+  background: #162334;
+  border: 1px solid #29415f;
+  color: #9ec9ff;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 800;
+}
 
-    thead th {
-      background: linear-gradient(135deg, #edf7ff, #f3fffb);
-      color: #355b7d;
-      font-size: 15px;
-      text-align: left;
-      padding: 14px 16px;
-      border-bottom: 1px solid #dcecf7;
-    }
+.table-scroll {
+  overflow: auto;
+  border-radius: 18px;
+}
 
-    tbody td {
-      padding: 14px 16px;
-      border-bottom: 1px solid #edf3f8;
-      font-size: 15px;
-    }
+table {
+  width: 100%;
+  min-width: 450px;
+  border-collapse: collapse;
+}
 
-    tbody tr:hover {
-      background: #f8fcff;
-    }
+thead th {
+  background: #172537;
+  color: var(--gold);
+  padding: 16px;
+  text-align: left;
+  font-size: 15px;
+  border-bottom: 1px solid #24364f;
+}
 
-    .text-right {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
+tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #1e2d42;
+  font-size: 15px;
+}
 
-    .negative {
-      color: #c2556f;
-      font-weight: 700;
-    }
+tbody tr:hover {
+  background: #162233;
+}
 
-    .positive {
-      color: #2d8a68;
-      font-weight: 700;
-    }
+.text-right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
 
-    @media (max-width: 1100px) {
-      .main {
-        grid-template-columns: 1fr;
-      }
+.positive {
+  color: var(--green);
+  font-weight: 900;
+}
 
-      .button-area {
-        flex-direction: row;
-      }
+.negative {
+  color: var(--red);
+  font-weight: 900;
+}
 
-      .panel {
-        min-height: auto;
-      }
+.footer {
+  margin-top: 18px;
+  text-align: center;
+  color: #61768d;
+  font-size: 13px;
+}
 
-      textarea {
-        min-height: 300px;
-      }
+@media(max-width:1100px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
 
-      .result-wrap {
-        min-height: 320px;
-      }
-    }
-  </style>
+  .button-area {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .panel {
+    min-height: auto;
+  }
+
+  textarea {
+    min-height: 350px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="topbar">
-      <a class="home-btn" href="https://0urrigvojb.github.io/bng-tools/" target="_blank">回首頁</a>
-    </div>
 
-    <div class="header-card">
-      <h1 class="title">BE(BG)對帳工具</h1>
-      <p class="desc">貼上原始資料後，自動抓取「日期 / 代理帳號 / 代理損益金額」，並匯總代理帳號金額</p>
-    </div>
+<div class="page">
 
-    <div class="main">
-      <div class="panel">
-        <h2>原始資料</h2>
-        <textarea id="inputData" placeholder="請把原始資料貼在這裡..."></textarea>
-      </div>
+  <div class="header">
+    <div class="owl-bg">🦉</div>
 
-      <div class="button-area">
-        <button class="show-btn" onclick="processData()">顯示結果</button>
-        <button class="clear-btn" onclick="clearAll()">清除</button>
-      </div>
+    <div class="title">🦉 BE(BG) 貓頭鷹對帳工具</div>
 
-      <div class="panel">
-        <h2>整理結果</h2>
-        <div id="resultBox" class="result-wrap">
-          <div class="placeholder">整理後的表格結果會顯示在這裡</div>
-        </div>
-      </div>
+    <div class="desc">
+      貼上原始資料後，自動辨識「日期 / 代理帳號 / 代理損益金額」。<br>
+      支援橫向表頭，也支援從遊戲商複製後變成直向表頭的格式。
     </div>
   </div>
 
-  <script>
-    function clearAll() {
-      document.getElementById("inputData").value = "";
-      document.getElementById("resultBox").innerHTML = `
-        <div class="placeholder">整理後的表格結果會顯示在這裡</div>
-      `;
+  <div class="main">
+
+    <div class="panel">
+      <div class="panel-title">
+        <div>📄</div>
+        <h2>原始資料</h2>
+      </div>
+
+      <textarea id="inputData" placeholder="請貼上 BE(BG) 原始資料..."></textarea>
+    </div>
+
+    <div class="button-area">
+      <button class="show-btn" onclick="processData()">顯示結果</button>
+      <button class="clear-btn" onclick="clearAll()">清除資料</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        <div>🦉</div>
+        <h2>整理結果</h2>
+      </div>
+
+      <div id="resultBox" class="result-wrap">
+        <div class="placeholder">整理後的結果會顯示在這裡</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Owl Style UI ・ Auto Parse ・ BE(BG)
+  </div>
+
+</div>
+
+<script>
+function clearAll() {
+  document.getElementById("inputData").value = "";
+
+  document.getElementById("resultBox").innerHTML = `
+    <div class="placeholder">整理後的結果會顯示在這裡</div>
+  `;
+}
+
+function processData() {
+  const input = document.getElementById("inputData").value.trim();
+  const resultBox = document.getElementById("resultBox");
+
+  if (!input) {
+    resultBox.innerHTML = `<div class="empty-state">請輸入資料</div>`;
+    return;
+  }
+
+  const lines = input
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  const parsed = parseInput(lines);
+
+  if (!parsed) {
+    resultBox.innerHTML = `
+      <div class="empty-state">
+        找不到標題列，請確認資料內有「日期 / 代理帳號 / 代理損益金額」
+      </div>
+    `;
+    return;
+  }
+
+  const header = parsed.header;
+  const dataStartIndex = parsed.dataStartIndex;
+
+  const dateIndex = findHeaderIndex(header, ["日期"]);
+
+  const agentIndex = findHeaderIndex(header, [
+    "代理帳號",
+    "代理帐号",
+    "代理账号"
+  ]);
+
+  const profitIndex = findHeaderIndex(header, [
+    "代理損益金額",
+    "代理损益金额",
+    "代理損益",
+    "代理损益"
+  ]);
+
+  if (dateIndex === -1 || agentIndex === -1 || profitIndex === -1) {
+    resultBox.innerHTML = `
+      <div class="empty-state">
+        找不到必要欄位：日期 / 代理帳號 / 代理損益金額
+      </div>
+    `;
+    return;
+  }
+
+  const dataMap = {};
+  const dateSet = new Set();
+
+  for (let i = dataStartIndex; i < lines.length; i++) {
+    const row = lines[i].split(/\s+/);
+
+    const date = row[dateIndex];
+    const agent = row[agentIndex];
+    const profitRaw = row[profitIndex];
+
+    if (!date || !agent || !profitRaw) continue;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+
+    const profit = parseNumber(profitRaw);
+
+    if (isNaN(profit)) continue;
+
+    dateSet.add(date);
+
+    if (!dataMap[agent]) {
+      dataMap[agent] = 0;
     }
 
-    function processData() {
-      const input = document.getElementById("inputData").value.trim();
-      const resultBox = document.getElementById("resultBox");
+    dataMap[agent] += profit;
+  }
 
-      if (!input) {
-        resultBox.innerHTML = `<div class="empty-state">請輸入資料。</div>`;
-        return;
-      }
+  const dates = Array.from(dateSet).sort();
+  const agents = Object.keys(dataMap).sort();
 
-      const lines = input
-        .split(/\n+/)
-        .map(line => line.trim())
-        .filter(Boolean);
+  if (!dates.length || !agents.length) {
+    resultBox.innerHTML = `
+      <div class="empty-state">
+        未抓到有效資料，請確認資料格式是否正確
+      </div>
+    `;
+    return;
+  }
 
-      if (lines.length < 2) {
-        resultBox.innerHTML = `<div class="empty-state">資料不足，請確認是否有標題列與資料列。</div>`;
-        return;
-      }
+  const startDate = dates[0];
+  const endDate = dates[dates.length - 1];
 
-      const headerIndex = lines.findIndex(line =>
-        line.includes("日期") &&
-        line.includes("代理") &&
-        line.includes("損益")
-      );
+  const rowsHtml = agents.map(agent => {
+    const value = dataMap[agent];
+    const cls = value < 0 ? "negative" : "positive";
 
-      if (headerIndex === -1) {
-        resultBox.innerHTML = `
-          <div class="empty-state">
-            找不到標題列，請確認資料內有「日期 / 代理帳號 / 代理損益金額」
-          </div>
-        `;
-        return;
-      }
+    return `
+      <tr>
+        <td>${escapeHtml(agent)}</td>
+        <td class="text-right ${cls}">${formatNumber(value)}</td>
+      </tr>
+    `;
+  }).join("");
 
-      const header = lines[headerIndex].split(/\s+/);
+  resultBox.innerHTML = `
+    <div class="result-header">
+      <div class="badge">📅 ${startDate} ~ ${endDate}</div>
+      <div class="badge">🦉 共 ${agents.length} 個代理帳號</div>
+    </div>
 
-      const dateIndex = findHeaderIndex(header, ["日期"]);
-      const agentIndex = findHeaderIndex(header, ["代理帐号", "代理帳號", "代理账号", "代理"]);
-      const profitIndex = findHeaderIndex(header, ["代理损益金额", "代理損益金額", "代理损益", "代理損益"]);
-
-      if (dateIndex === -1 || agentIndex === -1 || profitIndex === -1) {
-        resultBox.innerHTML = `
-          <div class="empty-state">
-            找不到必要欄位：日期 / 代理帳號 / 代理損益金額
-          </div>
-        `;
-        return;
-      }
-
-      const dataMap = {};
-      const dateSet = new Set();
-
-      for (let i = headerIndex + 1; i < lines.length; i++) {
-        const row = lines[i].split(/\s+/);
-
-        const date = row[dateIndex];
-        const agent = row[agentIndex];
-        const profitRaw = row[profitIndex];
-
-        if (!date || !agent || !profitRaw) continue;
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
-
-        const profit = parseNumber(profitRaw);
-
-        if (isNaN(profit)) continue;
-
-        dateSet.add(date);
-
-        if (!dataMap[agent]) {
-          dataMap[agent] = 0;
-        }
-
-        dataMap[agent] += profit;
-      }
-
-      const dates = Array.from(dateSet).sort();
-      const agents = Object.keys(dataMap).sort();
-
-      if (dates.length === 0 || agents.length === 0) {
-        resultBox.innerHTML = `
-          <div class="empty-state">
-            未抓取到有效資料，請確認貼上的資料格式是否正確。
-          </div>
-        `;
-        return;
-      }
-
-      const startDate = dates[0];
-      const endDate = dates[dates.length - 1];
-
-      const rowsHtml = agents.map(agent => {
-        const value = dataMap[agent];
-        const cls = value < 0 ? "negative" : "positive";
-
-        return `
+    <div class="table-scroll">
+      <table>
+        <thead>
           <tr>
-            <td>${escapeHtml(agent)}</td>
-            <td class="text-right ${cls}">${formatNumber(value)}</td>
+            <th>代理帳號</th>
+            <th class="text-right">代理損益金額</th>
           </tr>
-        `;
-      }).join("");
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
 
-      resultBox.innerHTML = `
-        <div class="result-header">
-          <div class="date-range">日期 ${startDate} ~ ${endDate}</div>
-          <div class="summary-badge">共 ${agents.length} 個代理帳號</div>
-        </div>
+function parseInput(lines) {
+  const dateLineIndex = lines.findIndex(line => {
+    const parts = line.split(/\s+/);
+    return parts.some(part => normalize(part) === normalize("日期"));
+  });
 
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>代理帳號</th>
-                <th class="text-right">代理損益金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-          </table>
-        </div>
-      `;
+  if (dateLineIndex === -1) {
+    return null;
+  }
+
+  const firstLineParts = lines[dateLineIndex].split(/\s+/);
+
+  const isHorizontalHeader =
+    firstLineParts.length > 1 &&
+    firstLineParts.some(part => normalize(part).includes(normalize("代理"))) &&
+    firstLineParts.some(part => normalize(part).includes(normalize("損益")));
+
+  if (isHorizontalHeader) {
+    return {
+      header: firstLineParts,
+      dataStartIndex: dateLineIndex + 1
+    };
+  }
+
+  const header = [];
+
+  for (let i = dateLineIndex; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (/^\d{4}-\d{2}-\d{2}/.test(line)) {
+      return {
+        header: header,
+        dataStartIndex: i
+      };
     }
 
-    function findHeaderIndex(header, names) {
-      return header.findIndex(item => {
-        const cleanItem = normalizeText(item);
-        return names.some(name => cleanItem === normalizeText(name));
-      });
-    }
+    header.push(line);
+  }
 
-    function normalizeText(text) {
-      return String(text)
-        .replace(/\s+/g, "")
-        .replace(/帳/g, "账")
-        .replace(/損/g, "损")
-        .replace(/額/g, "额")
-        .trim();
-    }
+  return null;
+}
 
-    function parseNumber(value) {
-      return parseFloat(
-        String(value)
-          .replace(/,/g, "")
-          .replace(/％/g, "%")
-          .trim()
-      );
-    }
+function findHeaderIndex(header, names) {
+  return header.findIndex(item => {
+    const clean = normalize(item);
 
-    function formatNumber(num) {
-      return Number(num).toLocaleString("en-US", {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 4
-      });
-    }
+    return names.some(name => {
+      return clean === normalize(name);
+    });
+  });
+}
 
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-  </script>
+function normalize(str) {
+  return String(str)
+    .replace(/\s+/g, "")
+    .replace(/帳/g, "账")
+    .replace(/號/g, "号")
+    .replace(/損/g, "损")
+    .replace(/額/g, "额")
+    .replace(/臺/g, "台")
+    .trim();
+}
+
+function parseNumber(value) {
+  return parseFloat(
+    String(value)
+      .replace(/,/g, "")
+      .replace(/％/g, "%")
+      .trim()
+  );
+}
+
+function formatNumber(num) {
+  return Number(num).toLocaleString("en-US", {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  });
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+</script>
+
 </body>
 </html>
