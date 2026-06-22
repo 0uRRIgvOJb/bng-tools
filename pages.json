@@ -30,9 +30,9 @@
     "type": "对帐"
   },
             {
-    "name": "塔防",
-    "file": "Tower Guard.html",
-    "type": "其他"
+    "name": "排班",
+    "file": "Scheduling.html",
+    "type": "工具"
   },
  {
     "name": "卡牌冒险",
