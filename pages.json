@@ -1,15 +1,5 @@
 [
-  {
-    "name": "BNG电子对帐",
-    "file": "tool.html",
-    "type": "对帐"
-  },
      {
-    "name": "BE(BG)电子对帐",
-    "file": "BE (BG) tool.html",
-    "type": "对帐"
-  },
-          {
     "name": "前后台链接",
     "file": "Website link.html",
     "type": "网址链接"
@@ -19,24 +9,4 @@
     "file": "announcement.html",
     "type": "工具"
   },
-        {
-    "name": "维护表",
-    "file": "maintain.html",
-    "type": "工具"
-  },
-          {
-    "name": "DB棋牌对帐",
-    "file": "DBC hessCard.html",
-    "type": "对帐"
-  },
-            {
-    "name": "排班",
-    "file": "Scheduling.html",
-    "type": "工具"
-  },
- {
-    "name": "卡牌冒险",
-    "file": "card-game.html",
-    "type": "其他"
-  }
 ]
